@@ -23,8 +23,8 @@ class AnomalyResponse(BaseModel):
     is_anomaly: bool
     score: float
     severity: AnomalySeverity
-    model_scores: Dict[str, float]
-    timestamp: datetime
+    model_scores: Dict[str, float] = Field(default_factory=dict)
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
 
 
 class BatchPredictRequest(BaseModel):
