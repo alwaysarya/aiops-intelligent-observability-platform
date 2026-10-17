@@ -1,30 +1,26 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          900: '#1e3a8a',
+        apple: {
+          blue: '#0071E3', blueHover: '#0077ED', cyan: '#5AC8FA',
+          teal: '#2DD4BF', green: '#30D158', purple: '#AF52DE',
+          indigo: '#5E5CE6', orange: '#FF9F0A', red: '#FF453A',
+          pink: '#FF6B9D', yellow: '#FFD60A',
         },
-        dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-        },
+        ink: { bg: '#FBFBFD', card: '#FFFFFF', grey: '#F5F5F7' },
+        text: { primary: '#1D1D1F', secondary: '#6E6E73', tertiary: '#86868B' },
+      },
+      fontFamily: { sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Inter', 'sans-serif'] },
+      keyframes: {
+        shimmer: { '0%, 100%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' } },
+        pulseDot: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0.3' } },
       },
       animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        shimmer: 'shimmer 8s ease-in-out infinite',
+        pulseDot: 'pulseDot 1.5s ease-in-out infinite',
       },
     },
   },

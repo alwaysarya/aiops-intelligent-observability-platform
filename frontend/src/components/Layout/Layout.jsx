@@ -1,17 +1,19 @@
 import { Outlet } from 'react-router-dom'
-import Sidebar from './Sidebar'
-import Header from './Header'
+import Topbar from './Topbar'
+import CommandPalette from '../Premium/CommandPalette'
+import ToastContainer from '../Premium/Toast'
+import AIChatbot from '../Premium/AIChatbot'
 
 function Layout() {
   return (
-    <div className="flex h-screen bg-dark-900">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
-        </main>
-      </div>
+    <div className="min-h-screen bg-white flex flex-col font-sans">
+      <CommandPalette />
+      <Topbar />
+      <main className="flex-1 w-full relative bg-ink-bg">
+        <Outlet />
+      </main>
+      <ToastContainer />
+      <AIChatbot />
     </div>
   )
 }
