@@ -213,6 +213,75 @@ function LandingPage() {
         </div>
       </section>
 
+
+      {/* PREMIUM ARCHITECTURE / INTEGRATION SHOWCASE */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Architecture</p>
+            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F] mb-6">Connects your entire stack.</h2>
+            <p className="text-[20px] text-gray-500 max-w-[600px] mx-auto font-medium">One central brain that ingests, processes, and analyzes data from all your cloud-native tools.</p>
+          </div>
+
+          <div className="relative w-full max-w-[900px] mx-auto aspect-[2/1] flex items-center justify-center">
+            {/* Connecting Lines (SVG) */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 500">
+              <defs>
+                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.1" />
+                  <stop offset="50%" stopColor="#14b8a6" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.1" />
+                </linearGradient>
+              </defs>
+              {/* Lines from left sources to center */}
+              <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.2 }} d="M 150 100 C 300 100, 350 250, 500 250" fill="none" stroke="url(#lineGrad)" strokeWidth="2" />
+              <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.4 }} d="M 150 250 C 300 250, 350 250, 500 250" fill="none" stroke="url(#lineGrad)" strokeWidth="2" />
+              <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.6 }} d="M 150 400 C 300 400, 350 250, 500 250" fill="none" stroke="url(#lineGrad)" strokeWidth="2" />
+              
+              {/* Lines from right sources to center */}
+              <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.3 }} d="M 850 100 C 700 100, 650 250, 500 250" fill="none" stroke="url(#lineGrad)" strokeWidth="2" />
+              <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.5 }} d="M 850 250 C 700 250, 650 250, 500 250" fill="none" stroke="url(#lineGrad)" strokeWidth="2" />
+              <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.7 }} d="M 850 400 C 700 400, 650 250, 500 250" fill="none" stroke="url(#lineGrad)" strokeWidth="2" />
+            </svg>
+
+            {/* Left Source Nodes */}
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="absolute left-[5%] top-[15%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center"><Database size={20} className="text-teal-600"/></div>
+              <span className="font-bold text-[#1D1D1F]">Kafka</span>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }} className="absolute left-[5%] top-[45%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center"><Server size={20} className="text-teal-600"/></div>
+              <span className="font-bold text-[#1D1D1F]">Kubernetes</span>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }} className="absolute left-[5%] top-[75%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center"><Terminal size={20} className="text-teal-600"/></div>
+              <span className="font-bold text-[#1D1D1F]">Fluentd</span>
+            </motion.div>
+
+            {/* Right Destination Nodes */}
+            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="absolute right-[5%] top-[15%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5 flex-row-reverse">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center"><BarChart3 size={20} className="text-indigo-600"/></div>
+              <span className="font-bold text-[#1D1D1F]">Grafana</span>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }} className="absolute right-[5%] top-[45%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5 flex-row-reverse">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center"><Cloud size={20} className="text-indigo-600"/></div>
+              <span className="font-bold text-[#1D1D1F]">AWS Cloud</span>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }} className="absolute right-[5%] top-[75%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5 flex-row-reverse">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center"><Activity size={20} className="text-indigo-600"/></div>
+              <span className="font-bold text-[#1D1D1F]">Slack</span>
+            </motion.div>
+
+            {/* Central AIOps Brain */}
+            <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ delay: 0.8, type: 'spring' }} className="relative z-10 w-32 h-32 rounded-full bg-[#1D1D1F] flex flex-col items-center justify-center shadow-[0_20px_60px_rgba(20,184,166,0.4)] border-[6px] border-white">
+              <Cpu size={40} className="text-teal-400 mb-1" />
+              <span className="text-white font-bold text-[13px] tracking-widest uppercase">AIOps</span>
+              <div className="absolute inset-0 rounded-full border border-teal-400/30 animate-ping opacity-20" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* LIVE TERMINAL */}
       <section className="relative py-32 bg-white border-t border-black/5 overflow-hidden">
         <div className="max-w-[1000px] mx-auto px-6 relative z-10">
@@ -225,6 +294,88 @@ function LandingPage() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-teal-400 to-emerald-400 rounded-[40px] blur-3xl opacity-20" />
             <LiveTerminal />
+          </motion.div>
+        </div>
+      </section>
+
+
+      {/* PREMIUM DASHBOARD MOCKUP */}
+      <section className="relative py-24 bg-white overflow-hidden border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F] mb-6">See the whole picture.</h2>
+            <p className="text-[20px] text-gray-500 max-w-[600px] mx-auto font-medium">One unified dashboard for all your infrastructure metrics, logs, and traces.</p>
+          </div>
+          
+          {/* Mockup Window */}
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative rounded-[32px] bg-[#FBFBFD] border border-black/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
+            {/* Window Top Bar */}
+            <div className="h-12 bg-white border-b border-black/5 flex items-center px-6 gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-400" />
+              <div className="w-3 h-3 rounded-full bg-amber-400" />
+              <div className="w-3 h-3 rounded-full bg-green-400" />
+              <div className="ml-4 h-6 w-64 bg-gray-100 rounded-md flex items-center px-3">
+                <span className="text-[10px] text-gray-400 font-mono">https://app.aiops.io/dashboard</span>
+              </div>
+            </div>
+            
+            {/* Dashboard Content */}
+            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Sidebar / Metrics */}
+              <div className="space-y-6">
+                <div className="p-6 rounded-2xl bg-white border border-black/5 shadow-sm">
+                  <p className="text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-2">System Health</p>
+                  <div className="flex items-end gap-2">
+                    <span className="text-[36px] font-black text-emerald-500 leading-none">99.99%</span>
+                    <span className="text-[12px] text-emerald-600 font-bold mb-1 bg-emerald-50 px-2 py-0.5 rounded-md">+0.02%</span>
+                  </div>
+                </div>
+                <div className="p-6 rounded-2xl bg-white border border-black/5 shadow-sm">
+                  <p className="text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-2">Active Incidents</p>
+                  <div className="flex items-end gap-2">
+                    <span className="text-[36px] font-black text-[#1D1D1F] leading-none">0</span>
+                    <span className="text-[12px] text-gray-500 font-bold mb-1 bg-gray-100 px-2 py-0.5 rounded-md">All clear</span>
+                  </div>
+                </div>
+                <div className="p-6 rounded-2xl bg-white border border-black/5 shadow-sm">
+                  <p className="text-[13px] font-bold text-gray-400 uppercase tracking-wider mb-2">Logs Processed</p>
+                  <div className="flex items-end gap-2">
+                    <span className="text-[36px] font-black text-[#1D1D1F] leading-none">4.2B</span>
+                    <span className="text-[12px] text-teal-600 font-bold mb-1 bg-teal-50 px-2 py-0.5 rounded-md">+12%</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Main Chart Area */}
+              <div className="md:col-span-2 p-6 rounded-2xl bg-white border border-black/5 shadow-sm flex flex-col">
+                <div className="flex justify-between items-center mb-6">
+                  <p className="text-[15px] font-bold text-[#1D1D1F]">Request Latency (ms)</p>
+                  <div className="flex gap-2">
+                    <span className="text-[11px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-md border border-teal-100">Live</span>
+                  </div>
+                </div>
+                {/* Fake Chart Lines using SVG */}
+                <div className="flex-grow relative h-[200px] w-full">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="#14b8a6" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,80 Q10,70 20,75 T40,40 T60,50 T80,20 T100,30 L100,100 L0,100 Z" fill="url(#chartGrad)" />
+                    <path d="M0,80 Q10,70 20,75 T40,40 T60,50 T80,20 T100,30" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  {/* Grid lines */}
+                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                    <div className="border-t border-black w-full"></div>
+                    <div className="border-t border-black w-full"></div>
+                    <div className="border-t border-black w-full"></div>
+                    <div className="border-t border-black w-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
