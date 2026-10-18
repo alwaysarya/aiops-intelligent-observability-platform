@@ -95,7 +95,7 @@ function LandingPage() {
   ]
 
   return (
-    <div className="w-full bg-[#FBFBFD] min-h-screen text-[#1D1D1F] overflow-hidden font-sans selection:bg-teal-200 selection:text-teal-900">
+    <div className="w-full bg-[#FBFBFD] min-h-screen overflow-x-hidden text-[#1D1D1F] overflow-hidden font-sans selection:bg-teal-200 selection:text-teal-900">
       
       <motion.div 
         className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 via-emerald-500 to-teal-400 z-[100] origin-left"
@@ -124,11 +124,11 @@ function LandingPage() {
             <p className="mt-10 max-w-[640px] mx-auto text-[22px] leading-[1.5] tracking-[-0.015em] text-gray-500 font-medium">
               Real-time observability with AI-powered anomaly detection, intelligent root cause analysis, and automated alerting for cloud-native applications.
             </p>
-            <div className="mt-14 flex flex-wrap items-center justify-center gap-4">
-              <button onClick={() => navigate('/login')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
+            <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+              <button onClick={() => navigate('/login')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-8 py-4 text-[15px] sm:text-[17px] w-full sm:w-auto font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
                 Enter AIOps World <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
               </button>
-              <a href="#features" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 backdrop-blur-md px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-[#1D1D1F] shadow-sm transition-all hover:bg-white hover:shadow-md">
+              <a href="#features" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 backdrop-blur-md px-8 py-4 text-[15px] sm:text-[17px] w-full sm:w-auto font-semibold tracking-[-0.01em] text-[#1D1D1F] shadow-sm transition-all hover:bg-white hover:shadow-md">
                 <Play size={18} fill="currentColor" /> Explore Capabilities
               </a>
             </div>
@@ -156,7 +156,7 @@ function LandingPage() {
             </div>
 
             {/* Main Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               
               {/* Left Column: Stats & Nodes */}
               <div className="md:col-span-1 space-y-4">
@@ -245,10 +245,10 @@ function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-24">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">The Workflow</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">How it works.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">How it works.</h2>
             <p className="text-gray-500 mt-6 max-w-[600px] mx-auto text-[20px] font-medium">From ingestion to remediation — fully automated in under 90 seconds.</p>
           </div>
-          <div className="relative grid grid-cols-1 md:grid-cols-4 gap-6 max-w-[1400px] mx-auto">
+          <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-[1400px] mx-auto">
             {[
               { step: '01', title: 'Ingest', desc: 'Logs streamed from Fluentd to Kafka.', icon: Server },
               { step: '02', title: 'Analyze', desc: 'AI models detect anomalies instantly.', icon: Brain },
@@ -292,9 +292,9 @@ function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-24">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Capabilities</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Everything you need.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Everything you need.</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {[
               { icon: Database, title: 'Log Ingestion', desc: 'High-throughput ingestion from Fluentd, Kafka, and 40+ sources.', big: true, color: 'bg-teal-50 text-teal-600 border-teal-100' },
               { icon: Brain, title: 'AI Anomaly Detection', desc: 'LSTM models detect patterns humans miss.', color: 'bg-teal-50 text-teal-600 border-teal-100' },
@@ -304,7 +304,7 @@ function LandingPage() {
               { icon: BarChart3, title: 'Dashboards', desc: 'Beautiful, customizable, real-time charts.', big: true, color: 'bg-teal-50 text-teal-600 border-teal-100' },
               { icon: ShieldCheck, title: 'Compliance-Ready', desc: 'SOC2, ISO 27001, GDPR built-in.', color: 'bg-teal-50 text-teal-600 border-teal-100' },
             ].map((f, i) => (
-              <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -5 }} className={`group relative flex flex-col h-full p-10 rounded-[32px] bg-white border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all ${f.big ? 'md:col-span-2' : ''}`}>
+              <motion.div key={f.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -5 }} className={`group relative flex flex-col h-full p-10 rounded-[32px] bg-white border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all ${f.big ? 'sm:col-span-2' : ''}`}>
                 <div className="w-14 h-14 rounded-2xl shrink-0 relative z-10 bg-teal-50 border border-teal-100 shadow-sm flex items-center justify-center mb-8">
                   <f.icon size={32} className="text-teal-600" />
                 </div>
@@ -322,11 +322,11 @@ function LandingPage() {
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-20">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Architecture</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F] mb-6">Connects your entire stack.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F] mb-6">Connects your entire stack.</h2>
             <p className="text-[20px] text-gray-500 max-w-[600px] mx-auto font-medium">One central brain that ingests, processes, and analyzes data from all your cloud-native tools.</p>
           </div>
 
-          <div className="relative w-full max-w-[900px] mx-auto aspect-[2/1] flex items-center justify-center">
+          <div className="relative w-full max-w-[900px] mx-auto aspect-square md:aspect-[2/1] flex items-center justify-center">
             {/* Connecting Lines (SVG) */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 500">
               <defs>
@@ -406,7 +406,7 @@ function LandingPage() {
       <section className="relative py-24 bg-white overflow-hidden border-t border-black/5">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F] mb-6">See the whole picture.</h2>
+            <h2 className="text-[32px] sm:text-[40px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F] mb-6">See the whole picture.</h2>
             <p className="text-[20px] text-gray-500 max-w-[600px] mx-auto font-medium">One unified dashboard for all your infrastructure metrics, logs, and traces.</p>
           </div>
           
@@ -423,7 +423,7 @@ function LandingPage() {
             </div>
             
             {/* Dashboard Content */}
-            <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {/* Sidebar / Metrics */}
               <div className="space-y-6">
                 <div className="p-6 rounded-2xl bg-white border border-black/5 shadow-sm">
@@ -450,7 +450,7 @@ function LandingPage() {
               </div>
               
               {/* Main Chart Area */}
-              <div className="md:col-span-2 p-6 rounded-2xl bg-white border border-black/5 shadow-sm flex flex-col">
+              <div className="sm:col-span-2 p-6 rounded-2xl bg-white border border-black/5 shadow-sm flex flex-col">
                 <div className="flex justify-between items-center mb-6">
                   <p className="text-[15px] font-bold text-[#1D1D1F]">Request Latency (ms)</p>
                   <div className="flex gap-2">
@@ -569,7 +569,7 @@ function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-24">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Industries</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Built for every industry.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Built for every industry.</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
@@ -673,7 +673,7 @@ function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-24">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Integrations</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Plays well with your stack.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Plays well with your stack.</h2>
           </div>
           <div className="relative w-full max-w-[700px] mx-auto aspect-square mt-10">
             <div className="absolute inset-0 rounded-full border border-black/5 bg-[#FBFBFD]/50" />
@@ -747,7 +747,7 @@ function LandingPage() {
         <div className="max-w-[1000px] mx-auto px-6">
           <div className="text-center mb-20">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Loved by engineers</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Don't take our word.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Don't take our word.</h2>
           </div>
           <div className="relative h-[300px] flex items-center justify-center">
             <AnimatePresence mode="wait">
@@ -779,7 +779,7 @@ function LandingPage() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="text-center mb-20">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Pricing</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Simple, transparent pricing.</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Simple, transparent pricing.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -792,7 +792,7 @@ function LandingPage() {
                 <h3 className="text-[26px] font-bold mb-2">{plan.name}</h3>
                 <p className={`text-[16px] font-medium mb-8 ${plan.highlight ? 'text-white/60' : 'text-gray-500'}`}>{plan.desc}</p>
                 <div className="flex items-baseline gap-1 mb-10">
-                  <span className="text-[56px] font-black tracking-tighter">{plan.price}</span>
+                  <span className="text-[42px] sm:text-[56px] font-black tracking-tighter">{plan.price}</span>
                   <span className={`text-[18px] font-medium ${plan.highlight ? 'text-white/60' : 'text-gray-500'}`}>{plan.period}</span>
                 </div>
                 <ul className="space-y-5 mb-12">
@@ -850,7 +850,7 @@ function LandingPage() {
         <div className="max-w-[850px] mx-auto px-6">
           <div className="text-center mb-20">
             <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">FAQ</p>
-            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Questions?</h2>
+            <h2 className="text-[36px] sm:text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Questions?</h2>
           </div>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
@@ -883,7 +883,7 @@ function LandingPage() {
             <motion.span animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }} transition={{ duration: 8, repeat: Infinity }} className="inline-block bg-gradient-to-r from-teal-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent bg-[length:200%_100%] mt-2 drop-shadow-[0_0_30px_rgba(45,212,191,0.5)]">scale up?</motion.span>
           </h2>
           <p className="mt-10 text-[22px] font-medium text-white/60 max-w-[500px] mx-auto">Join 500+ engineering teams already shipping faster with AIOps.</p>
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
             <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group relative inline-flex items-center gap-3 rounded-full bg-white text-[#1D1D1F] px-10 py-5 text-[18px] font-bold overflow-hidden transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(255,255,255,0.2)]">
               Back on Top <ArrowUp size={22} className="relative transition-transform group-hover:-translate-y-1" strokeWidth={2.5} />
             </button>
