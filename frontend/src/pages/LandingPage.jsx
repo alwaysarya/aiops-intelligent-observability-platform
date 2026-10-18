@@ -52,7 +52,7 @@ function LiveTerminal() {
         <Terminal size={16} className="text-white/40 ml-3" />
         <span className="text-[12px] font-mono text-white/40">aiops-terminal — kafka-consumer</span>
       </div>
-      <div className="p-8 font-mono text-[14px] leading-relaxed h-[320px] overflow-hidden relative">
+      <div className="p-4 sm:p-8 font-mono text-[12px] sm:text-[14px] leading-relaxed h-[250px] sm:h-[320px] overflow-hidden relative">
         {terminalLines.slice(0, visible).map((line, i) => (
           <motion.p key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className={line.c}>
             <span className="opacity-70">{line.t}</span> {line.m}
@@ -95,7 +95,7 @@ function LandingPage() {
   ]
 
   return (
-    <div className="w-full bg-[#FBFBFD] min-h-screen overflow-x-hidden text-[#1D1D1F] overflow-hidden font-sans selection:bg-teal-200 selection:text-teal-900">
+    <div className="w-full bg-[#FBFBFD] min-h-screen overflow-x-hidden text-[#1D1D1F] overflow-x-hidden font-sans selection:bg-teal-200 selection:text-teal-900">
       
       <motion.div 
         className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-400 via-emerald-500 to-teal-400 z-[100] origin-left"
@@ -181,7 +181,7 @@ function LandingPage() {
               </div>
 
               {/* Right Column: Big Chart */}
-              <div className="md:col-span-3 p-6 rounded-2xl bg-white border border-black/5 shadow-sm flex flex-col">
+              <div className="md:col-span-3 p-4 sm:p-6 rounded-2xl bg-white border border-black/5 shadow-sm flex flex-col">
                 <div className="flex justify-between items-center mb-6">
                   <div>
                     <p className="text-[15px] font-bold text-[#1D1D1F]">Global Traffic</p>
@@ -193,7 +193,7 @@ function LandingPage() {
                     <button className="px-3 py-1 bg-gray-100 text-[11px] font-bold text-gray-600 rounded-md">7D</button>
                   </div>
                 </div>
-                <div className="flex-grow relative h-[220px] w-full">
+                <div className="flex-grow relative h-[150px] sm:h-[220px] w-full">
                   {/* SVG Chart Area */}
                   <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
                     <defs>
@@ -255,7 +255,7 @@ function LandingPage() {
               { step: '03', title: 'Alert', desc: 'Smart routing to Slack/PagerDuty.', icon: Activity },
               { step: '04', title: 'Remediate', desc: 'K8s auto-heals without human touch.', icon: Zap },
             ].map((item, i) => (
-              <motion.div key={item.step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -8 }} className="relative flex flex-col justify-between h-[240px] p-8 rounded-3xl bg-[#FBFBFD] border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all">
+              <motion.div key={item.step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} whileHover={{ y: -8 }} className="relative flex flex-col justify-between min-h-[240px] p-6 sm:p-8 h-auto rounded-3xl bg-[#FBFBFD] border border-black/5 shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all">
                 <div className="text-[84px] font-black text-gray-400/80 absolute top-4 right-6 leading-none select-none">{item.step}</div>
                 <div className="w-14 h-14 rounded-2xl shrink-0 relative z-10 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100 flex items-center justify-center mb-6 shadow-sm shrink-0">
                   <item.icon size={28} className="text-teal-600" />
@@ -348,7 +348,7 @@ function LandingPage() {
             </svg>
 
             {/* Left Source Nodes */}
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="absolute left-[5%] top-[15%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5">
+            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="absolute left-[2%] sm:left-[5%] top-[15%] scale-75 sm:scale-100 origin-left flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5">
               <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center"><Database size={20} className="text-teal-600"/></div>
               <span className="font-bold text-[#1D1D1F]">Kafka</span>
             </motion.div>
@@ -362,7 +362,7 @@ function LandingPage() {
             </motion.div>
 
             {/* Right Destination Nodes */}
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="absolute right-[5%] top-[15%] flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5 flex-row-reverse">
+            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="absolute right-[2%] sm:right-[5%] top-[15%] scale-75 sm:scale-100 origin-right flex items-center gap-4 bg-white p-4 rounded-2xl shadow-lg border border-black/5 flex-row-reverse">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center"><BarChart3 size={20} className="text-indigo-600"/></div>
               <span className="font-bold text-[#1D1D1F]">Grafana</span>
             </motion.div>
@@ -487,7 +487,7 @@ function LandingPage() {
       {/* PREMIUM LOGS / INCIDENTS MOCKUP */}
       <section className="relative py-32 bg-[#1D1D1F] overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center gap-16">
+          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
             <div className="flex-1">
               <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-400 mb-5">Centralized Logs</p>
               <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-white mb-6 leading-tight">Every error. <br/>One place.</h2>
@@ -544,7 +544,7 @@ function LandingPage() {
           <div className="text-center mb-12">
             <h2 className="text-[36px] font-bold text-[#1D1D1F]">Global Observability.</h2>
           </div>
-          <div className="relative h-[300px] w-full rounded-3xl bg-[#FBFBFD] border border-black/5 overflow-hidden flex items-center justify-center">
+          <div className="relative min-h-[200px] sm:h-[300px] w-full rounded-3xl bg-[#FBFBFD] border border-black/5 overflow-hidden flex items-center justify-center">
             <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '40px 40px' }} />
             {/* Fake Map Dots */}
             <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-teal-500 rounded-full animate-ping" />
@@ -619,7 +619,7 @@ function LandingPage() {
         <div className="max-w-[1100px] mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative rounded-[48px] bg-white border border-black/5 p-10 md:p-20 overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.1)]">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-50 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 opacity-60" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-16">
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-100/50 text-teal-800 text-[12px] font-bold uppercase tracking-wider mb-8 border border-teal-200/50">
                   <Sparkles size={14} /> AI Insights
@@ -631,7 +631,7 @@ function LandingPage() {
                   <div className="flex items-center gap-4 text-[17px] font-semibold text-gray-700 bg-[#FBFBFD] p-4 rounded-2xl border border-black/5 shadow-sm"><CheckCircle2 size={22} className="text-emerald-500 shrink-0" /> Auto-scaled pod from 3 to 5</div>
                 </div>
               </div>
-              <div className="w-full md:w-80 p-10 rounded-[40px] bg-[#1D1D1F] border border-white/10 shadow-2xl text-white">
+              <div className="w-full md:w-80 p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] bg-[#1D1D1F] border border-white/10 shadow-2xl text-white">
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-[14px] font-bold text-white/60">Anomaly Score</span>
                   <span className="text-[12px] bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full font-bold">Critical</span>
@@ -719,13 +719,13 @@ function LandingPage() {
             <div className="p-8 space-y-6">
               {/* User Message */}
               <div className="flex justify-end">
-                <div className="bg-[#1D1D1F] text-white p-4 rounded-2xl rounded-tr-sm max-w-[80%]">
+                <div className="bg-[#1D1D1F] text-white p-4 rounded-2xl rounded-tr-sm max-w-[90%] sm:max-w-[80%]">
                   <p className="text-[15px]">Why is the payment-service latency so high right now?</p>
                 </div>
               </div>
               {/* AI Response */}
               <div className="flex justify-start">
-                <div className="bg-gray-50 border border-black/5 p-5 rounded-2xl rounded-tl-sm max-w-[85%]">
+                <div className="bg-gray-50 border border-black/5 p-5 rounded-2xl rounded-tl-sm max-w-[95%] sm:max-w-[85%]">
                   <p className="text-[15px] text-gray-700 font-medium mb-4">I found the root cause. The latency is caused by a slow database query in the <code className="bg-red-50 text-red-600 px-1 py-0.5 rounded text-sm font-mono">orders</code> table.</p>
                   <div className="bg-white border border-black/5 rounded-xl p-3 shadow-sm mb-4">
                     <p className="text-[13px] font-mono text-gray-600">SELECT * FROM orders WHERE status = 'pending' <span className="text-red-500">-- Missing Index</span></p>
@@ -787,7 +787,7 @@ function LandingPage() {
               { name: 'Pro', price: '$49', period: '/mo', desc: 'For growing teams', features: ['10M logs/day', 'Unlimited members', '90-day retention', 'Priority support', 'AI anomaly detection'], highlight: true },
               { name: 'Enterprise', price: 'Custom', period: '', desc: 'For scale', features: ['Unlimited logs', 'SSO & SAML', 'Air-gapped deploy', 'Dedicated CSM', 'Custom SLAs'], highlight: false },
             ].map((plan) => (
-              <motion.div key={plan.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`relative p-10 rounded-[40px] border ${plan.highlight ? 'bg-[#1D1D1F] border-[#1D1D1F] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] scale-105 z-10 text-white' : 'bg-[#FBFBFD] border-black/5 text-[#1D1D1F]'}`}>
+              <motion.div key={plan.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`relative p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border ${plan.highlight ? 'bg-[#1D1D1F] border-[#1D1D1F] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] md:scale-105 z-10 text-white' : 'bg-[#FBFBFD] border-black/5 text-[#1D1D1F]'}`}>
                 {plan.highlight && <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full bg-gradient-to-r from-teal-400 to-emerald-500 text-[12px] font-black text-white uppercase tracking-wider shadow-lg">Most Popular</div>}
                 <h3 className="text-[26px] font-bold mb-2">{plan.name}</h3>
                 <p className={`text-[16px] font-medium mb-8 ${plan.highlight ? 'text-white/60' : 'text-gray-500'}`}>{plan.desc}</p>
