@@ -1,6 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { authService } from './services/auth'
+import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
@@ -10,7 +8,6 @@ import Alerts from './pages/Alerts'
 import RootCause from './pages/RootCause'
 import ServiceMapPage from './pages/ServiceMapPage'
 import Settings from './pages/Settings'
-import LoginPage from './pages/LoginPage'
 import NotFound from './pages/NotFound'
 import DatasetsPage from './pages/DatasetsPage'
 import ModelsPage from './pages/ModelsPage'
@@ -21,24 +18,13 @@ import IncidentDetail from './pages/IncidentDetail'
 import TracesPage from './pages/TracesPage'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated())
-
-  useEffect(() => {
-    const handleLogin = () => setIsAuthenticated(true)
-    window.addEventListener('login-success', handleLogin)
-    return () => window.removeEventListener('login-success', handleLogin)
-  }, [])
-
   return (
     <Routes>
-      {/* Public Landing Page */}
+      {/* 1. Landing Page (Default) */}
       <Route path="/" element={<LandingPage />} />
       
-      {/* Login */}
-      <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" />} />
-      
-      {/* Protected App Routes */}
-      <Route path="/dashboard" element={isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
+      {/* 2. Dashboard & App Routes (No Login Required) */}
+      <Route path="/dashboard" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="logs" element={<Logs />} />

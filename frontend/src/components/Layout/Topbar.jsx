@@ -7,31 +7,31 @@ import UserMenu from './UserMenu'
 import NotificationPanel from './NotificationPanel'
 
 const navItems = [
-  { label: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { label: 'Analytics', path: '/analytics', icon: BarChart3 },
-  { label: 'Logs', path: '/logs', icon: FileText },
-  { label: 'Alerts', path: '/alerts', icon: Bell },
+  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
+  { label: 'Logs', path: '/dashboard/logs', icon: FileText },
+  { label: 'Alerts', path: '/dashboard/alerts', icon: Bell },
   { 
     label: 'Platform', 
     icon: Brain,
     dropdown: [
-      { label: 'Datasets', path: '/datasets', icon: Database, desc: 'Data catalog & integrity' },
-      { label: 'Models', path: '/models', icon: Box, desc: 'AI model registry' },
-      { label: 'Reports', path: '/reports', icon: FileCheck, desc: 'Audit & compliance' },
-      { label: 'Root Cause', path: '/root-cause', icon: GitBranch, desc: 'AI issue detection' },
-      { label: 'Service Map', path: '/service-map', icon: Network, desc: 'Dependency topology' },
+      { label: 'Datasets', path: '/dashboard/datasets', icon: Database, desc: 'Data catalog & integrity' },
+      { label: 'Models', path: '/dashboard/models', icon: Box, desc: 'AI model registry' },
+      { label: 'Reports', path: '/dashboard/reports', icon: FileCheck, desc: 'Audit & compliance' },
+      { label: 'Root Cause', path: '/dashboard/root-cause', icon: GitBranch, desc: 'AI issue detection' },
+      { label: 'Service Map', path: '/dashboard/service-map', icon: Network, desc: 'Dependency topology' },
     ]
   },
   {
     label: 'Ops',
     icon: Server,
     dropdown: [
-      { label: 'Kubernetes', path: '/kubernetes', icon: Server, desc: 'Cluster health & pods' },
-      { label: 'Incidents', path: '/incidents', icon: AlertOctagon, desc: 'Active incident tracker' },
-      { label: 'Distributed Traces', path: '/traces', icon: Activity, desc: 'Request waterfall' },
+      { label: 'Kubernetes', path: '/dashboard/kubernetes', icon: Server, desc: 'Cluster health & pods' },
+      { label: 'Incidents', path: '/dashboard/incidents', icon: AlertOctagon, desc: 'Active incident tracker' },
+      { label: 'Distributed Traces', path: '/dashboard/traces', icon: Activity, desc: 'Request waterfall' },
     ]
   },
-  { label: 'Settings', path: '/settings', icon: Settings },
+  { label: 'Settings', path: '/dashboard/settings', icon: Settings },
 ]
 
 function Topbar() {
@@ -69,7 +69,7 @@ function Topbar() {
     <header className="sticky top-0 z-40 w-full border-b border-black/[0.06] bg-white/90 dark:bg-gray-900/90 dark:border-gray-800 backdrop-blur-xl shadow-sm">
       <div className="mx-auto flex h-[64px] max-w-[1400px] items-center justify-between px-6">
         
-        <NavLink to="/" className="flex shrink-0 items-center gap-2.5 group">
+        <NavLink to="/dashboard" className="flex shrink-0 items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-lg bg-apple-blue flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
             <Shield size={16} className="text-white" strokeWidth={2.5} />
           </div>

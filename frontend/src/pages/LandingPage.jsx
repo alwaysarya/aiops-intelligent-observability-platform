@@ -111,28 +111,80 @@ function LandingPage() {
           <motion.div animate={{ scale: [1, 1.3, 1], x: [0, -50, 0], opacity: [0.2, 0.3, 0.2] }} transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 2 }} className="absolute bottom-0 right-1/4 w-[800px] h-[800px] rounded-full blur-[120px]" style={{ background: 'radial-gradient(circle, #a78bfa, transparent 60%)' }} />
         </div>
 
-        <motion.div style={{ y, opacity }} className="relative mx-auto max-w-[1200px] px-6">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} className="text-center">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-black/5 bg-white/80 backdrop-blur-xl mb-10 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
-              <motion.span className="w-2 h-2 rounded-full bg-emerald-500" animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} style={{ boxShadow: '0 0 10px #10b981' }} />
-              <span className="text-black/70 text-[12px] font-bold tracking-[0.16em] uppercase">AI-Powered Observability v2.0</span>
+        <motion.div style={{ y, opacity }} className="relative mx-auto max-w-[1300px] px-6">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-8 pt-20 pb-10">
+            
+            {/* Left Side: Text */}
+            <div className="flex-1 text-center lg:text-left z-10">
+              <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-black/5 bg-white/60 backdrop-blur-xl mb-8 shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+                  <span className="text-black/70 text-[11px] font-bold tracking-[0.16em] uppercase">AI-Powered Observability v2.0</span>
+                </div>
+                
+                <h1 className="text-[56px] sm:text-[72px] md:text-[86px] font-extrabold leading-[1.05] tracking-[-0.04em] text-[#1D1D1F]">
+                  Intelligence<br />
+                  <span className="bg-gradient-to-r from-teal-500 to-emerald-400 bg-clip-text text-transparent">at scale.</span>
+                </h1>
+                
+                <p className="mt-8 max-w-[500px] mx-auto lg:mx-0 text-[18px] sm:text-[20px] leading-[1.6] text-gray-500 font-medium">
+                  Real-time observability with AI-powered anomaly detection, intelligent root cause analysis, and automated alerting for cloud-native applications.
+                </p>
+                
+                <div className="mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                  <button onClick={() => navigate('/dashboard')} className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#1D1D1F] px-8 py-4 text-[16px] font-semibold text-white transition-all hover:scale-[1.02] shadow-xl w-full sm:w-auto">
+                    Enter AIOps World <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                  </button>
+                  <a href="#features" className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-200 bg-white px-8 py-4 text-[16px] font-semibold text-[#1D1D1F] transition-all hover:bg-gray-50 shadow-sm w-full sm:w-auto">
+                    <Play size={16} fill="currentColor" /> Explore Capabilities
+                  </a>
+                </div>
+              </motion.div>
             </div>
-            <h1 className="max-w-[1100px] mx-auto text-[72px] md:text-[110px] font-bold leading-[0.95] tracking-[-0.04em] text-[#1D1D1F]">
-              Intelligence<br />
-              <motion.span animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }} transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }} className="inline-block bg-gradient-to-r from-teal-400 via-emerald-500 to-teal-500 bg-clip-text text-transparent bg-[length:200%_100%] mt-2 drop-shadow-[0_0_20px_rgba(45,212,191,0.3)]">at scale.</motion.span>
-            </h1>
-            <p className="mt-10 max-w-[640px] mx-auto text-[22px] leading-[1.5] tracking-[-0.015em] text-gray-500 font-medium">
-              Real-time observability with AI-powered anomaly detection, intelligent root cause analysis, and automated alerting for cloud-native applications.
-            </p>
-            <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-              <button onClick={() => navigate('/login')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-8 py-4 text-[15px] sm:text-[17px] w-full sm:w-auto font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
-                Enter AIOps World <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
-              </button>
-              <a href="#features" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 backdrop-blur-md px-8 py-4 text-[15px] sm:text-[17px] w-full sm:w-auto font-semibold tracking-[-0.01em] text-[#1D1D1F] shadow-sm transition-all hover:bg-white hover:shadow-md">
-                <Play size={18} fill="currentColor" /> Explore Capabilities
-              </a>
+
+            {/* Right Side: Premium 3D Abstract Visual */}
+            <div className="flex-1 relative w-full max-w-[500px] lg:max-w-none h-[450px] sm:h-[550px] perspective-[1000px]">
+              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, delay: 0.2, ease: 'easeOut' }} className="relative w-full h-full flex items-center justify-center transform-style-3d">
+                
+                {/* Glowing Background Orbs */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-teal-400/30 blur-[90px] rounded-full animate-pulse" />
+                <div className="absolute top-1/3 right-1/4 w-[250px] h-[250px] bg-emerald-400/20 blur-[70px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+
+                {/* Floating Glass Sphere Container */}
+                <motion.div animate={{ y: [-10, 10, -10] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} className="relative w-[320px] h-[320px] rounded-full bg-white/30 backdrop-blur-2xl border border-white/60 shadow-[0_30px_80px_rgba(20,184,166,0.3)] flex items-center justify-center">
+                  
+                  {/* Inner Ring */}
+                  <div className="absolute inset-8 rounded-full border border-teal-500/20" />
+                  <div className="absolute inset-16 rounded-full border border-emerald-500/20" />
+                  
+                  {/* Center Metric */}
+                  <div className="text-center z-10">
+                    <p className="text-[12px] font-bold text-teal-600 tracking-widest uppercase mb-1">Efficiency</p>
+                    <p className="text-[64px] font-black text-[#1D1D1F] leading-none">99.9<span className="text-[24px] text-gray-400">%</span></p>
+                  </div>
+                </motion.div>
+
+                {/* Floating UI Cards (Asymmetrical) */}
+                <motion.div animate={{ y: [10, -15, 10] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }} className="absolute top-10 right-0 bg-white/80 backdrop-blur-xl border border-white p-4 rounded-2xl shadow-xl flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center"><Activity size={16} className="text-teal-600"/></div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase">Latency</p>
+                    <p className="text-[14px] font-bold text-[#1D1D1F]">12ms</p>
+                  </div>
+                </motion.div>
+
+                <motion.div animate={{ y: [-10, 15, -10] }} transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }} className="absolute bottom-12 left-0 bg-white/80 backdrop-blur-xl border border-white p-4 rounded-2xl shadow-xl flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><Server size={16} className="text-indigo-600"/></div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase">Nodes</p>
+                    <p className="text-[14px] font-bold text-[#1D1D1F]">24 Active</p>
+                  </div>
+                </motion.div>
+
+              </motion.div>
             </div>
-          </motion.div>
+
+          </div>
         </motion.div>
       </section>
 
@@ -802,7 +854,7 @@ function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => navigate('/login')} className={`w-full py-4 rounded-2xl text-[16px] font-bold transition-all ${plan.highlight ? 'bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-xl' : 'bg-[#1D1D1F] text-white hover:bg-black shadow-lg'}`}>
+                <button onClick={() => navigate('/dashboard')} className={`w-full py-4 rounded-2xl text-[16px] font-bold transition-all ${plan.highlight ? 'bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-xl' : 'bg-[#1D1D1F] text-white hover:bg-black shadow-lg'}`}>
                   Get Started
                 </button>
               </motion.div>
