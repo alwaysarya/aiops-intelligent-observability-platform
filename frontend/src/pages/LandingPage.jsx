@@ -136,6 +136,92 @@ function LandingPage() {
         </motion.div>
       </section>
 
+
+      {/* PREMIUM COMMAND CENTER MOCKUP (Hero ke theek niche) */}
+      <section className="relative py-20 bg-[#FBFBFD] overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative rounded-[32px] bg-white/60 backdrop-blur-2xl border border-white shadow-[0_40px_100px_-20px_rgba(0,0,0,0.1)] overflow-hidden p-6 md:p-8">
+            
+            {/* Window Header */}
+            <div className="flex justify-between items-center mb-8 pb-6 border-b border-black/5">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-red-400" />
+                <div className="w-3 h-3 rounded-full bg-amber-400" />
+                <div className="w-3 h-3 rounded-full bg-green-400" />
+                <div className="ml-4 px-3 py-1 bg-gray-100 rounded-lg text-[12px] font-mono text-gray-500 hidden md:block">aiops-cluster-main</div>
+              </div>
+              <div className="flex items-center gap-2 text-[12px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> All Systems Operational
+              </div>
+            </div>
+
+            {/* Main Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              
+              {/* Left Column: Stats & Nodes */}
+              <div className="md:col-span-1 space-y-4">
+                <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-sm">
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Active Nodes</p>
+                  <div className="text-[28px] font-black text-[#1D1D1F]">24<span className="text-[14px] text-gray-400 font-medium">/24</span></div>
+                </div>
+                <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-sm">
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">CPU Usage</p>
+                  <div className="text-[28px] font-black text-teal-600">34%</div>
+                  <div className="h-1.5 w-full bg-gray-100 rounded-full mt-2 overflow-hidden">
+                    <div className="h-full bg-teal-500 w-[34%] rounded-full" />
+                  </div>
+                </div>
+                <div className="p-5 rounded-2xl bg-white border border-black/5 shadow-sm">
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Memory</p>
+                  <div className="text-[28px] font-black text-indigo-600">12GB</div>
+                  <div className="h-1.5 w-full bg-gray-100 rounded-full mt-2 overflow-hidden">
+                    <div className="h-full bg-indigo-500 w-[55%] rounded-full" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Big Chart */}
+              <div className="md:col-span-3 p-6 rounded-2xl bg-white border border-black/5 shadow-sm flex flex-col">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <p className="text-[15px] font-bold text-[#1D1D1F]">Global Traffic</p>
+                    <p className="text-[12px] text-gray-400">Requests per second across all regions</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1 bg-gray-100 text-[11px] font-bold text-gray-600 rounded-md">1H</button>
+                    <button className="px-3 py-1 bg-[#1D1D1F] text-[11px] font-bold text-white rounded-md">24H</button>
+                    <button className="px-3 py-1 bg-gray-100 text-[11px] font-bold text-gray-600 rounded-md">7D</button>
+                  </div>
+                </div>
+                <div className="flex-grow relative h-[220px] w-full">
+                  {/* SVG Chart Area */}
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
+                    <defs>
+                      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="#14b8a6" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    {/* Main Area */}
+                    <path d="M0,70 Q10,60 20,65 T40,30 T60,40 T80,15 T100,25 L100,100 L0,100 Z" fill="url(#areaGrad)" />
+                    <path d="M0,70 Q10,60 20,65 T40,30 T60,40 T80,15 T100,25" fill="none" stroke="#14b8a6" strokeWidth="2.5" strokeLinecap="round" />
+                    {/* Secondary Line */}
+                    <path d="M0,85 Q10,80 20,85 T40,60 T60,70 T80,50 T100,55" fill="none" stroke="#6366f1" strokeWidth="2" strokeDasharray="4 4" strokeLinecap="round" />
+                  </svg>
+                  {/* Grid Lines */}
+                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+                    <div className="border-t border-black w-full"></div>
+                    <div className="border-t border-black w-full"></div>
+                    <div className="border-t border-black w-full"></div>
+                    <div className="border-t border-black w-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* MARQUEE */}
       <section className="relative py-16 border-y border-black/5 bg-white/50 backdrop-blur-md overflow-hidden">
         <p className="text-center text-[12px] font-bold tracking-[0.2em] uppercase text-gray-500 mb-10">Trusted by engineering teams at</p>
@@ -180,6 +266,23 @@ function LandingPage() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* DEPLOYMENT PIPELINE VISUAL */}
+      <section className="relative py-20 bg-white">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="flex items-center justify-between p-6 rounded-3xl bg-[#FBFBFD] border border-black/5 shadow-sm overflow-hidden relative">
+             <div className="absolute top-0 left-0 h-1 bg-gradient-to-r from-teal-400 to-emerald-500 w-full" />
+             <div className="flex flex-col items-center gap-2 z-10 bg-white p-3 rounded-xl border border-black/5 shadow-sm"><Code2 size={20} className="text-[#1D1D1F]"/><span className="text-[11px] font-bold">GitHub</span></div>
+             <div className="flex-grow h-px bg-gray-200 relative"><div className="absolute top-1/2 left-0 w-full h-px bg-teal-400 animate-[pulse_2s_ease-in-out_infinite]" /></div>
+             <div className="flex flex-col items-center gap-2 z-10 bg-white p-3 rounded-xl border border-black/5 shadow-sm"><Server size={20} className="text-[#1D1D1F]"/><span className="text-[11px] font-bold">Build</span></div>
+             <div className="flex-grow h-px bg-gray-200" />
+             <div className="flex flex-col items-center gap-2 z-10 bg-white p-3 rounded-xl border border-black/5 shadow-sm"><ShieldCheck size={20} className="text-[#1D1D1F]"/><span className="text-[11px] font-bold">Test</span></div>
+             <div className="flex-grow h-px bg-gray-200" />
+             <div className="flex flex-col items-center gap-2 z-10 bg-[#1D1D1F] p-3 rounded-xl shadow-lg"><Cloud size={20} className="text-teal-400"/><span className="text-[11px] font-bold text-white">Deploy</span></div>
           </div>
         </div>
       </section>
@@ -380,6 +483,87 @@ function LandingPage() {
         </div>
       </section>
 
+
+      {/* PREMIUM LOGS / INCIDENTS MOCKUP */}
+      <section className="relative py-32 bg-[#1D1D1F] overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="flex-1">
+              <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-400 mb-5">Centralized Logs</p>
+              <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-white mb-6 leading-tight">Every error. <br/>One place.</h2>
+              <p className="text-[20px] text-white/50 font-medium mb-8">Search through millions of logs in milliseconds. AI automatically groups related errors and pinpoints the exact stack trace.</p>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Full-text search</div>
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Trace correlation</div>
+              </div>
+            </div>
+            <div className="flex-1 w-full relative">
+              <div className="absolute -inset-4 bg-teal-500/20 rounded-[40px] blur-2xl" />
+              <div className="relative rounded-3xl bg-[#0A0A0F] border border-white/10 shadow-2xl overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-[12px] font-mono text-white/40">production-logs</span>
+                </div>
+                <div className="p-6 font-mono text-[12px] leading-relaxed text-white/80">
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    <span className="text-red-400 font-bold shrink-0">ERROR</span>
+                    <div>
+                      <p className="text-white font-semibold">Database connection timeout</p>
+                      <p className="text-white/40 mt-1">at pool.connect (db.js:42:15)</p>
+                    </div>
+                  </div>
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                    <span className="text-amber-400 font-bold shrink-0">WARN</span>
+                    <div>
+                      <p className="text-white font-semibold">High memory usage detected</p>
+                      <p className="text-white/40 mt-1">Pod auth-service-5f8d9 (85%)</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+                    <span className="text-teal-400 font-bold shrink-0">INFO</span>
+                    <div>
+                      <p className="text-white font-semibold">Request completed successfully</p>
+                      <p className="text-white/40 mt-1">GET /api/v1/users (200 OK)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* GLOBAL NETWORK MAP */}
+      <section className="relative py-24 bg-white border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-[36px] font-bold text-[#1D1D1F]">Global Observability.</h2>
+          </div>
+          <div className="relative h-[300px] w-full rounded-3xl bg-[#FBFBFD] border border-black/5 overflow-hidden flex items-center justify-center">
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+            {/* Fake Map Dots */}
+            <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-teal-500 rounded-full animate-ping" />
+            <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-teal-500 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.8)]" />
+            <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-teal-500 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.8)]" />
+            <div className="absolute top-2/3 right-1/4 w-3 h-3 bg-teal-500 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.8)]" />
+            {/* Connecting Lines (Fake) */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" opacity="0.3">
+              <path d="M 330 75 Q 500 150 500 150" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="5 5" />
+              <path d="M 500 150 Q 750 198 750 198" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="5 5" />
+            </svg>
+            <div className="relative z-10 text-center">
+              <p className="text-[60px] font-black text-[#1D1D1F]">50+</p>
+              <p className="text-[14px] font-bold text-gray-500 uppercase tracking-widest">Global Regions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* USE CASES */}
       <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5">
         <div className="max-w-[1400px] mx-auto px-6">
@@ -462,6 +646,28 @@ function LandingPage() {
         </div>
       </section>
 
+
+      {/* LIVE CODE EDITOR MOCKUP */}
+      <section className="relative py-24 bg-[#FBFBFD] border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="rounded-3xl bg-[#0A0A0F] border border-white/10 shadow-2xl overflow-hidden">
+            <div className="flex items-center px-6 py-3 border-b border-white/10 bg-white/5">
+              <span className="text-[12px] font-mono text-teal-400">aiops.config.js</span>
+            </div>
+            <div className="p-6 font-mono text-[13px] leading-relaxed">
+              <p className="text-white/40">// Initialize AIOps SDK</p>
+              <p className="text-blue-400">import <span className="text-white">{ "{ AIOps }" }</span> from <span className="text-teal-300">'@aiops/sdk'</span>;</p>
+              <br/>
+              <p className="text-blue-400">const <span className="text-white">observability</span> = <span className="text-blue-400">new</span> <span className="text-yellow-300">{ "AIOps" }</span>({'{'}</p>
+              <p className="pl-4 text-white">apiKey: <span className="text-teal-300">'ai_ops_prod_xxx'</span>,</p>
+              <p className="pl-4 text-white">environment: <span className="text-teal-300">'production'</span>,</p>
+              <p className="pl-4 text-white">autoRemediate: <span className="text-orange-400">true</span></p>
+              <p className="text-white">{'}'});</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* INTEGRATIONS */}
       <section className="relative py-32 bg-white border-t border-black/5 overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6">
@@ -493,6 +699,46 @@ function LandingPage() {
               )
             })}
           </div>
+        </div>
+      </section>
+
+
+      {/* PREMIUM AI CHAT MOCKUP */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Meet Copilot</p>
+            <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Ask your infrastructure.</h2>
+          </div>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-[800px] mx-auto bg-white rounded-[32px] border border-black/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
+            <div className="h-16 bg-gray-50 border-b border-black/5 flex items-center px-6 gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1D1D1F] flex items-center justify-center"><Sparkles size={16} className="text-teal-400" /></div>
+              <span className="font-bold text-[#1D1D1F]">AIOps Copilot</span>
+              <span className="text-[11px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-md font-bold ml-auto">Online</span>
+            </div>
+            <div className="p-8 space-y-6">
+              {/* User Message */}
+              <div className="flex justify-end">
+                <div className="bg-[#1D1D1F] text-white p-4 rounded-2xl rounded-tr-sm max-w-[80%]">
+                  <p className="text-[15px]">Why is the payment-service latency so high right now?</p>
+                </div>
+              </div>
+              {/* AI Response */}
+              <div className="flex justify-start">
+                <div className="bg-gray-50 border border-black/5 p-5 rounded-2xl rounded-tl-sm max-w-[85%]">
+                  <p className="text-[15px] text-gray-700 font-medium mb-4">I found the root cause. The latency is caused by a slow database query in the <code className="bg-red-50 text-red-600 px-1 py-0.5 rounded text-sm font-mono">orders</code> table.</p>
+                  <div className="bg-white border border-black/5 rounded-xl p-3 shadow-sm mb-4">
+                    <p className="text-[13px] font-mono text-gray-600">SELECT * FROM orders WHERE status = 'pending' <span className="text-red-500">-- Missing Index</span></p>
+                  </div>
+                  <p className="text-[15px] text-gray-700 font-medium">I recommend adding an index on <code className="bg-teal-50 text-teal-700 px-1 py-0.5 rounded text-sm font-mono">status</code>. This should reduce latency by 85%.</p>
+                  <div className="flex gap-2 mt-5">
+                    <button className="bg-[#1D1D1F] text-white text-[13px] font-bold px-4 py-2 rounded-lg">Apply Fix</button>
+                    <button className="bg-white border border-black/10 text-gray-700 text-[13px] font-bold px-4 py-2 rounded-lg">View Query Plan</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -560,6 +806,26 @@ function LandingPage() {
                   Get Started
                 </button>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* SECURITY GRID MOCKUP */}
+      <section className="relative py-24 bg-white border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { title: 'TLS 1.3 Encryption', icon: Lock },
+              { title: 'AES-256 at Rest', icon: Database },
+              { title: 'SSO / SAML', icon: ShieldCheck },
+              { title: 'Data Residency', icon: Globe },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center justify-center p-6 rounded-2xl bg-[#FBFBFD] border border-black/5 hover:bg-white hover:shadow-md transition-all">
+                <item.icon size={24} className="text-teal-600 mb-3" />
+                <span className="text-[14px] font-bold text-[#1D1D1F] text-center">{item.title}</span>
+              </div>
             ))}
           </div>
         </div>
