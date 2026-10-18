@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AlertOctagon, Clock, User, CheckCircle2, MessageSquare, Terminal, Shield, ArrowLeft, Send } from 'lucide-react'
+import { AlertOctagon, Clock, User, CheckCircle2, MessageSquare, Terminal, Shield, ArrowLeft, Send, Loader2 } from 'lucide-react'
 import { showToast } from '../components/Premium/Toast'
 
 function IncidentDetail() {
@@ -10,15 +10,15 @@ function IncidentDetail() {
   const [status, setStatus] = useState('Active')
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
+  const [actionLoading, setActionLoading] = useState(null)
 
-  // Dummy incident data based on ID
+  // Dummy Data for Real Look
   const incident = {
     id: id || 'INC-2026-084',
     title: 'Database Connection Timeout',
     service: 'user-service',
     severity: 'Critical',
     startedAt: '10:02:15 AM',
-    duration: '10 mins',
     assignee: 'Aryan T.',
     description: 'Primary database cluster is rejecting connections. Error rate at 45%.',
     timeline: [
@@ -41,9 +41,17 @@ function IncidentDetail() {
     showToast('Incident marked as resolved!', 'success')
   }
 
+  const executeAction = (actionName) => {
+    setActionLoading(actionName)
+    setTimeout(() => {
+      setActionLoading(null)
+      showToast(`${actionName} executed successfully!`, 'success')
+      setNotes([...notes, { text: `[Automated] ${actionName} executed`, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }])
+    }, 2000)
+  }
+
   return (
     <div className="w-full bg-white min-h-screen">
-      {/* Back Button & Header */}
       <div className="max-w-[1200px] mx-auto px-6 pt-10 pb-8">
         <button onClick={() => navigate('/incidents')} className="flex items-center gap-2 text-[13px] font-semibold text-text-tertiary hover:text-text-primary transition-colors mb-6">
           <ArrowLeft size={16} /> Back to Incidents
@@ -66,7 +74,6 @@ function IncidentDetail() {
 
       <section className="max-w-[1200px] mx-auto px-6 pb-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Left Column: Timeline */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-[28px] border border-black/[0.04] shadow-sm p-8">
             <h2 className="text-[20px] font-semibold text-text-primary mb-6 flex items-center gap-2"><Clock size={20} className="text-apple-blue" /> Incident Timeline</h2>
@@ -89,7 +96,6 @@ function IncidentDetail() {
             </div>
           </div>
 
-          {/* Add Note Form */}
           <div className="bg-white rounded-[24px] border border-black/[0.04] shadow-sm p-4">
             <form onSubmit={handleAddNote} className="flex gap-3">
               <input type="text" value={newNote} onChange={(e) => setNewNote(e.target.value)} placeholder="Add an investigation note..."
@@ -99,7 +105,6 @@ function IncidentDetail() {
           </div>
         </div>
 
-        {/* Right Column: Context & Actions */}
         <div className="space-y-6">
           <div className="bg-white rounded-[28px] border border-black/[0.04] shadow-sm p-6">
             <h3 className="text-[16px] font-semibold text-text-primary mb-4">Incident Details</h3>
@@ -126,13 +131,26 @@ function IncidentDetail() {
           <div className="bg-white rounded-[28px] border border-black/[0.04] shadow-sm p-6">
             <h3 className="text-[16px] font-semibold text-text-primary mb-4 flex items-center gap-2"><Terminal size={16} className="text-apple-purple"/> Automated Runbooks</h3>
             <div className="space-y-2">
-              <button onClick={() => showToast('Restarting pods in user-service...', 'warning')} className="w-full text-left px-4 py-3 rounded-xl border border-black/[0.04] bg-ink-grey hover:bg-white hover:shadow-sm transition-all flex items-center justify-between group">
-                <span className="text-[13px] font-semibold text-text-primary">Restart Pod</span>
-                <Shield size={14} className="text-text-tertiary group-hover:text-apple-purple" />
+              <button 
+                onClick={() => executeAction('Restart Pod')} 
+                disabled={actionLoading === 'Restart Pod'}
+                className="w-full text-left px-4 py-3 rounded-xl border border-black/[0.04] bg-ink-grey hover:bg-white hover:shadow-sm transition-all flex items-center justify-between group disabled:opacity-50"
+              >
+                <span className="text-[13px] font-semibold text-text-primary">
+                  {actionLoading === 'Restart Pod' ? 'Restarting...' : 'Restart Pod'}
+                </span>
+                {actionLoading === 'Restart Pod' ? <Loader2 size={14} className="animate-spin text-apple-purple" /> : <Shield size={14} className="text-text-tertiary group-hover:text-apple-purple" />}
               </button>
-              <button onClick={() => showToast('Rolling back deployment...', 'warning')} className="w-full text-left px-4 py-3 rounded-xl border border-black/[0.04] bg-ink-grey hover:bg-white hover:shadow-sm transition-all flex items-center justify-between group">
-                <span className="text-[13px] font-semibold text-text-primary">Rollback Deploy</span>
-                <Shield size={14} className="text-text-tertiary group-hover:text-apple-purple" />
+              
+              <button 
+                onClick={() => executeAction('Rollback Deploy')} 
+                disabled={actionLoading === 'Rollback Deploy'}
+                className="w-full text-left px-4 py-3 rounded-xl border border-black/[0.04] bg-ink-grey hover:bg-white hover:shadow-sm transition-all flex items-center justify-between group disabled:opacity-50"
+              >
+                <span className="text-[13px] font-semibold text-text-primary">
+                  {actionLoading === 'Rollback Deploy' ? 'Rolling back...' : 'Rollback Deploy'}
+                </span>
+                {actionLoading === 'Rollback Deploy' ? <Loader2 size={14} className="animate-spin text-apple-purple" /> : <Shield size={14} className="text-text-tertiary group-hover:text-apple-purple" />}
               </button>
             </div>
           </div>

@@ -7,11 +7,6 @@
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   html, body, #root { height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif; }
   body { @apply bg-ink-bg text-text-primary; }
-  
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 9999px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 }
 
 @layer components {
@@ -21,18 +16,30 @@
   .card-title { @apply text-[18px] md:text-[20px] font-semibold tracking-[-0.02em] text-text-primary; }
   .body-text { @apply text-[14px] md:text-[15px] tracking-[-0.01em] leading-[1.5] text-text-secondary; }
   .label-text { @apply text-[11px] font-bold tracking-[0.16em] uppercase text-text-tertiary; }
-  
-  /* Glass & Cards */
-  .glass-card { @apply relative rounded-2xl bg-white border border-black/[0.04]; box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
-  .glass-card-hover { @apply glass-card transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)]; }
-  
-  /* Buttons */
-  .btn-premium { @apply inline-flex items-center gap-2 rounded-full font-semibold tracking-[-0.01em] transition-all; }
-  .btn-primary { @apply btn-premium bg-apple-blue text-white px-7 py-3.5 text-[15px] hover:bg-apple-blueHover hover:scale-[1.03]; box-shadow: 0 12px 40px -8px rgba(0,113,227,0.4); }
-  .btn-secondary { @apply btn-premium border border-black/[0.08] bg-white px-7 py-3.5 text-[15px] text-text-primary hover:bg-ink-grey hover:shadow-md; }
-}
+  .micro-text { @apply text-[10px] font-bold tracking-[0.14em] uppercase text-text-tertiary; }
 
-@layer utilities {
-  .tabular-nums { font-variant-numeric: tabular-nums; }
-  .no-scrollbar::-webkit-scrollbar { display: none; }
+  /* Light Content Card (from Prompt D) */
+  .content-card {
+    @apply relative overflow-hidden rounded-[28px] bg-white border border-black/[0.04] transition-all;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  }
+  .content-card:hover {
+    @apply -translate-y-1.5;
+    box-shadow: 0 20px 60px -15px rgba(0,0,0,0.1);
+  }
+
+  /* Dark Spotlight Card (from Prompt E) */
+  .spotlight-card {
+    @apply relative rounded-[40px] overflow-hidden bg-[#0A0A0F];
+    box-shadow: 0 40px 120px -20px rgba(0,0,0,0.4);
+  }
+
+  /* Buttons (from Prompt F) */
+  .btn-primary-blue { 
+    @apply inline-flex items-center gap-2 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white px-7 py-3.5 text-[15px] font-semibold tracking-[-0.01em] transition-all hover:scale-[1.03]; 
+    box-shadow: 0 12px 40px -8px rgba(0,113,227,0.6); 
+  }
+  .btn-secondary-light { 
+    @apply inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white px-7 py-3.5 text-[15px] font-medium tracking-[-0.01em] text-[#1D1D1F] transition-all hover:bg-[#F5F5F7] hover:shadow-md; 
+  }
 }

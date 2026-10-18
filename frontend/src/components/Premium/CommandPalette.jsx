@@ -22,7 +22,6 @@ const pages = [
 const actions = [
   { icon: Activity, label: 'Check System Health', category: 'Actions', keywords: 'status health' },
   { icon: Zap, label: 'Trigger Test Alert', category: 'Actions', keywords: 'test alert send' },
-  { icon: Server, label: 'Restart All Services', category: 'Actions', keywords: 'restart reboot' },
 ]
 
 function CommandPalette() {
@@ -34,7 +33,6 @@ function CommandPalette() {
 
   const allItems = [...pages, ...actions]
   
-  // Smart filtering based on keywords
   const filteredItems = query === '' ? allItems : allItems.filter(item => {
     const searchStr = query.toLowerCase()
     return item.label.toLowerCase().includes(searchStr) || 
@@ -58,7 +56,6 @@ function CommandPalette() {
   const handleSelect = (item) => {
     if (item.path) navigate(item.path)
     else if (item.category === 'Actions') {
-      // Trigger a dummy action event
       window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `Executing: ${item.label}`, type: 'success' } }))
     }
     setIsOpen(false)

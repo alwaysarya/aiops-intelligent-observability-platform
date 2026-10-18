@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { authService } from './services/auth'
 import Layout from './components/Layout/Layout'
+import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
 import AnalyticsPage from './pages/AnalyticsPage'
 import Logs from './pages/Logs'
@@ -19,7 +21,7 @@ import IncidentDetail from './pages/IncidentDetail'
 import TracesPage from './pages/TracesPage'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('aiops_auth') === 'true')
+  const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated())
 
   useEffect(() => {
     const handleLogin = () => setIsAuthenticated(true)
@@ -29,8 +31,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/" element={isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
+      {/* Public Landing Page */}
+      <Route path="/" element={<LandingPage />} />
+      
+      {/* Login */}
+      <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" />} />
+      
+      {/* Protected App Routes */}
+      <Route path="/dashboard" element={isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
         <Route index element={<Dashboard />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="logs" element={<Logs />} />

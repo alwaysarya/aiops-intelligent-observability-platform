@@ -1,37 +1,59 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Clock, Server, Filter, Download, X } from 'lucide-react'
-import DarkFooter from '../components/Premium/DarkFooter'
+import { Search, Clock, Server, Download, AlertCircle, RefreshCw, Play, Pause } from 'lucide-react'
+import { ingestionApi } from '../services/api'
 import { exportToCSV } from '../services/export'
 import { showToast } from '../components/Premium/Toast'
-
-const sampleLogs = [
-  { timestamp: '10:00:00', level: 'INFO', service: 'api-gateway', message: 'Request processed successfully', duration: 45 },
-  { timestamp: '10:01:00', level: 'WARN', service: 'payment-service', message: 'High latency detected in payment processing', duration: 1250 },
-  { timestamp: '10:02:00', level: 'ERROR', service: 'user-service', message: 'Database connection timeout after 5s', duration: 5000 },
-  { timestamp: '10:03:00', level: 'INFO', service: 'catalog-service', message: 'Cache hit ratio: 0.95', duration: 12 },
-  { timestamp: '10:04:00', level: 'ERROR', service: 'payment-service', message: 'Payment gateway unreachable', duration: 3000 },
-]
+import DarkFooter from '../components/Premium/DarkFooter'
 
 function Logs() {
+  const [logs, setLogs] = useState([])
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [activeFilters, setActiveFilters] = useState([])
   const [levelFilter, setLevelFilter] = useState('all')
+  const [error, setError] = useState(null)
+  const [autoRefresh, setAutoRefresh] = useState(false)
 
-  const toggleFilter = (filter) => {
-    setActiveFilters(prev => prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter])
+  const fetchLogs = async (silent = false) => {
+    if (!silent) setLoading(true)
+    setError(null)
+    try {
+      const response = await ingestionApi.getLogs()
+      const fetchedLogs = response.data || response || []
+      setLogs(fetchedLogs)
+    } catch (err) {
+      console.error(err)
+      if (!silent) {
+        setError("Failed to fetch logs. Make sure the backend is running.")
+      }
+    } finally {
+      if (!silent) setLoading(false)
+    }
   }
 
-  const filteredLogs = sampleLogs.filter(log => {
-    const matchesSearch = log.message.toLowerCase().includes(searchTerm.toLowerCase()) || log.service.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    fetchLogs()
+  }, [])
+
+  useEffect(() => {
+    let interval
+    if (autoRefresh) {
+      interval = setInterval(() => fetchLogs(true), 5000)
+    }
+    return () => clearInterval(interval)
+  }, [autoRefresh])
+
+  const filteredLogs = logs.filter(log => {
+    const matchesSearch = log.message?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          log.service?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesLevel = levelFilter === 'all' || log.level === levelFilter
-    const matchesTags = activeFilters.length === 0 || activeFilters.some(f => log.service.includes(f) || log.level === f)
-    return matchesSearch && matchesLevel && matchesTags
+    return matchesSearch && matchesLevel
   })
 
   const handleExport = () => {
+    if (filteredLogs.length === 0) return
     exportToCSV(filteredLogs, 'aiops-logs-export')
-    showToast('Logs exported to CSV successfully!', 'success')
+    showToast('Logs exported!', 'success')
   }
 
   const getLevelBadge = (level) => {
@@ -40,70 +62,71 @@ function Logs() {
   }
 
   return (
-    <div className="w-full bg-white min-h-screen">
+    <div className="w-full bg-white dark:bg-gray-900 min-h-screen transition-colors">
       <div className="max-w-[1200px] mx-auto px-6 pt-20 pb-12">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-[52px] md:text-[72px] font-semibold tracking-[-0.04em] leading-[1.02] text-text-primary mb-4">
+          <h1 className="text-[52px] md:text-[72px] font-semibold tracking-[-0.04em] leading-[1.02] text-text-primary dark:text-white mb-4">
             Search <span className="bg-gradient-to-r from-[#0071E3] to-[#AF52DE] bg-clip-text text-transparent">Logs.</span>
           </h1>
-          <p className="text-[18px] text-text-secondary">Advanced filtering and inspection.</p>
         </motion.div>
       </div>
 
       <section className="max-w-[1200px] mx-auto px-6 pb-24">
-        <div className="bg-white rounded-[24px] border border-black/[0.04] shadow-sm p-5 mb-6">
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-[24px] border border-black/[0.04] dark:border-gray-700 shadow-sm p-5 mb-6">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary" />
-              <input type="text" placeholder="Search logs or services..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-ink-grey border border-transparent focus:bg-white focus:border-apple-blue/40 outline-none transition-all text-[15px]" />
+              <input type="text" placeholder="Search logs..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-ink-grey dark:bg-gray-900 border border-transparent focus:bg-white dark:focus:bg-gray-800 outline-none transition-all text-[15px] dark:text-white" />
             </div>
             <select value={levelFilter} onChange={(e) => setLevelFilter(e.target.value)}
-              className="px-5 py-3 rounded-xl bg-ink-grey border border-transparent outline-none text-[14px] font-medium text-text-primary">
+              className="px-5 py-3 rounded-xl bg-ink-grey dark:bg-gray-900 border border-transparent outline-none text-[14px] font-medium text-text-primary dark:text-white">
               <option value="all">All Levels</option>
               <option value="INFO">INFO</option>
               <option value="WARN">WARN</option>
               <option value="ERROR">ERROR</option>
             </select>
-            <button onClick={handleExport} className="px-5 py-3 rounded-xl bg-white border border-black/[0.08] text-text-primary font-medium hover:bg-ink-grey transition-all flex items-center gap-2">
-              <Download size={16} /> Export CSV
+            
+            <button onClick={() => setAutoRefresh(!autoRefresh)} 
+              className={`px-5 py-3 rounded-xl font-medium transition-all flex items-center gap-2 border ${autoRefresh ? 'bg-green-50 text-apple-green border-green-200' : 'bg-white dark:bg-gray-900 border-black/[0.08] dark:border-gray-700 text-text-primary dark:text-white'}`}>
+              {autoRefresh ? <><Pause size={16}/> Stop Live</> : <><Play size={16}/> Start Live</>}
+            </button>
+
+            <button onClick={handleExport} className="px-5 py-3 rounded-xl bg-apple-blue text-white font-medium hover:bg-apple-blueHover transition-all flex items-center gap-2">
+              <Download size={16} /> Export
             </button>
           </div>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[12px] font-bold text-text-tertiary uppercase tracking-wider mr-2 flex items-center gap-1"><Filter size={12} /> Quick Filters:</span>
-            {['payment-service', 'user-service', 'ERROR', 'WARN'].map(tag => (
-              <button key={tag} onClick={() => toggleFilter(tag)}
-                className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all flex items-center gap-1.5 ${activeFilters.includes(tag) ? 'bg-apple-blue text-white shadow-sm' : 'bg-ink-grey text-text-secondary hover:bg-gray-200'}`}>
-                {tag}
-                {activeFilters.includes(tag) && <X size={12} />}
-              </button>
-            ))}
-            {activeFilters.length > 0 && (
-              <button onClick={() => setActiveFilters([])} className="text-[12px] font-medium text-apple-red hover:underline ml-2">Clear all</button>
-            )}
+        {loading ? (
+          <div className="text-center py-20 text-text-tertiary">Loading...</div>
+        ) : error ? (
+          <div className="bg-red-50 text-apple-red p-6 rounded-2xl flex items-center gap-3 border border-red-100">
+            <AlertCircle size={20} /> {error}
           </div>
-        </div>
-
-        <div className="space-y-3">
-          <AnimatePresence>
-            {filteredLogs.map((log, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ delay: i * 0.05 }}
-                className="bg-white rounded-[20px] border border-black/[0.04] p-5 hover:shadow-md transition-all group">
-                <div className="flex flex-wrap items-center gap-4 mb-3">
-                  <span className={`px-2.5 py-1 rounded-md text-[11px] font-bold border ${getLevelBadge(log.level)}`}>{log.level}</span>
-                  <div className="flex items-center gap-1.5 text-[13px] text-text-tertiary font-mono"><Clock size={14} /> {log.timestamp}</div>
-                  <div className="flex items-center gap-1.5 text-[13px] text-apple-blue font-medium"><Server size={14} /> {log.service}</div>
-                  <div className="text-[12px] text-text-tertiary bg-ink-grey px-2 py-1 rounded-md ml-auto">{log.duration}ms</div>
-                </div>
-                <p className="text-[15px] text-text-primary">{log.message}</p>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+        ) : filteredLogs.length === 0 ? (
+          <div className="text-center py-20 text-text-tertiary">No logs found.</div>
+        ) : (
+          <div className="space-y-3">
+            <AnimatePresence>
+              {filteredLogs.map((log, i) => (
+                <motion.div key={log.id || i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: i * 0.05 }}
+                  className="bg-white dark:bg-gray-800 rounded-[20px] border border-black/[0.04] dark:border-gray-700 p-5 hover:shadow-md transition-all">
+                  <div className="flex flex-wrap items-center gap-4 mb-3">
+                    <span className={`px-2.5 py-1 rounded-md text-[11px] font-bold border ${getLevelBadge(log.level)}`}>{log.level}</span>
+                    <div className="flex items-center gap-1.5 text-[13px] text-text-tertiary font-mono"><Clock size={14} /> {log.timestamp ? new Date(log.timestamp).toLocaleTimeString() : 'N/A'}</div>
+                    <div className="flex items-center gap-1.5 text-[13px] text-apple-blue font-medium"><Server size={14} /> {log.service}</div>
+                    <div className="text-[12px] text-text-tertiary bg-ink-grey dark:bg-gray-900 px-2 py-1 rounded-md ml-auto">{log.duration_ms || 0}ms</div>
+                  </div>
+                  <p className="text-[15px] text-text-primary dark:text-gray-200">{log.message}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
       </section>
 
-      <DarkFooter badge="Log Analysis" title="Dive into" highlight="the details." description="Connect your real Elasticsearch cluster to see live production logs." primary="Configure ES" secondary="Read Docs" />
+      <DarkFooter badge="Log Analysis" title="Dive into" highlight="the details." description="Connect your real Elasticsearch cluster." primary="Configure ES" secondary="Read Docs" />
     </div>
   )
 }
