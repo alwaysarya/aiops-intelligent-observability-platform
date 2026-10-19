@@ -3,15 +3,16 @@ import { useState, useEffect } from 'react'
 import {
   Activity, Database, Clock, Network, ChevronRight, 
   ShieldAlert, ShieldCheck, Server, Terminal, Cpu, GitCommit, 
-  Check, X, HelpCircle, Sparkles, Lock, ArrowRight
+  Check, X, HelpCircle, Sparkles, Lock, ArrowRight, Globe, 
+  MessageSquare, Users, Box, Zap, AlertCircle, Search, Command, FileText, CheckCircle2, Award
 } from 'lucide-react'
 
 const appleEase = [0.16, 1, 0.3, 1]
 const spring = { type: "spring", stiffness: 300, damping: 25 }
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.08, ease: appleEase } }),
+  hidden: { opacity: 0, y: 20 },
+  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.05, ease: appleEase } }),
 }
 
 function useAnimatedNumber(target, duration = 1500) {
@@ -33,7 +34,7 @@ function useAnimatedNumber(target, duration = 1500) {
 
 function Dashboard() {
   const [time, setTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-  const [logs, setLogs] = useState(13840)
+  const [logs, setLogs] = useState(13853)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,94 +50,286 @@ function Dashboard() {
     <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F7] font-[-apple-system,BlinkMacSystemFont,'SF_Pro_Display','SF_Pro_Text','Helvetica_Neue',sans-serif] selection:bg-[#2997FF]/30 overflow-x-hidden antialiased">
       
       {/* Background Deep Glows */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#0A84FF]/[0.03] blur-[150px] rounded-full pointer-events-none z-0" />
-      <div className="fixed bottom-0 right-0 w-[600px] h-[600px] bg-[#30D158]/[0.02] blur-[150px] rounded-full pointer-events-none z-0" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-[#0A84FF]/[0.04] blur-[160px] rounded-full pointer-events-none z-0" />
 
-      <div className="relative z-10 max-w-[1100px] mx-auto px-6 py-16 md:py-24">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-20 md:py-32">
         
-        {/* Apple-style Hero Section with Visual */}
-        <header className="flex flex-col items-center justify-center text-center mb-24 gap-8 relative">
+        {/* UPGRADED HERO SECTION */}
+        <header className="relative flex flex-col lg:flex-row justify-between items-center mb-24 gap-12 lg:gap-8">
           
-          {/* Animated Core Visual */}
-          <motion.div 
-            animate={{ rotate: 360 }} 
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] opacity-20 pointer-events-none"
-          >
-            <div className="absolute inset-0 border-[1px] border-white/20 rounded-full" />
-            <div className="absolute inset-8 border-[1px] border-white/10 rounded-full" />
-            <div className="absolute inset-16 border-[1px] border-white/5 rounded-full" />
-            <div className="absolute top-0 left-1/2 w-3 h-3 bg-[#0A84FF] rounded-full blur-[2px]" />
-          </motion.div>
-
-          <motion.div variants={fadeUp} initial="hidden" animate="show" className="relative z-10">
-            <p className="text-[12px] font-semibold tracking-[0.05em] text-[#86868B] uppercase mb-6 flex items-center justify-center gap-2">
+          {/* Left Side Text */}
+          <motion.div variants={fadeUp} initial="hidden" animate="show" className="flex-1 text-center lg:text-left z-10">
+            <p className="text-[13px] font-semibold tracking-[0.06em] text-[#86868B] uppercase mb-5 flex items-center justify-center lg:justify-start gap-2">
               <span className="w-2 h-2 rounded-full bg-[#30D158] shadow-[0_0_10px_#30D158]" /> System Operational
             </p>
-            <h1 className="text-[64px] md:text-[88px] font-bold tracking-[-0.04em] leading-[1.05] mb-6">
+            <h1 className="text-[64px] md:text-[80px] font-bold tracking-[-0.04em] leading-none mb-6 bg-gradient-to-br from-white via-white to-[#86868B] bg-clip-text text-transparent">
               Overview.
             </h1>
-            <p className="text-[24px] md:text-[28px] text-[#86868B] font-medium tracking-[-0.01em] max-w-2xl mx-auto">
-              Real-time infrastructure intelligence. <br className="hidden md:block" />
-              <span className="text-white/60">Designed for scale.</span>
+            <p className="text-[24px] md:text-[28px] text-[#86868B] font-medium tracking-[-0.015em] max-w-lg mx-auto lg:mx-0">
+              Real-time infrastructure intelligence. Designed for absolute scale.
             </p>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-8">
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={spring} className="flex items-center gap-2 px-6 py-3 bg-[#F5F5F7] text-black rounded-full text-[15px] font-bold tracking-[-0.01em]">
+                <Terminal size={16} /> Open Terminal
+              </motion.button>
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={spring} className="flex items-center gap-2 px-6 py-3 bg-[#1C1C1E] border border-[#2C2C2E] text-white rounded-full text-[15px] font-bold tracking-[-0.01em]">
+                <FileText size={16} /> View Docs
+              </motion.button>
+            </div>
           </motion.div>
-          
-          <motion.div variants={fadeUp} initial="hidden" animate="show" custom={1} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} transition={spring} 
-            className="relative z-10 flex items-center gap-2.5 bg-[#1C1C1E]/80 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 cursor-default shadow-2xl">
-            <Clock size={18} className="text-[#86868B]" strokeWidth={2} />
-            <span className="text-[16px] font-semibold tracking-[-0.01em]">{time} Local</span>
+
+          {/* Right Side Visual (Apple-style 3D Orb/Server Core) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            transition={{ duration: 1.5, ease: appleEase }}
+            className="flex-1 relative w-full max-w-[400px] lg:max-w-[500px] h-[300px] lg:h-[400px] flex items-center justify-center"
+          >
+            {/* Central Glowing Orb */}
+            <div className="relative w-48 h-48 lg:w-64 lg:h-64 rounded-full bg-gradient-to-b from-[#1C1C1E] to-[#0A0A0C] shadow-[inset_0_0_40px_rgba(255,255,255,0.05),0_0_80px_rgba(10,132,255,0.2)] border border-white/10 flex items-center justify-center z-20">
+               <motion.div animate={{ rotateY: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border border-[#0A84FF]/30 border-t-[#0A84FF] opacity-50" />
+               <motion.div animate={{ rotateX: 360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute inset-4 rounded-full border border-white/10 border-b-white/40 opacity-50" />
+               <Cpu size={64} className="text-[#0A84FF] drop-shadow-[0_0_15px_rgba(10,132,255,0.8)]" strokeWidth={1} />
+            </div>
+            
+            {/* Floating Orbit Rings */}
+            <motion.div animate={{ rotate: 360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute w-[320px] h-[320px] lg:w-[450px] lg:h-[450px] rounded-full border border-white/5 border-dashed z-10" />
+            <motion.div animate={{ rotate: -360 }} transition={{ duration: 35, repeat: Infinity, ease: "linear" }} className="absolute w-[400px] h-[400px] lg:w-[550px] lg:h-[550px] rounded-full border border-white/[0.03] z-0" />
+            
+            {/* Floating Data Nodes */}
+            <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute top-0 right-10 w-3 h-3 bg-[#30D158] rounded-full shadow-[0_0_15px_#30D158] z-30" />
+            <motion.div animate={{ y: [0, 20, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }} className="absolute bottom-10 left-0 w-2 h-2 bg-[#0A84FF] rounded-full shadow-[0_0_15px_#0A84FF] z-30" />
           </motion.div>
         </header>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {/* REST OF THE DASHBOARD (UNTOUCHED) */}
+        
+        {/* TOP STATS */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[
             { title: 'Logs Ingested', value: logsAnim.toLocaleString(), trend: '+12%', isUp: true },
             { title: 'Active Alerts', value: '33', trend: '-2', isUp: false },
             { title: 'Incidents', value: '1', trend: '-1', isUp: false },
             { title: 'Anomalies', value: '2', trend: '+3', isUp: true },
           ].map((stat, i) => (
-            <motion.div key={i} variants={fadeUp} initial="hidden" animate="show" custom={i + 2} 
-              whileHover={{ scale: 1.02, backgroundColor: '#232326' }} whileTap={{ scale: 0.98 }} transition={spring}
-              className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] cursor-pointer flex flex-col justify-between min-h-[160px]">
-              <p className="text-[15px] font-semibold text-[#86868B] mb-4">{stat.title}</p>
+            <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} custom={i + 2} 
+              whileHover={{ y: -4, backgroundColor: '#232326' }} transition={spring}
+              className="bg-[#1C1C1E] rounded-[24px] p-7 border border-[#2C2C2E] cursor-pointer flex flex-col justify-between min-h-[170px]">
+              <p className="text-[15px] font-semibold text-[#86868B] mb-6">{stat.title}</p>
               <div className="flex items-end justify-between">
-                <p className="text-[44px] font-bold tracking-[-0.03em] leading-none">{stat.value}</p>
-                <span className={`text-[15px] font-bold tracking-[-0.01em] ${stat.isUp ? 'text-[#30D158]' : 'text-[#FF453A]'}`}>
-                  {stat.trend}
-                </span>
+                <p className="text-[42px] font-bold tracking-[-0.03em] leading-none">{stat.value}</p>
+                <span className={`text-[14px] font-bold ${stat.isUp ? 'text-[#30D158]' : 'text-[#FF453A]'}`}>{stat.trend}</span>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* NEW: Premium Feature Visual (Image style) */}
+        {/* BIG BENTO */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
+            className="col-span-1 lg:col-span-2 bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] relative overflow-hidden flex flex-col min-h-[360px]">
+            <div className="flex justify-between items-center mb-8">
+              <div>
+                <h2 className="text-[22px] font-bold tracking-[-0.02em] flex items-center gap-3"><Activity size={24} className="text-[#0A84FF]" strokeWidth={2}/> Real-Time Metrics</h2>
+                <p className="text-[14px] text-[#86868B] mt-1">Requests per second (last 60 mins)</p>
+              </div>
+              <span className="flex items-center gap-2 text-[12px] font-bold text-[#0A84FF] bg-[#0A84FF]/10 px-3.5 py-1.5 rounded-full border border-[#0A84FF]/20">
+                <span className="w-2 h-2 rounded-full bg-[#0A84FF] animate-pulse"/> Live
+              </span>
+            </div>
+            <div className="flex-grow relative flex items-end gap-1.5 pb-2">
+              {Array.from({ length: 45 }).map((_, i) => {
+                const height = Math.sin(i * 0.25) * 25 + Math.cos(i * 0.4) * 15 + 55;
+                return (
+                  <motion.div key={i} initial={{ height: 0 }} whileInView={{ height: `${height}%` }} viewport={{ once: true }} transition={{ duration: 1, delay: i * 0.02, ease: appleEase }}
+                    className="flex-1 bg-gradient-to-t from-[#0A84FF]/20 to-[#0A84FF] rounded-t-sm" />
+                )
+              })}
+            </div>
+            <div className="flex justify-between items-center mt-4 text-[12px] text-[#86868B] font-semibold tracking-wide">
+              <span>-60 MIN</span><span>-30 MIN</span><span>NOW</span>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
+            className="col-span-1 bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col min-h-[360px] relative overflow-hidden">
+            <div className="flex justify-between items-center mb-4 relative z-10">
+              <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3"><Globe size={22} className="text-[#0A84FF]" strokeWidth={2}/> Threat Globe</h2>
+            </div>
+            <div className="flex-grow relative flex items-center justify-center mt-2">
+               <div className="w-48 h-48 rounded-full border border-white/5 relative flex items-center justify-center">
+                 <div className="w-32 h-32 rounded-full border border-white/10 absolute" />
+                 <div className="w-16 h-16 rounded-full border border-white/20 absolute" />
+                 <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }} className="absolute top-8 right-12 w-2 h-2 bg-[#FF453A] rounded-full shadow-[0_0_10px_#FF453A]" />
+                 <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }} className="absolute bottom-10 left-14 w-2 h-2 bg-[#FF453A] rounded-full shadow-[0_0_10px_#FF453A]" />
+               </div>
+            </div>
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-[#2C2C2E] relative z-10">
+              <span className="text-[13px] text-[#86868B]">Blocked: 1,024</span>
+              <span className="text-[13px] text-[#FF453A]">Active: 5</span>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* MIDDLE GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col h-[320px]">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3"><ShieldCheck size={22} className="text-[#30D158]" strokeWidth={2}/> Security</h2>
+              <span className="text-[13px] font-semibold text-[#30D158] bg-[#30D158]/10 px-3 py-1 rounded-full">Grade A</span>
+            </div>
+            <div className="flex-grow relative flex items-center justify-center">
+              <div className="w-40 h-40 rounded-full border border-[#2C2C2E] relative flex items-center justify-center">
+                <div className="w-28 h-28 rounded-full border border-[#2C2C2E] absolute" />
+                <div className="w-16 h-16 rounded-full border border-[#2C2C2E] absolute" />
+                <div className="absolute w-full h-[1px] bg-[#2C2C2E]" />
+                <div className="absolute h-full w-[1px] bg-[#2C2C2E]" />
+                <motion.svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+                  <motion.polygon initial={{ opacity: 0, scale: 0.5 }} whileInView={{ opacity: 0.3, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1, ease: appleEase }} points="100,30 160,70 140,150 60,160 40,80" fill="#30D158" stroke="#30D158" strokeWidth="2" />
+                </motion.svg>
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-[#2C2C2E]">
+              <div className="text-center"><p className="text-[18px] font-bold text-white">0</p><p className="text-[11px] text-[#86868B] font-medium">Critical</p></div>
+              <div className="text-center"><p className="text-[18px] font-bold text-[#FF9F0A]">3</p><p className="text-[11px] text-[#86868B] font-medium">Medium</p></div>
+              <div className="text-center"><p className="text-[18px] font-bold text-[#30D158]">124</p><p className="text-[11px] text-[#86868B] font-medium">Passed</p></div>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col h-[320px]">
+            <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3 mb-6"><Award size={22} className="text-[#0A84FF]" strokeWidth={2}/> Compliance</h2>
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              {['SOC2 Type II', 'ISO 27001', 'GDPR', 'HIPAA'].map((cert, i) => (
+                <div key={i} className="flex items-center gap-2 bg-[#0A0A0C] border border-[#2C2C2E] rounded-xl p-3">
+                  <CheckCircle2 size={16} className="text-[#30D158]" />
+                  <span className="text-[13px] font-bold text-[#F5F5F7]">{cert}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex-grow">
+              <p className="text-[11px] font-bold text-[#86868B] mb-3 uppercase tracking-wider">Audit Logs</p>
+              <div className="space-y-3">
+                {[
+                  { log: 'Access policy updated', time: '2h ago' },
+                  { log: 'Encryption keys rotated', time: '12h ago' },
+                  { log: 'Vuln scan completed', time: '1d ago' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText size={12} className="text-[#86868B]" />
+                    <p className="text-[13px] font-medium text-[#F5F5F7] flex-grow">{item.log}</p>
+                    <span className="text-[11px] text-[#86868B]">{item.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col h-[320px]">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3"><Activity size={22} className="text-[#30D158]" strokeWidth={2}/> Uptime</h2>
+              <span className="text-[13px] font-semibold text-[#30D158]">99.99%</span>
+            </div>
+            <div className="flex-grow flex items-end justify-between gap-1 pb-4">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <motion.div key={i} initial={{ height: 0 }} whileInView={{ height: `${Math.random() * 30 + 70}%` }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.02 }}
+                  className={`w-full rounded-sm ${i === 15 ? 'bg-[#FF9F0A]' : 'bg-[#30D158]'} opacity-80 hover:opacity-100 transition-opacity`} />
+              ))}
+            </div>
+            <div className="flex justify-between items-center pt-4 border-t border-[#2C2C2E]">
+              <span className="text-[12px] font-semibold text-[#86868B]">30 DAYS AGO</span>
+              <span className="text-[12px] font-semibold text-[#86868B]">TODAY</span>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* SEARCH BAR */}
         <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
-          className="relative w-full h-[400px] rounded-[32px] overflow-hidden mb-6 border border-[#2C2C2E] bg-gradient-to-br from-[#1C1C1E] to-[#0A0A0C] flex items-center justify-center group cursor-pointer">
-          
-          {/* Parallax Glow Background */}
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-1000 ease-out mix-blend-luminosity" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/50 to-transparent" />
-          
-          <div className="relative z-10 text-center px-6 max-w-2xl">
-            <Sparkles size={32} className="text-[#0A84FF] mx-auto mb-4" />
-            <h3 className="text-[40px] md:text-[48px] font-bold tracking-[-0.03em] leading-tight mb-4">
-              Intelligence at the edge.
-            </h3>
-            <p className="text-[18px] text-[#86868B] font-medium leading-relaxed mb-8">
-              Our AI engine processes millions of events per second to detect anomalies before they become incidents.
-            </p>
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-8 py-3 bg-white text-black rounded-full font-bold text-[15px] flex items-center gap-2 mx-auto">
-              Learn more <ArrowRight size={16} />
-            </motion.button>
+          className="w-full bg-[#0A0A0C] rounded-[20px] border border-[#2C2C2E] p-5 flex items-center gap-4 mb-8 shadow-xl hover:border-[#48484A] transition-colors cursor-pointer group">
+          <Search size={22} className="text-[#86868B] group-hover:text-white transition-colors ml-2" />
+          <p className="text-[17px] text-[#86868B] font-medium flex-grow">Search infrastructure, logs, incidents...</p>
+          <div className="flex items-center gap-1 bg-[#1C1C1E] border border-[#2C2C2E] rounded-md px-2.5 py-1.5">
+            <Command size={14} className="text-[#86868B]" />
+            <span className="text-[13px] font-bold text-[#86868B]">K</span>
           </div>
         </motion.div>
 
-        {/* Infrastructure & Active Events */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
-            className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E]">
+        {/* AI COPILOT & TEAM */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
+            className="col-span-1 lg:col-span-2 bg-gradient-to-br from-[#1C1C1E] to-[#0A0A0C] rounded-[24px] p-8 border border-[#2C2C2E] relative overflow-hidden flex flex-col min-h-[280px]">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-[#0A84FF]/10 blur-[80px] rounded-full pointer-events-none" />
+             <div className="flex items-center gap-3 mb-6 relative z-10">
+               <div className="w-12 h-12 rounded-xl bg-[#0A84FF]/20 flex items-center justify-center"><Sparkles size={24} className="text-[#0A84FF]" /></div>
+               <div>
+                 <h2 className="text-[20px] font-bold tracking-[-0.02em]">AI Copilot</h2>
+                 <p className="text-[14px] text-[#86868B]">Automated Root Cause Analysis</p>
+               </div>
+             </div>
+             <div className="bg-[#0A0A0C] border border-[#2C2C2E] rounded-2xl p-6 relative z-10 flex-grow">
+               <p className="text-[15px] leading-relaxed text-[#F5F5F7]">
+                 <span className="text-[#FF453A] font-bold">Alert:</span> Log Ingestion service is down on port 8000. <br/><br/>
+                 <span className="text-[#0A84FF] font-bold">Analysis:</span> High memory usage caused a pod crash. Auto-scaling failed due to quota limits. <br/><br/>
+                 <span className="text-[#30D158] font-bold">Suggestion:</span> Increase memory limit to 2GB and restart the service.
+               </p>
+             </div>
+             <div className="mt-5 flex gap-3 relative z-10">
+               <button className="px-5 py-2.5 bg-[#0A84FF] text-white rounded-full text-[14px] font-bold hover:bg-[#007AFF] transition-colors">Apply Fix</button>
+               <button className="px-5 py-2.5 bg-[#2C2C2E] text-white rounded-full text-[14px] font-bold hover:bg-[#3A3A3C] transition-colors">Dismiss</button>
+             </div>
+           </motion.div>
+
+           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
+            className="col-span-1 bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E]">
+             <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3 mb-8"><Users size={22} className="text-[#86868B]" strokeWidth={2}/> Team Activity</h2>
+             <div className="space-y-6">
+               {[
+                 { user: 'Aryan', action: 'deployed v2.0', time: '2m ago', avatar: 'AT', color: 'bg-[#0A84FF]' },
+                 { user: 'John', action: 'resolved INC-4092', time: '15m ago', avatar: 'JD', color: 'bg-[#FF9F0A]' },
+                 { user: 'Sarah', action: 'updated policy', time: '1h ago', avatar: 'SM', color: 'bg-[#30D158]' },
+               ].map((act, i) => (
+                 <div key={i} className="flex items-center gap-4">
+                   <div className={`w-10 h-10 rounded-full ${act.color} flex items-center justify-center text-[13px] font-bold text-white`}>{act.avatar}</div>
+                   <div className="flex-grow">
+                     <p className="text-[15px] font-medium"><span className="font-bold text-white">{act.user}</span> <span className="text-[#86868B]">{act.action}</span></p>
+                     <p className="text-[13px] text-[#86868B]">{act.time}</p>
+                   </div>
+                 </div>
+               ))}
+             </div>
+           </motion.div>
+        </div>
+
+        {/* INTEGRATIONS GRID */}
+        <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
+          className="w-full bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] mb-8">
+           <div className="flex justify-between items-center mb-8">
+             <div>
+               <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3"><Box size={22} className="text-[#86868B]" strokeWidth={2}/> Integrations</h2>
+               <p className="text-[14px] text-[#86868B] mt-1">Connect your favorite tools with AIOps.</p>
+             </div>
+             <button className="text-[13px] font-bold text-[#0A84FF] hover:text-white transition-colors">View Directory</button>
+           </div>
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+             {[
+               { name: 'Slack', icon: MessageSquare, color: 'text-[#4A154B]', bg: 'bg-[#4A154B]/10' },
+               { name: 'GitHub', icon: GitCommit, color: 'text-[#F5F5F7]', bg: 'bg-[#F5F5F7]/10' },
+               { name: 'AWS', icon: Server, color: 'text-[#FF9F0A]', bg: 'bg-[#FF9F0A]/10' },
+               { name: 'Datadog', icon: Activity, color: 'text-[#632CA6]', bg: 'bg-[#632CA6]/10' },
+             ].map((int, i) => (
+               <div key={i} className="flex flex-col items-center justify-center p-6 rounded-xl bg-[#0A0A0C] border border-[#2C2C2E] hover:border-[#48484A] transition-colors cursor-pointer group">
+                 <div className={`w-12 h-12 rounded-xl ${int.bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                   <int.icon size={24} className={int.color} />
+                 </div>
+                 <span className="text-[14px] font-bold text-[#F5F5F7]">{int.name}</span>
+               </div>
+             ))}
+           </div>
+        </motion.div>
+
+        {/* INFRA & EVENTS */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E]">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3"><Server size={22} className="text-[#86868B]" strokeWidth={2}/> Infrastructure</h2>
               <span className="text-[14px] font-semibold bg-[#2C2C2E] px-4 py-1.5 rounded-full">3/4 Online</span>
@@ -162,8 +355,7 @@ function Dashboard() {
             </div>
           </motion.div>
 
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
-            className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E]">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E]">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3"><ShieldAlert size={22} className="text-[#86868B]" strokeWidth={2}/> Active Events</h2>
               <span className="text-[14px] font-semibold bg-[#FF453A]/15 text-[#FF453A] px-4 py-1.5 rounded-full">5 Open</span>
@@ -187,9 +379,8 @@ function Dashboard() {
           </motion.div>
         </div>
 
-        {/* 3-Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-          {/* Topology */}
+        {/* TOPOLOGY, DEPLOYMENTS, RESOURCES */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
             whileHover={{ scale: 1.02, backgroundColor: '#232326' }} transition={spring}
             className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col h-[320px] cursor-pointer">
@@ -214,7 +405,6 @@ function Dashboard() {
             </div>
           </motion.div>
 
-          {/* Recent Deployments */}
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
             className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col h-[320px]">
             <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3 mb-8"><GitCommit size={22} className="text-[#86868B]" strokeWidth={2}/> Recent Deployments</h2>
@@ -237,7 +427,6 @@ function Dashboard() {
             </div>
           </motion.div>
 
-          {/* Resource Limits */}
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
             className="bg-[#1C1C1E] rounded-[24px] p-8 border border-[#2C2C2E] flex flex-col h-[320px]">
             <h2 className="text-[20px] font-bold tracking-[-0.02em] flex items-center gap-3 mb-8"><Cpu size={22} className="text-[#86868B]" strokeWidth={2}/> Resource Limits</h2>
@@ -261,8 +450,8 @@ function Dashboard() {
           </motion.div>
         </div>
 
-        {/* Terminal & Resources */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        {/* TERMINAL & RESOURCES */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
             className="col-span-1 lg:col-span-2 bg-[#0A0A0C] rounded-[24px] border border-[#2C2C2E] overflow-hidden flex flex-col shadow-2xl">
             <div className="flex items-center gap-2.5 px-5 py-4 bg-[#1C1C1E] border-b border-[#2C2C2E]">
@@ -297,11 +486,10 @@ function Dashboard() {
           </motion.div>
         </div>
 
-        {/* Full Pipeline Assurance with Glowing Visual */}
+        {/* FULL PIPELINE ASSURANCE */}
         <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} 
           className="w-full bg-[#1C1C1E] rounded-[24px] p-10 md:p-14 border border-[#2C2C2E] flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
           
-          {/* Glowing Shield Background */}
           <div className="absolute -right-20 -bottom-20 opacity-10 pointer-events-none">
             <ShieldCheck size={400} className="text-[#0A84FF]" strokeWidth={1} />
           </div>
