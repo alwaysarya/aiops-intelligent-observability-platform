@@ -7,6 +7,7 @@ import Logs from './pages/Logs'
 import Alerts from './pages/Alerts'
 import RootCause from './pages/RootCause'
 import ServiceMapPage from './pages/ServiceMapPage'
+import SLAPage from './pages/SLAPage'
 import Settings from './pages/Settings'
 import NotFound from './pages/NotFound'
 import DatasetsPage from './pages/DatasetsPage'
@@ -31,6 +32,7 @@ function App() {
         <Route path="alerts" element={<Alerts />} />
         <Route path="root-cause" element={<RootCause />} />
         <Route path="service-map" element={<ServiceMapPage />} />
+        <Route path="sla" element={<SLAPage />} />
         <Route path="datasets" element={<DatasetsPage />} />
         <Route path="models" element={<ModelsPage />} />
         <Route path="reports" element={<ReportsPage />} />

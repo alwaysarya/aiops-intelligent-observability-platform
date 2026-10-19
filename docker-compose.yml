@@ -1,20 +1,58 @@
-version: "3.9"
-
 networks:
   aiops-network:
-    external: true
     name: log-ingestion-service_aiops-network
+    external: true
 
 services:
   api-gateway:
-    build:
-      context: ./services/api-gateway
-      dockerfile: Dockerfile
+    build: ./services/api-gateway
     container_name: aiops-api-gateway
     ports:
       - "8080:8080"
     environment:
       - ENVIRONMENT=development
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
+  log-ingestion-service:
+    build: ./services/log-ingestion-service
+    container_name: aiops-log-ingestion
+    ports:
+      - "8000:8000"
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
+  anomaly-detector:
+    build:
+      context: ./services/ai-anomaly-detector
+    container_name: aiops-anomaly-detector
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+      - MODEL_DIR=/app/models
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
+  alert-service:
+    build:
+      context: ./services/alert-service
+    container_name: aiops-alert-service
+    ports:
+      - "8002:8002"
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
+  root-cause-analyzer:
+    build:
+      context: ./services/root-cause-analyzer
+    container_name: aiops-root-cause-analyzer
+    ports:
+      - "8003:8003"
     networks:
       - aiops-network
     restart: unless-stopped

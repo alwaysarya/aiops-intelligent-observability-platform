@@ -14,10 +14,10 @@ app.add_middleware(
 )
 
 SERVICES = {
-    "ingestion": "http://localhost:8000",
-    "anomaly": "http://localhost:8001",
-    "alerts": "http://localhost:8002",
-    "rca": "http://localhost:8003",
+    "ingestion": "http://log-ingestion-service:8000",
+    "anomaly": "http://anomaly-detector:8001",
+    "alerts": "http://alert-service:8002",
+    "rca": "http://root-cause-analyzer:8003",
 }
 
 @app.get("/health")

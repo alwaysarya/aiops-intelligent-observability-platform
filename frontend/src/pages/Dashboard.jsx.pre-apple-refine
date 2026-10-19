@@ -1,0 +1,372 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import {
+  Activity, ArrowDownRight, ArrowUpRight, Bell, Check,
+  ChevronRight, Clock3, Command, Cpu, Database, GitBranch,
+  Gauge, Layers3, Network, Radio, Search, Server,
+  ShieldCheck, Terminal, TrendingUp, Zap, AlertTriangle
+} from 'lucide-react'
+
+const metrics = [
+  { label: 'Requests processed', value: '1.28M', delta: '+12.8%', icon: Activity, color: '#67E8C7', bars: [30,45,35,55,40,65,48,75,58,88,68,96] },
+  { label: 'P95 latency', value: '42 ms', delta: '-8.2%', icon: Clock3, color: '#7DA8FF', bars: [75,65,72,55,62,45,58,38,48,32,40,26] },
+  { label: 'Error rate', value: '0.12%', delta: '-0.04%', icon: AlertTriangle, color: '#F7B96D', bars: [72,60,76,48,65,42,55,34,48,30,38,22] },
+  { label: 'Availability', value: '99.98%', delta: '+0.02%', icon: ShieldCheck, color: '#C1A0FF', bars: [65,70,66,76,72,80,75,86,80,90,85,96] },
+]
+
+const services = [
+  { name: 'API Gateway', detail: 'Edge / Production', latency: '24 ms', status: 'Healthy', color: '#67E8C7' },
+  { name: 'Authentication', detail: 'Identity / Production', latency: '38 ms', status: 'Healthy', color: '#67E8C7' },
+  { name: 'Log Processor', detail: 'Pipeline / Production', latency: '112 ms', status: 'Degraded', color: '#F7B96D' },
+  { name: 'Metrics Engine', detail: 'Telemetry / Production', latency: '31 ms', status: 'Healthy', color: '#67E8C7' },
+]
+
+const events = [
+  { title: 'Ingestion latency elevated', detail: 'Log Processor · Warning', time: '12m ago', color: '#F7B96D' },
+  { title: 'API response time recovered', detail: 'API Gateway · Recovery', time: '38m ago', color: '#67E8C7' },
+  { title: 'Anomaly assessment completed', detail: 'Metrics Engine · Analysis', time: '1h ago', color: '#A991FF' },
+  { title: 'Infrastructure health check', detail: 'System · Completed', time: '2h ago', color: '#67E8C7' },
+]
+
+const panel = 'relative overflow-hidden rounded-2xl border border-white/[0.085] bg-[#101316]/90'
+const linkStyle = 'inline-flex items-center gap-1.5 text-xs text-[#A4AAA9] transition-colors hover:text-[#7AF0D0]'
+const points = [35,42,37,48,43,55,47,60,52,64,57,71,60,67,55,75,64,79,69,84,72,80,66,87,76,91,81,88,73,94,83,89,78,96,85,91,80,98]
+const line = points.map((v,i)=>`${i===0?'M':'L'} ${(i/(points.length-1))*1000} ${175-v*1.45}`).join(' ')
+
+function Heading({ eyebrow, title, note, action, to }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.2em] text-[#70E9CA]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#70E9CA] shadow-[0_0_12px_#70E9CA]"/>
+          {eyebrow}
+        </p>
+        <h2 className="text-lg font-semibold tracking-[-.035em] text-[#F0F3F2]">{title}</h2>
+        {note && <p className="mt-1 text-xs text-[#777F80]">{note}</p>}
+      </div>
+      {action && <Link to={to} className={linkStyle}>{action}<ArrowUpRight size={14}/></Link>}
+    </div>
+  )
+}
+
+function Dashboard() {
+  const [query, setQuery] = useState('')
+  const [period, setPeriod] = useState('24 hours')
+  const filtered = services.filter(s => `${s.name} ${s.detail} ${s.status}`.toLowerCase().includes(query.toLowerCase()))
+
+  return (
+    <main className="min-h-screen overflow-hidden bg-[#080A0C] text-[#EEF2F0]">
+      <div className="pointer-events-none fixed inset-0 animate-[topologyDrift_35s_linear_infinite] opacity-[.12]" style={{backgroundImage:'linear-gradient(rgba(120,240,210,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(120,240,210,.07) 1px,transparent 1px)',backgroundSize:'56px 56px',maskImage:'linear-gradient(to bottom,black,transparent 75%)'}}/>
+      <div className="pointer-events-none fixed left-[35%] top-[-240px] h-[540px] w-[540px] rounded-full bg-[#087D68]/[0.13] blur-[140px]"/>
+
+      <div className="relative mx-auto max-w-[1500px] px-5 py-7 md:px-8 xl:px-12">
+
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs text-[#747D7D]">
+            <Layers3 size={15} className="text-[#70E9CA]"/>
+            <span>Workspace</span><ChevronRight size={13}/>
+            <span className="text-[#D7DEDB]">Overview</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-2 rounded-full border border-[#70E9CA]/20 bg-[#70E9CA]/[0.06] px-3 py-1.5 text-[10px] text-[#8BEBD2]">
+              <span className="relative flex h-1.5 w-1.5"><span className="absolute h-full w-full animate-ping rounded-full bg-[#70E9CA] opacity-50"/><span className="relative h-1.5 w-1.5 rounded-full bg-[#70E9CA]"/></span>
+              SYSTEM OPERATIONAL
+            </span>
+            <span className="rounded-full border border-white/[0.08] px-3 py-1.5 text-[10px] text-[#89908F]">Preview data</span>
+          </div>
+        </div>
+
+        {/* HERO */}
+        <motion.section
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          className={`${panel} mb-5 min-h-[310px]`}>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_45%,rgba(23,155,125,.14),transparent_48%),linear-gradient(110deg,rgba(255,255,255,.015),transparent_65%)]"/>
+          <div className="absolute right-[8%] top-1/2 hidden h-64 w-64 -translate-y-1/2 items-center justify-center md:flex">
+            <div className="absolute inset-0 rounded-full border border-[#70E9CA]/10"/>
+            <div className="absolute inset-5 rounded-full border border-dashed border-[#70E9CA]/20 animate-[spin_50s_linear_infinite]"/>
+            <div className="absolute inset-12 rounded-full border border-[#70E9CA]/20 shadow-[0_0_50px_rgba(56,211,170,.08)]"/>
+            <div className="absolute h-28 w-28 rounded-full bg-[#0D6657]/20 blur-2xl"/>
+            <motion.div animate={{rotate:360}} transition={{duration:24,repeat:Infinity,ease:'linear'}} className="absolute inset-8">
+              <span className="absolute left-1/2 top-0 h-2 w-2 rounded-full bg-[#70E9CA] shadow-[0_0_18px_#70E9CA]"/>
+              <span className="absolute bottom-8 right-0 h-1.5 w-1.5 rounded-full bg-[#A991FF] shadow-[0_0_15px_#A991FF]"/>
+            </motion.div>
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-[#70E9CA]/30 bg-[#10211F]/90 shadow-[0_0_65px_rgba(49,220,175,.13)]">
+              <Activity size={35} strokeWidth={1.2} className="text-[#70E9CA]"/>
+            </div>
+            <div className="absolute right-[-12px] top-12 rounded-lg border border-white/10 bg-[#111817] px-3 py-2 shadow-xl">
+              <p className="text-[9px] text-[#7F8A87]">TELEMETRY</p><p className="mt-1 flex items-center gap-1.5 text-[10px] text-[#70E9CA]"><span className="h-1.5 w-1.5 rounded-full bg-current"/>Connected preview</p>
+            </div>
+          </div>
+          <div className="relative flex min-h-[310px] max-w-2xl flex-col items-start justify-center p-6 md:p-10">
+            <div className="mb-5 flex items-center gap-2 rounded-full border border-white/[0.09] bg-black/20 px-3 py-1.5 text-[10px] uppercase tracking-[.16em] text-[#A0AAA6]">
+              <Radio size={12} className="text-[#70E9CA]"/> Intelligent observability
+            </div>
+            <h1 className="max-w-xl text-4xl font-semibold leading-[1.04] tracking-[-.055em] sm:text-5xl">
+              Understand your systems.
+              <span className="block bg-gradient-to-r from-[#7AF0D0] via-[#56CDB7] to-[#A3B6FF] bg-clip-text pb-1 text-transparent">Before they fail.</span>
+            </h1>
+            <p className="mt-5 max-w-md text-sm leading-6 text-[#929B99]">
+              One clear view of service health, performance signals and operational events across your infrastructure.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link to="/logs" className="group flex items-center gap-2 rounded-lg bg-[#75E9CA] px-4 py-2.5 text-xs font-semibold text-[#07110F] transition-all hover:bg-[#A0F6E0] hover:shadow-[0_0_30px_rgba(112,233,202,.18)]">
+                Explore observability <ArrowUpRight size={14} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"/>
+              </Link>
+              <Link to="/service-map" className="flex items-center gap-2 rounded-lg border border-white/[0.12] bg-white/[0.025] px-4 py-2.5 text-xs text-[#D1D8D5] transition-colors hover:border-[#70E9CA]/40 hover:bg-white/[0.06]">
+                <Network size={14}/> Service topology
+              </Link>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#70E9CA]/40 to-transparent"/>
+        </motion.section>
+
+        {/* METRIC CARDS */}
+        <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {metrics.map((m,i)=>(
+            <motion.div key={m.label} initial={{opacity:0,y:14}} animate={{opacity:1,y:0}} transition={{delay:i*.07}} whileHover={{y:-4}} className={`${panel} group p-5 transition-colors duration-300 hover:border-white/[0.17]`}>
+              <div className="mb-5 flex items-center justify-between">
+                <span className="text-xs text-[#969F9D]">{m.label}</span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/[0.07] bg-white/[0.025] transition-colors group-hover:bg-white/[0.06]" style={{color:m.color}}><m.icon size={16}/></span>
+              </div>
+              <div className="flex items-end justify-between gap-2">
+                <span className="text-3xl font-semibold tracking-[-.055em]">{m.value}</span>
+                <span className="mb-1 flex items-center gap-1 text-[10px]" style={{color:m.color}}><TrendingUp size={12}/>{m.delta}</span>
+              </div>
+              <div className="mt-5 flex h-8 items-end gap-1">
+                {m.bars.map((h,j)=><motion.div key={j} initial={{height:2}} animate={{height:`${h}%`}} transition={{delay:.25+j*.025,duration:.35}} className="flex-1 rounded-[2px] opacity-60 transition-opacity group-hover:opacity-100" style={{background:m.color}}/>)}
+              </div>
+              <p className="mt-3 text-[9px] tracking-wide text-[#697371]">ILLUSTRATIVE METRIC · NOT LIVE CONNECTED</p>
+            </motion.div>
+          ))}
+        </div>
+
+
+        {/* CUSTOM TOPOLOGY VISUAL */}
+        <motion.section
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.7 }}
+          className="mb-10 overflow-hidden rounded-2xl border border-white/[0.09] bg-[#0D1112]"
+        >
+          <div className="grid lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="flex flex-col justify-center p-6 md:p-9">
+              <p className="mb-3 flex items-center gap-2 text-[10px] uppercase tracking-[.2em] text-[#70E9CA]">
+                <Network size={13}/> Service topology
+              </p>
+              <h2 className="max-w-sm text-2xl font-semibold leading-tight tracking-[-.045em] text-[#EDF2EF] md:text-3xl">
+                Every dependency tells a story.
+              </h2>
+              <p className="mt-4 max-w-sm text-sm leading-6 text-[#89938F]">
+                Follow the connections between your gateway, application
+                services and telemetry pipeline.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-[10px] text-[#A0AAA5]">
+                <span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[#70E9CA]"/>Operational</span>
+                <span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[#F7B96D]"/>Degraded</span>
+                <span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[#A991FF]"/>Telemetry</span>
+              </div>
+              <Link to="/service-map" className="mt-7 inline-flex w-fit items-center gap-2 rounded-lg border border-white/[0.12] px-4 py-2.5 text-xs text-[#E2E9E5] transition-all hover:border-[#70E9CA]/50 hover:text-[#70E9CA]">
+                Explore service map <ArrowUpRight size={14}/>
+              </Link>
+            </div>
+
+            <div className="relative min-h-[300px] overflow-hidden border-t border-white/[0.06] bg-[#0A0E10] lg:border-l lg:border-t-0">
+              <div className="pointer-events-none absolute inset-0 opacity-30"
+                style={{backgroundImage:'radial-gradient(#658078 0.7px, transparent 0.7px)',backgroundSize:'17px 17px'}}/>
+              <div className="absolute left-5 top-5 text-[9px] tracking-[.16em] text-[#586762]">DEPENDENCY GRAPH / PREVIEW</div>
+
+              <svg viewBox="0 0 520 340" className="relative h-full min-h-[300px] w-full" role="img" aria-label="Illustrative interactive service dependency network">
+                <defs>
+                  <linearGradient id="topologyLine" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#70E9CA" stopOpacity=".65"/>
+                    <stop offset="100%" stopColor="#70E9CA" stopOpacity=".06"/>
+                  </linearGradient>
+                  <filter id="topologyGlow">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+
+                {[
+                  [260,170,105,74],[260,170,395,70],
+                  [260,170,105,265],[260,170,395,265],
+                  [105,74,105,265],[395,70,395,265],
+                  [105,74,260,45],[395,70,260,45],
+                  [105,265,260,305],[395,265,260,305]
+                ].map(([x1,y1,x2,y2],i)=>(
+                  <g key={i}>
+                    <line x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="url(#topologyLine)" strokeWidth="1.2"/>
+                    <motion.circle r="2.5" fill="#70E9CA"
+                      initial={{cx:x1,cy:y1,opacity:0}}
+                      animate={{cx:[x1,x2],cy:[y1,y2],opacity:[0,.95,0]}}
+                      transition={{duration:2.8+i*.23,repeat:Infinity,delay:i*.31,ease:'linear'}}
+                    />
+                  </g>
+                ))}
+
+                {[
+                  {x:260,y:170,label:'API GATEWAY',color:'#70E9CA',r:24},
+                  {x:105,y:74,label:'AUTH',color:'#70E9CA',r:16},
+                  {x:395,y:70,label:'METRICS',color:'#A991FF',r:16},
+                  {x:105,y:265,label:'LOGS',color:'#F7B96D',r:16},
+                  {x:395,y:265,label:'WORKER',color:'#70E9CA',r:16},
+                  {x:260,y:45,label:'INGEST',color:'#A991FF',r:12},
+                  {x:260,y:305,label:'STORAGE',color:'#70E9CA',r:12}
+                ].map((n,i)=>(
+                  <motion.g key={n.label}
+                    initial={{opacity:0,scale:.8}}
+                    whileInView={{opacity:1,scale:1}}
+                    viewport={{once:true}}
+                    transition={{delay:i*.09,duration:.4}}
+                    whileHover={{scale:1.12}}
+                    style={{transformBox:'fill-box',transformOrigin:'center',cursor:'default'}}
+                  >
+                    <circle cx={n.x} cy={n.y} r={n.r+9} fill={n.color} opacity=".045"/>
+                    <circle cx={n.x} cy={n.y} r={n.r} fill="#11191A" stroke={n.color} strokeOpacity=".75" strokeWidth="1.3"/>
+                    <circle cx={n.x} cy={n.y} r="3" fill={n.color} filter="url(#topologyGlow)"/>
+                    <text x={n.x} y={n.y+n.r+17} textAnchor="middle" fill="#A7B3AD" fontSize="9" letterSpacing="1">{n.label}</text>
+                  </motion.g>
+                ))}
+              </svg>
+              <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-md border border-white/[0.08] bg-[#101615]/90 px-3 py-2 text-[9px] text-[#91A099]">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#70E9CA]"/> Animated topology preview
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* PERFORMANCE */}
+        <motion.section
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          className="mb-10">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
+            <Heading eyebrow="Performance signals" title="The system, at a glance" note="Explore the shape of activity across your services."/>
+            <select value={period} onChange={e=>setPeriod(e.target.value)} className="rounded-lg border border-white/10 bg-[#101316] px-3 py-2 text-xs text-[#C5CECA] outline-none focus:border-[#70E9CA]/50">
+              <option>24 hours</option><option>7 days</option><option>30 days</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+            <div className={`${panel} xl:col-span-3`}>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.07] px-5 py-4">
+                <div><h3 className="text-sm font-medium">Request throughput</h3><p className="mt-1 text-[10px] text-[#747D7B]">Illustrative trend · {period}</p></div>
+                <div className="flex items-center gap-2 text-[10px] text-[#70E9CA]"><span className="h-1.5 w-1.5 rounded-full bg-current"/>Request volume</div>
+              </div>
+              <div className="px-5 pb-5 pt-6">
+                <div className="mb-4 flex items-end gap-3"><span className="text-3xl font-semibold tracking-tight">14,280</span><span className="mb-1 text-xs text-[#78817F]">requests / min</span><span className="mb-1 ml-auto text-[10px] text-[#70E9CA]">+8.4%</span></div>
+                <div className="relative h-44">
+                  <div className="absolute inset-0 flex flex-col justify-between">{[0,1,2,3,4].map(n=><div key={n} className="border-t border-dashed border-white/[0.065]"/>)}</div>
+                  <svg viewBox="0 0 1000 200" preserveAspectRatio="none" className="relative h-full w-full overflow-visible">
+                    <defs><linearGradient id="overviewFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#70E9CA" stopOpacity=".22"/><stop offset="100%" stopColor="#70E9CA" stopOpacity="0"/></linearGradient></defs>
+                    <path d={`${line} L1000 200 L0 200Z`} fill="url(#overviewFill)"/>
+                    <motion.path d={line} fill="none" stroke="#70E9CA" strokeWidth="2.5" vectorEffect="non-scaling-stroke" strokeLinecap="round" initial={{pathLength:0}} animate={{pathLength:1}} transition={{duration:1.5,ease:'easeOut'}}/>
+                  </svg>
+                </div>
+                <div className="mt-3 flex justify-between text-[9px] text-[#69716F]"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:59</span></div>
+                <p className="mt-4 text-[9px] text-[#636C69]">Illustrative visualization — connect telemetry for actual measurements.</p>
+              </div>
+            </div>
+
+            <div className={`${panel} xl:col-span-2`}>
+              <div className="border-b border-white/[0.07] px-5 py-4"><h3 className="text-sm font-medium">Infrastructure health</h3><p className="mt-1 text-[10px] text-[#747D7B]">Service state overview</p></div>
+              <div className="flex flex-col items-center p-6">
+                <div className="relative flex h-40 w-40 items-center justify-center rounded-full" style={{background:'conic-gradient(from 220deg, #70E9CA 0deg 260deg, #29312F 260deg 360deg)'}}>
+                  <div className="absolute inset-[9px] rounded-full border border-white/[0.05] bg-[#101316]"/>
+                  <div className="relative text-center"><div className="text-4xl font-semibold tracking-[-.06em]">98.6</div><div className="mt-1 text-[9px] uppercase tracking-[.18em] text-[#7C8783]">Health score</div></div>
+                </div>
+                <div className="mt-7 w-full space-y-4">
+                  {[['Operational','18 services','#70E9CA'],['Degraded','2 services','#F7B96D'],['Critical','0 services','#F17D85']].map(([label,count,color])=><div key={label} className="flex items-center justify-between text-xs"><span className="flex items-center gap-2 text-[#A4AEAA]"><span className="h-2 w-2 rounded-full" style={{background:color,boxShadow:`0 0 10px ${color}55`}}/>{label}</span><span className="text-[#E2E8E5]">{count}</span></div>)}
+                </div>
+                <Link to="/service-map" className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-white/[0.09] py-2.5 text-xs text-[#C5CECA] transition-colors hover:border-[#70E9CA]/40 hover:text-[#70E9CA]">Open service map <ArrowUpRight size={13}/></Link>
+                <p className="mt-3 text-[9px] text-[#636C69]">Illustrative health summary</p>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* SERVICES + ACTIVITY */}
+        <motion.section
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          className="mb-10">
+          <div className="mb-4"><Heading eyebrow="Operational intelligence" title="Know what needs attention" note="A focused view of services and recent events."/></div>
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+            <div className={`${panel} xl:col-span-3`}>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.07] px-5 py-4">
+                <div><h3 className="text-sm font-medium">Service performance</h3><p className="mt-1 text-[10px] text-[#747D7B]">Latency and operational status</p></div>
+                <Link to="/service-map" className={linkStyle}>Topology <ArrowUpRight size={13}/></Link>
+              </div>
+              <div className="border-b border-white/[0.06] p-4">
+                <div className="flex max-w-xs items-center gap-2 rounded-lg border border-white/[0.08] bg-black/20 px-3 py-2.5 focus-within:border-[#70E9CA]/40">
+                  <Search size={14} className="text-[#78817F]"/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Filter services..." className="w-full bg-transparent text-xs outline-none placeholder:text-[#626B68]"/>
+                </div>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[440px] text-left">
+                  <thead><tr className="border-b border-white/[0.06] text-[9px] uppercase tracking-[.13em] text-[#727C78]"><th className="px-5 py-3 font-medium">Service</th><th className="px-3 py-3 font-medium">Latency</th><th className="px-5 py-3 font-medium">Status</th></tr></thead>
+                  <tbody>{filtered.map((s,i)=><tr key={s.name} className="group border-b border-white/[0.045] transition-colors last:border-0 hover:bg-white/[0.025]">
+                    <td className="px-5 py-4"><div className="flex items-center gap-3"><div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.07] bg-white/[0.025] transition-colors group-hover:border-[#70E9CA]/20"><Server size={15} style={{color:s.color}}/></div><div><p className="text-xs font-medium text-[#E2E8E5]">{s.name}</p><p className="mt-1 text-[10px] text-[#727C78]">{s.detail}</p></div></div></td>
+                    <td className="px-3 py-4 font-mono text-xs text-[#B6C0BC]">{s.latency}</td>
+                    <td className="px-5 py-4"><span className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px]" style={{color:s.color,borderColor:`${s.color}30`,background:`${s.color}0D`}}><span className="h-1.5 w-1.5 rounded-full bg-current"/>{s.status}</span></td>
+                  </tr>)}</tbody>
+                </table>
+                {filtered.length===0&&<p className="p-6 text-xs text-[#89928E]">No matching services.</p>}
+              </div>
+              <p className="border-t border-white/[0.05] px-5 py-3 text-[9px] text-[#626B68]">Sample service data · Replace with your existing API data source.</p>
+            </div>
+
+            <div className={`${panel} xl:col-span-2`}>
+              <div className="flex items-center justify-between border-b border-white/[0.07] px-5 py-4"><div><h3 className="text-sm font-medium">Recent activity</h3><p className="mt-1 text-[10px] text-[#747D7B]">Operational event timeline</p></div><span className="rounded-md border border-white/[0.08] px-2 py-1 text-[9px] text-[#8C9692]">ACTIVITY</span></div>
+              <div className="p-5">
+                {events.map((e,i)=><div key={e.title} className="relative flex gap-3 pb-6 last:pb-0">
+                  {i!==events.length-1&&<div className="absolute bottom-0 left-[5px] top-4 w-px bg-white/[0.09]"/>}
+                  <span className="relative mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full border-2 border-[#101316]" style={{background:e.color,boxShadow:`0 0 12px ${e.color}55`}}/>
+                  <div className="min-w-0 flex-1"><p className="text-xs font-medium text-[#DDE4E0]">{e.title}</p><p className="mt-1.5 text-[10px] text-[#7C8682]">{e.detail}</p></div><span className="shrink-0 pt-0.5 text-[9px] text-[#69716F]">{e.time}</span>
+                </div>)}
+              </div>
+              <Link to="/alerts" className="mx-5 mb-5 flex items-center justify-center gap-2 rounded-lg border border-white/[0.08] py-2.5 text-xs text-[#C3CCC8] transition-colors hover:border-[#70E9CA]/30 hover:text-[#70E9CA]">Open alert center <ArrowUpRight size={13}/></Link>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* QUICK ACCESS */}
+        <motion.section
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
+          className="mb-8">
+          <div className="mb-4"><Heading eyebrow="Quick access" title="Go deeper" note="Move from overview to investigation in one step."/></div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            {[
+              {icon:Terminal,title:'Log explorer',desc:'Investigate events and application signals.',path:'/logs',tag:'LOGS',color:'#70E9CA'},
+              {icon:GitBranch,title:'Root cause analysis',desc:'Follow dependencies and investigate incidents.',path:'/root-cause',tag:'ANALYSIS',color:'#A991FF'},
+              {icon:Bell,title:'Alert center',desc:'Review warnings and operational events.',path:'/alerts',tag:'ALERTS',color:'#F7B96D'},
+            ].map((item,i)=><motion.div key={item.title} whileHover={{y:-3}} transition={{duration:.2}}><Link to={item.path} className={`${panel} group flex h-full items-start gap-4 p-5 transition-all duration-300 hover:border-white/[0.17] hover:bg-[#14191A]`}>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] transition-all group-hover:scale-105" style={{color:item.color}}><item.icon size={18}/></span>
+              <div className="min-w-0 flex-1"><div className="mb-2 flex items-center gap-2"><span className="text-[9px] tracking-[.15em]" style={{color:item.color}}>{item.tag}</span><span className="h-px flex-1 bg-white/[0.07]"/></div><h3 className="text-sm font-medium">{item.title}</h3><p className="mt-2 text-xs leading-5 text-[#818B87]">{item.desc}</p></div>
+              <ArrowUpRight size={15} className="shrink-0 text-[#626C68] transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#70E9CA]"/>
+            </Link></motion.div>)}
+          </div>
+        </motion.section>
+
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] py-5 text-[10px] text-[#626B68]">
+          <span className="flex items-center gap-2"><Command size={12}/> AIOps Intelligence Workspace</span>
+          <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-[#70E9CA]"/> UI preview · Metrics shown above are illustrative</span>
+        </footer>
+      </div>
+    </main>
+  )
+}
+
+export default Dashboard

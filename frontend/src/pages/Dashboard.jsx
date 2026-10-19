@@ -1,378 +1,278 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState } from "react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import {
-  Activity, Database, Clock, Network, ChevronRight, 
-  ShieldAlert, ShieldCheck, Server, Terminal, Cpu, GitCommit, 
-  Check, X, HelpCircle, Sparkles, Lock, ArrowRight, Globe, 
-  MessageSquare, Users, Box, Zap, AlertCircle, Search, Command, FileText, CheckCircle2, Award,
-  Upload, Play, Shield, PlayCircle, MonitorPlay, TrendingUp, Cloud, Star
-} from 'lucide-react'
+  Activity, ArrowDown, ArrowRight, ArrowUpRight, CheckCircle2,
+  ChevronRight, Cloud, Cpu, GitBranch, Layers3, Menu, RefreshCw,
+  Server, ShieldCheck, Terminal, X, Zap
+} from "lucide-react";
+import { useRef } from "react";
 
-const appleEase = [0.16, 1, 0.3, 1]
-const spring = { type: "spring", stiffness: 300, damping: 25 }
+const services = [
+  { name: "API Gateway", detail: "Request routing and traffic", status: "Operational", uptime: "99.98%", icon: Cloud },
+  { name: "Application Server", detail: "Core application services", status: "Operational", uptime: "99.95%", icon: Server },
+  { name: "Build Pipeline", detail: "Continuous integration", status: "Operational", uptime: "99.91%", icon: GitBranch },
+  { name: "Compute Engine", detail: "Processing resources", status: "Monitoring", uptime: "98.76%", icon: Cpu }
+];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 60 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.9, delay: i * 0.08, ease: appleEase } }),
+const deployments = [
+  { version: "v2.8.4", branch: "main", environment: "Production", status: "Successful", time: "Today · 10:42 AM" },
+  { version: "v2.8.3", branch: "release/stable", environment: "Staging", status: "Successful", time: "Today · 9:18 AM" },
+  { version: "v2.8.2", branch: "main", environment: "Production", status: "Successful", time: "Yesterday · 6:32 PM" }
+];
+
+const activities = [
+  { title: "Deployment completed", detail: "Production · main branch", time: "8 min ago", type: "success" },
+  { title: "Build pipeline passed", detail: "Build #284 · 12 checks", time: "24 min ago", type: "success" },
+  { title: "Resource usage increased", detail: "Compute Engine · 72% CPU", time: "41 min ago", type: "warning" },
+  { title: "Configuration updated", detail: "Environment variables", time: "1 hr ago", type: "info" }
+];
+
+function Reveal({ children, className = "", delay = 0 }) {
+  const ref = useRef(null);
+  const visible = useInView(ref, { once: true, amount: 0.14 });
+  return (
+    <motion.div ref={ref} className={className}
+      initial={{ opacity: 0, y: 28 }}
+      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+      transition={{ duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] }}>
+      {children}
+    </motion.div>
+  );
 }
 
-const slideInLeft = {
-  hidden: { opacity: 0, x: -100 },
-  show: { opacity: 1, x: 0, transition: { duration: 1, ease: appleEase } },
+function Heading({ eyebrow, title, description }) {
+  return (
+    <div className="dash-heading">
+      <p className="dash-eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      {description && <p className="dash-description">{description}</p>}
+    </div>
+  );
 }
 
-const slideInRight = {
-  hidden: { opacity: 0, x: 100 },
-  show: { opacity: 1, x: 0, transition: { duration: 1, ease: appleEase } },
+function Pill({ children, warning = false }) {
+  return <span className={`dash-pill ${warning ? "warning" : ""}`}><i />{children}</span>;
 }
 
-function useAnimatedNumber(target, duration = 1500) {
-  const [val, setVal] = useState(0)
-  useEffect(() => {
-    let raf, start
-    const step = (t) => {
-      if (!start) start = t
-      const p = Math.min((t - start) / duration, 1)
-      const eased = 1 - Math.pow(1 - p, 4)
-      setVal(Math.floor(eased * target))
-      if (p < 1) raf = requestAnimationFrame(step)
-    }
-    raf = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(raf)
-  }, [target, duration])
-  return val
+function Metric({ label, value, note, icon: Icon, index }) {
+  return (
+    <Reveal delay={index * 0.08}>
+      <motion.article className="dash-metric" whileHover={{ y: -5 }} transition={{ duration: 0.22 }}>
+        <div className="dash-metric-top"><span>{label}</span><Icon size={19} strokeWidth={1.6} /></div>
+        <div className="dash-metric-value">{value}</div>
+        <div className="dash-metric-note"><span>↗</span> {note}</div>
+      </motion.article>
+    </Reveal>
+  );
 }
 
-function Dashboard() {
-  const [time, setTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-  const [logs, setLogs] = useState(13870)
-  
-  const { scrollYProgress } = useScroll()
-  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.95])
+export default function Dashboard() {
+  const [period, setPeriod] = useState("Last 24 hours");
+  const [filter, setFilter] = useState("All activity");
+  const [refreshing, setRefreshing] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, 90]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.24], [1, 0.3]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-      setLogs(prev => prev + Math.floor(Math.random() * 3))
-    }, 60000)
-    return () => clearInterval(timer)
-  }, [])
+  const filtered = activities.filter(item =>
+    filter === "All activity" ||
+    (filter === "Alerts" && item.type === "warning") ||
+    (filter === "Deployments" && item.type === "success")
+  );
 
-  const logsAnim = useAnimatedNumber(logs)
+  const refresh = () => {
+    setRefreshing(true);
+    window.setTimeout(() => setRefreshing(false), 700);
+  };
 
   return (
-    <div className="w-full min-h-screen bg-[#000000] text-[#F5F5F7] font-[-apple-system,BlinkMacSystemFont,'SF_Pro_Display','SF_Pro_Text','Helvetica_Neue',sans-serif] antialiased selection:bg-[#0A84FF]/30">
-      
-      {/* SECTION 1: HERO */}
-      <motion.div style={{ scale: heroScale }} className="relative w-full overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div key={i} animate={{ y: [0, -150, 0], opacity: [0, 1, 0] }} transition={{ duration: Math.random() * 8 + 5, repeat: Infinity, delay: Math.random() * 5 }}
-            className="absolute w-1 h-1 bg-[#0A84FF] rounded-full blur-[1px]" style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }} />
-        ))}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-[#0A84FF]/[0.08] blur-[160px] rounded-full pointer-events-none z-0" />
-        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-24 md:py-32">
-          <header className="relative flex flex-col lg:flex-row justify-between items-center mb-10 gap-12 lg:gap-8">
-            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: appleEase }} className="flex-1 text-center lg:text-left z-10">
-              <p className="text-[13px] font-semibold tracking-[0.06em] text-[#86868B] uppercase mb-5 flex items-center justify-center lg:justify-start gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#30D158] shadow-[0_0_15px_#30D158]" /> System Operational
-              </p>
-              <h1 className="text-[64px] md:text-[80px] font-bold tracking-[-0.04em] leading-none mb-6 bg-gradient-to-br from-white via-white to-[#86868B] bg-clip-text text-transparent drop-shadow-2xl">Overview.</h1>
-              <p className="text-[24px] md:text-[28px] text-[#86868B] font-medium tracking-[-0.015em] max-w-lg mx-auto lg:mx-0">Real-time infrastructure intelligence. Designed for absolute scale.</p>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.5, ease: appleEase }} className="flex-1 relative w-full max-w-[400px] lg:max-w-[500px] h-[300px] lg:h-[400px] flex items-center justify-center">
-              <div className="relative w-48 h-48 lg:w-64 lg:h-64 rounded-full bg-gradient-to-b from-[#1C1C1E] to-[#0A0A0C] shadow-[inset_0_0_40px_rgba(255,255,255,0.05),0_0_120px_rgba(10,132,255,0.4)] border border-white/10 flex items-center justify-center z-20">
-                 <motion.div animate={{ rotateY: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border border-[#0A84FF]/50 border-t-[#0A84FF] opacity-60" />
-                 <Cpu size={64} className="text-[#0A84FF] drop-shadow-[0_0_25px_rgba(10,132,255,1)]" strokeWidth={1} />
+    <main className="apple-dash">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        .apple-dash{--ink:#1d1d1f;--muted:#6e6e73;--line:#e8e8ed;--blue:#0071e3;background:#fff;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;overflow:hidden}
+        .apple-dash *{box-sizing:border-box}
+        .apple-dash a{color:inherit;text-decoration:none}
+        .dash-nav{height:54px;display:flex;align-items:center;justify-content:space-between;max-width:1240px;padding:0 28px;margin:auto}
+        .dash-brand{font-size:17px;font-weight:700;letter-spacing:-.7px}
+        .dash-navlinks{display:flex;align-items:center;gap:30px;font-size:12px;color:#424245}
+        .dash-navlinks a:hover,.dash-footer a:hover{color:var(--blue)}
+        .dash-navright{display:flex;gap:12px;align-items:center}
+        .dash-iconbtn{display:none;border:0;background:none;padding:8px}
+        .dash-navline{border-bottom:1px solid #f0f0f2}
+        .dash-hero{position:relative;min-height:600px;display:flex;align-items:center;justify-content:center;text-align:center;padding:74px 24px 80px;background:linear-gradient(180deg,#fff 0%,#f5f8fc 100%)}
+        .dash-hero-inner{max-width:940px;position:relative;z-index:2}
+        .dash-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid #d9e7f8;border-radius:99px;padding:8px 13px;color:#245a91;font-size:11px;font-weight:600;background:#fff}
+        .dash-kicker span{width:7px;height:7px;background:#30b566;border-radius:50%;box-shadow:0 0 0 4px #30b56618}
+        .dash-hero h1{font-size:clamp(44px,7vw,82px);line-height:1.03;letter-spacing:-.075em;font-weight:700;margin:25px 0 18px}
+        .dash-hero h1 em{font-style:normal;color:#777d87}
+        .dash-hero-copy{max-width:620px;margin:0 auto;color:var(--muted);font-size:17px;line-height:1.75}
+        .dash-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+        .dash-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:99px;padding:13px 21px;font-size:13px;font-weight:600;transition:transform .25s,box-shadow .25s}
+        .dash-button:hover{transform:translateY(-2px)}
+        .dash-button.primary{background:var(--blue);color:white;box-shadow:0 6px 18px #0071e326}
+        .dash-button.primary:hover{box-shadow:0 9px 25px #0071e344}
+        .dash-button.secondary{color:var(--blue);background:#fff;border:1px solid #d9d9df}
+        .dash-hero-visual{position:relative;margin:54px auto 0;max-width:920px;border-radius:25px;overflow:hidden;box-shadow:0 30px 90px #22395720;border:1px solid #ffffff}
+        .dash-hero-visual img{display:block;width:100%;height:clamp(190px,33vw,370px);object-fit:cover;object-position:center 48%}
+        .dash-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#091d3555,transparent 65%),linear-gradient(0deg,#091d3544,transparent 50%);pointer-events:none}
+        .dash-image-caption{position:absolute;z-index:1;left:24px;bottom:22px;color:white;text-align:left}
+        .dash-image-caption strong{display:block;font-size:17px;letter-spacing:-.4px}
+        .dash-image-caption span{font-size:11px;color:#ffffffc4;margin-top:5px;display:block}
+        .dash-scrollhint{margin-top:28px;color:#929298;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+        .dash-section{max-width:1180px;margin:0 auto;padding:100px 28px}
+        .dash-eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:700;margin:0 0 13px}
+        .dash-heading{margin-bottom:35px}
+        .dash-heading h2{font-size:clamp(30px,4vw,48px);line-height:1.12;letter-spacing:-.06em;font-weight:650;margin:0}
+        .dash-description{color:var(--muted);font-size:14px;line-height:1.7;margin:12px 0 0;max-width:580px}
+        .dash-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+        .dash-metric{height:100%;min-height:170px;padding:23px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#fff,#fafbfe);box-shadow:0 4px 15px #10182804;transition:border-color .25s,box-shadow .25s}
+        .dash-metric:hover{border-color:#cbdcf3;box-shadow:0 15px 35px #203e600d}
+        .dash-metric-top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px;gap:8px}
+        .dash-metric-top svg{color:#64748b}
+        .dash-metric-value{font-size:clamp(27px,3vw,36px);font-weight:650;letter-spacing:-.06em;margin:22px 0 9px}
+        .dash-metric-note{font-size:11px;color:var(--muted)}.dash-metric-note span{color:#159957;font-weight:700}
+        .dash-note{font-size:10px;color:#929298;margin-top:14px}
+        .dash-band{background:#f5f5f7;border-top:1px solid #ededf0;border-bottom:1px solid #ededf0}
+        .dash-band .dash-section{padding-top:90px;padding-bottom:90px}
+        .dash-two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:50px;align-items:start}
+        .dash-service-list,.dash-activity-list,.dash-deployments{border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden}
+        .dash-service{display:flex;align-items:center;gap:13px;padding:19px 20px;border-bottom:1px solid #f0f0f2;transition:background .2s}
+        .dash-service:last-child{border-bottom:0}.dash-service:hover{background:#fafcff}
+        .dash-service-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#f2f6fc;color:#376da8;flex-shrink:0}
+        .dash-service-info{min-width:0;flex:1}.dash-service-info strong{display:block;font-size:13px;font-weight:600}.dash-service-info small{display:block;margin-top:5px;color:var(--muted);font-size:11px}
+        .dash-uptime{text-align:right;margin-right:8px}.dash-uptime strong{font-size:12px;display:block}.dash-uptime small{font-size:10px;color:var(--muted)}
+        .dash-pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:7px 9px;font-size:10px;white-space:nowrap;background:#eaf8f0;color:#177245}
+        .dash-pill i{height:6px;width:6px;background:#27a865;border-radius:50%}.dash-pill.warning{background:#fff4e5;color:#985c00}.dash-pill.warning i{background:#e9a23b}
+        .dash-panel{border:1px solid var(--line);border-radius:20px;padding:22px;background:#fff}
+        .dash-panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:19px}.dash-panel-title h3{font-size:15px;letter-spacing:-.4px;margin:0}.dash-panel-title span{font-size:11px;color:var(--muted)}
+        .dash-filter{font:inherit;font-size:11px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:white;color:var(--ink);outline:none}
+        .dash-activity{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #f0f0f2}.dash-activity:last-child{border-bottom:0}
+        .dash-activity-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#eef8f1;color:#198754;flex-shrink:0}.dash-activity-icon.warning{background:#fff4e5;color:#a36500}.dash-activity-icon.info{background:#eef5ff;color:#2468b4}
+        .dash-activity strong{display:block;font-size:12px;font-weight:600}.dash-activity p{font-size:11px;color:var(--muted);margin:5px 0}.dash-activity small{font-size:10px;color:#929298}
+        .dash-deploy-head,.dash-deploy-row{display:grid;grid-template-columns:1fr .8fr .8fr 1fr;gap:12px;align-items:center;padding:16px 20px;font-size:11px}
+        .dash-deploy-head{background:#fafafa;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+        .dash-deploy-row{border-top:1px solid #f0f0f2}.dash-deploy-row strong{font-size:12px}.dash-deploy-row small{display:block;color:var(--muted);margin-top:4px}
+        .dash-status-band{background:#101b2b;color:#fff;position:relative;overflow:hidden}
+        .dash-status-band .dash-section{padding-top:88px;padding-bottom:88px}
+        .dash-status-band .dash-eyebrow{color:#9dc5ff}.dash-status-band .dash-heading h2{color:#fff}.dash-status-band .dash-description{color:#a9b6c8}
+        .dash-health-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+        .dash-health-card{border:1px solid #ffffff20;border-radius:18px;background:#ffffff08;padding:23px;backdrop-filter:blur(12px)}
+        .dash-health-card svg{color:#b3d2ff}.dash-health-card strong{display:block;font-size:24px;letter-spacing:-.04em;margin:22px 0 7px}.dash-health-card span{font-size:11px;color:#a9b6c8}
+        .dash-health-line{height:3px;background:#ffffff18;border-radius:10px;margin-top:20px;overflow:hidden}.dash-health-line span{display:block;height:100%;background:#9dc5ff;border-radius:10px}
+        .dash-footer{max-width:1180px;margin:auto;padding:26px 28px;display:flex;align-items:center;justify-content:space-between;gap:15px;color:var(--muted);font-size:10px}
+        .dash-footer-links{display:flex;gap:20px}
+        @media(max-width:850px){.dash-nav{padding:0 20px}.dash-navlinks{display:none;position:absolute;z-index:10;top:54px;left:0;right:0;background:#fff;padding:20px 25px;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:20px}.dash-navlinks.open{display:flex}.dash-iconbtn{display:block}.dash-hero{min-height:auto;padding:65px 20px}.dash-hero-visual{margin-top:38px}.dash-section{padding:72px 20px}.dash-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-two-col{grid-template-columns:1fr;gap:35px}.dash-health-grid{grid-template-columns:1fr}.dash-status-band .dash-section{padding:70px 20px}}
+        @media(max-width:520px){.dash-hero h1{font-size:46px}.dash-hero-copy{font-size:14px}.dash-metrics{gap:9px}.dash-metric{padding:16px;min-height:150px}.dash-metric-value{font-size:27px}.dash-service{padding:15px 12px;gap:9px}.dash-service-icon{width:36px;height:36px}.dash-uptime{display:none}.dash-deploy-head,.dash-deploy-row{grid-template-columns:1fr .8fr .8fr;gap:8px;padding:13px 11px}.dash-deploy-head span:last-child,.dash-deploy-row>span:last-child{display:none}.dash-footer{align-items:flex-start;flex-direction:column}.dash-footer-links{flex-wrap:wrap}}
+        @media(prefers-reduced-motion:reduce){.apple-dash *{scroll-behavior:auto!important;transition:none!important}}
+      `}</style>
+
+      <section className="dash-hero" id="home" ref={heroRef}>
+        <motion.div className="dash-hero-inner" style={{ y: heroY, opacity: heroOpacity }}>
+          <span className="dash-kicker"><span /> YOUR INFRASTRUCTURE, IN FOCUS</span>
+          <h1>Everything running.<br/><em>One clear view.</em></h1>
+          <p className="dash-hero-copy">Understand your systems at a glance. Track service health, follow deployments, and spot issues before they become problems.</p>
+          <div className="dash-actions">
+            <a className="dash-button primary" href="#overview">Explore dashboard <ArrowRight size={15}/></a>
+            <a className="dash-button secondary" href="#services">View infrastructure <ChevronRight size={15}/></a>
+          </div>
+          <div className="dash-hero-visual">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1800&q=85" alt="Earth horizon and connected global infrastructure" />
+            <div className="dash-image-caption"><strong>One connected platform.</strong><span>Clarity across your entire infrastructure.</span></div>
+          </div>
+          <p className="dash-scrollhint"><ArrowDown size={12} style={{display:"inline",verticalAlign:"middle",marginRight:7}}/> Scroll to explore</p>
+        </motion.div>
+      </section>
+
+      <section className="dash-section" id="overview">
+        <Reveal><Heading eyebrow="At a glance" title="The big picture, made simple." description="A focused view of the signals that matter most to your team."/></Reveal>
+        <div className="dash-metrics">
+          <Metric label="Service availability" value="99.98%" note="0.04% vs previous period" icon={Activity} index={0}/>
+          <Metric label="Successful deployments" value="128" note="12.6% vs previous period" icon={GitBranch} index={1}/>
+          <Metric label="Active services" value="12 / 13" note="1 needs attention" icon={Layers3} index={2}/>
+          <Metric label="Average response" value="142 ms" note="8.2% faster than before" icon={Zap} index={3}/>
+        </div>
+        <p className="dash-note">Illustrative dashboard values. Connect live telemetry to display measured results.</p>
+      </section>
+
+      <section className="dash-band" id="services">
+        <div className="dash-section">
+          <Reveal><Heading eyebrow="Infrastructure" title="Built to keep things moving." description="See the state of core services without digging through logs and multiple tools."/></Reveal>
+          <div className="dash-two-col">
+            <Reveal>
+              <div className="dash-panel-title"><h3>Service health</h3><span>Current overview</span></div>
+              <div className="dash-service-list">
+                {services.map((service, i) => {
+                  const Icon = service.icon;
+                  return <motion.div className="dash-service" key={service.name} initial={{opacity:0,x:-12}} whileInView={{opacity:1,x:0}} viewport={{once:true,amount:.2}} transition={{delay:i*.07}}>
+                    <div className="dash-service-icon"><Icon size={19}/></div>
+                    <div className="dash-service-info"><strong>{service.name}</strong><small>{service.detail}</small></div>
+                    <div className="dash-uptime"><strong>{service.uptime}</strong><small>Availability</small></div>
+                    <Pill warning={service.status !== "Operational"}>{service.status}</Pill>
+                  </motion.div>;
+                })}
               </div>
-            </motion.div>
-          </header>
-        </div>
-      </motion.div>
-
-      {/* NEW SECTION: GLOBAL MAP */}
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#050508] py-32 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4 text-white">Global Infrastructure.</h2>
-            <p className="text-[19px] text-[#86868B] font-medium max-w-xl mx-auto">Running across 24 regions worldwide.</p>
-          </motion.div>
-          <motion.div variants={fadeUp} className="relative w-full h-[400px] rounded-[32px] overflow-hidden border border-white/10 bg-[#0A0A0C] group">
-            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" alt="World Map" className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-transparent to-[#000000]/50" />
-            {[{ top: '40%', left: '20%', label: 'US-East' },{ top: '35%', left: '50%', label: 'EU-West' },{ top: '55%', left: '70%', label: 'Asia-Pacific' },{ top: '70%', left: '30%', label: 'SA-East' }].map((loc, i) => (
-              <div key={i} className="absolute" style={{ top: loc.top, left: loc.left }}>
-                <div className="relative flex h-4 w-4"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0A84FF] opacity-75"></span><span className="relative inline-flex rounded-full h-4 w-4 bg-[#0A84FF] shadow-[0_0_15px_#0A84FF]"></span></div>
-                <p className="absolute top-6 left-1/2 -translate-x-1/2 text-[12px] font-mono text-white whitespace-nowrap">{loc.label}</p>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* NEW SECTION: KEY METRICS */}
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#000000] py-32 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4 text-white">Numbers that matter.</h2>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[{ value: '99.99', suffix: '%', label: 'Uptime SLA' },{ value: '50', suffix: 'ms', label: 'Avg Response' },{ value: '10', suffix: 'k+', label: 'Deployments' },{ value: '24', suffix: '/7', label: 'Support' }].map((stat, i) => (
-              <motion.div key={i} variants={fadeUp} custom={i} className="bg-gradient-to-b from-[#1C1C1E] to-[#0A0A0C] rounded-[24px] p-8 border border-[#2C2C2E] text-center">
-                <p className="text-[48px] font-bold tracking-tighter text-white mb-2">{stat.value}<span className="text-[#0A84FF]">{stat.suffix}</span></p>
-                <p className="text-[14px] font-medium text-[#86868B] uppercase tracking-wider">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* NEW SECTION: INTEGRATIONS */}
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#FBFBFD] text-[#1D1D1F] py-32 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4">Works with everything.</h2>
-            <p className="text-[19px] text-[#86868B] font-medium max-w-xl mx-auto">Seamlessly integrates with your entire stack.</p>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['AWS', 'GCP', 'Azure', 'Kubernetes', 'Docker', 'GitHub', 'Slack', 'Datadog'].map((name, i) => (
-              <motion.div key={i} variants={fadeUp} custom={i} whileHover={{ y: -5, boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)' }} className="bg-white rounded-[24px] p-8 border border-[#E5E5EA] flex flex-col items-center justify-center gap-4 cursor-pointer transition-all">
-                <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-[24px] font-bold text-gray-400">{name[0]}</div>
-                <span className="text-[16px] font-bold">{name}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* NEW SECTION: CERTIFICATIONS */}
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#000000] py-32 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4 text-white">Enterprise Grade.</h2>
-            <p className="text-[19px] text-[#86868B] font-medium max-w-xl mx-auto">Trusted by the world's most secure teams.</p>
-          </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['SOC2 Type II', 'ISO 27001', 'GDPR', 'HIPAA'].map((cert, i) => (
-              <motion.div key={i} variants={fadeUp} custom={i} className="bg-[#111111] rounded-[24px] p-8 border border-[#222] flex flex-col items-center justify-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#30D158]/10 flex items-center justify-center"><ShieldCheck size={32} className="text-[#30D158]" /></div>
-                <span className="text-[16px] font-bold text-white">{cert}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* SECTION 2: PURE WHITE (Quick Actions) */}
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#FBFBFD] text-[#1D1D1F] py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#00000010_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-20">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4">Start in seconds.</h2>
-            <p className="text-[19px] text-[#86868B] font-medium max-w-xl mx-auto">Manage your entire DevOps pipeline right out of the box.</p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[{ title: 'View Live Logs', desc: 'Stream real-time events', icon: Terminal, color: 'text-[#0A84FF]', bg: 'bg-[#0A84FF]/10' },{ title: 'Deploy Service', desc: 'Push to production', icon: PlayCircle, color: 'text-[#5E5CE6]', bg: 'bg-[#5E5CE6]/10' },{ title: 'Run Playbook', desc: 'Execute auto-remediation', icon: ShieldCheck, color: 'text-[#30D158]', bg: 'bg-[#30D158]/10' },{ title: 'View Incidents', desc: 'Manage active alerts', icon: ShieldAlert, color: 'text-[#FF9F0A]', bg: 'bg-[#FF9F0A]/10' }].map((act, i) => (
-              <motion.div key={i} variants={fadeUp} custom={i} whileHover={{ y: -10, boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)' }}
-                className="bg-white rounded-[24px] p-8 border border-[#E5E5EA] cursor-pointer transition-all flex flex-col items-start relative group">
-                <div className={`w-14 h-14 rounded-2xl ${act.bg} flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform`}>
-                  <act.icon size={28} className={act.color} strokeWidth={2} />
+            </Reveal>
+            <Reveal delay={.12}>
+              <div className="dash-panel" id="activity">
+                <div className="dash-panel-title"><h3>Recent activity</h3>
+                  <select className="dash-filter" value={filter} onChange={e=>setFilter(e.target.value)} aria-label="Filter activity">
+                    <option>All activity</option><option>Deployments</option><option>Alerts</option>
+                  </select>
                 </div>
-                <h3 className="text-[18px] font-semibold mb-1">{act.title}</h3>
-                <p className="text-[14px] text-[#86868B] font-medium">{act.desc}</p>
-              </motion.div>
-            ))}
+                {filtered.map(item=><div className="dash-activity" key={item.title}>
+                  <div className={`dash-activity-icon ${item.type}`}><Activity size={15}/></div>
+                  <div><strong>{item.title}</strong><p>{item.detail}</p><small>{item.time}</small></div>
+                </div>)}
+                {!filtered.length && <p style={{fontSize:12,color:"#6e6e73"}}>No matching activity.</p>}
+              </div>
+            </Reveal>
           </div>
         </div>
-      </motion.div>
+      </section>
 
-      {/* SECTION 3: DARK VISUALS (Absolute Visibility) */}
-      <div className="relative w-full bg-[#000000] py-32 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="text-center mb-20">
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4 text-white">Absolute Visibility.</h2>
-          </motion.div>
+      <section className="dash-section" id="deployments">
+        <Reveal><Heading eyebrow="Delivery" title="Every release, accounted for." description="A clean history of recent changes across production and staging."/></Reveal>
+        <Reveal delay={.1}>
+          <div className="dash-deployments">
+            <div className="dash-deploy-head"><span>Release</span><span>Environment</span><span>Status</span><span>Updated</span></div>
+            {deployments.map(item=><div className="dash-deploy-row" key={item.version}>
+              <span><strong>{item.version}</strong><small>{item.branch}</small></span>
+              <span>{item.environment}</span>
+              <span><Pill><CheckCircle2 size={11}/> {item.status}</Pill></span>
+              <span style={{color:"#6e6e73"}}>{item.time}</span>
+            </div>)}
+          </div>
+        </Reveal>
+      </section>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {[
-              { title: 'Logs Ingested', value: logsAnim.toLocaleString(), trend: '+12%', isUp: true, color: '#0A84FF', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop' },
-              { title: 'Active Alerts', value: '33', trend: '-2', isUp: false, color: '#FF9F0A', img: 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=800&auto=format&fit=crop' },
-              { title: 'Incidents', value: '1', trend: '-1', isUp: false, color: '#FF453A', img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop' },
-              { title: 'Anomalies', value: '2', trend: '+3', isUp: true, color: '#30D158', img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop' },
-            ].map((stat, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, delay: i * 0.15, ease: appleEase }}
-                whileHover={{ y: -10, scale: 1.02 }} className="relative rounded-[28px] p-8 cursor-pointer flex flex-col justify-between min-h-[220px] transition-all duration-500 group overflow-hidden border border-white/10 shadow-2xl">
-                <div className="absolute inset-0 z-0">
-                  <img src={stat.img} alt={stat.title} className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-110 transition-all duration-700 ease-out" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent" />
-                </div>
-                <div className="relative z-20 flex flex-col h-full justify-between">
-                  <div>
-                    <p className="text-[15px] font-semibold text-white/70 mb-6 uppercase tracking-wider">{stat.title}</p>
-                    <div className="flex items-end justify-between">
-                      <p className="text-[48px] font-bold tracking-[-0.04em] leading-none text-white drop-shadow-2xl">{stat.value}</p>
-                      <span className={`text-[14px] font-bold px-3 py-1.5 rounded-xl border backdrop-blur-md ${stat.isUp ? 'text-[#30D158] bg-[#30D158]/10 border-[#30D158]/30' : 'text-[#FF453A] bg-[#FF453A]/10 border-[#FF453A]/30'}`}>{stat.trend}</span>
-                    </div>
-                  </div>
-                </div>
+      <section className="dash-status-band">
+        <div className="dash-section">
+          <Reveal><Heading eyebrow="System confidence" title="Know where you stand." description="A quick, readable snapshot of the indicators teams use to assess system readiness."/></Reveal>
+          <div className="dash-health-grid">
+            {[{name:"API availability",value:"99%",width:"99%"},{name:"Build success rate",value:"96%",width:"96%"},{name:"Resource capacity",value:"72%",width:"72%"}].map((item,i)=><Reveal key={item.name} delay={i*.1}>
+              <motion.div className="dash-health-card" whileHover={{y:-4}}>
+                <ShieldCheck size={20}/><strong>{item.value}</strong><span>{item.name}</span>
+                <div className="dash-health-line"><motion.span initial={{width:0}} whileInView={{width:item.width}} viewport={{once:true}} transition={{duration:1,delay:.2}}/></div>
               </motion.div>
-            ))}
+            </Reveal>)}
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <motion.div variants={slideInLeft} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }}
-              className="col-span-1 lg:col-span-2 bg-[#0A0A0C] rounded-[24px] p-8 border border-[#222] flex flex-col min-h-[380px] relative overflow-hidden group">
-              <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'linear-gradient(#0A84FF 1px, transparent 1px), linear-gradient(90deg, #0A84FF 1px, transparent 1px)', backgroundSize: '40px 40px', transform: 'perspective(500px) rotateX(60deg) scale(2)', transformOrigin: 'bottom' }} />
-              <div className="flex justify-between items-center mb-8 relative z-10">
-                <div><h2 className="text-[22px] font-bold flex items-center gap-3 text-white drop-shadow-md"><Activity size={24} className="text-[#0A84FF]"/> Live Metrics</h2><p className="text-[14px] text-[#86868B] mt-1">Requests per second</p></div>
-              </div>
-              <div className="flex-grow relative w-full h-[220px] mt-4 z-10">
-                <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 1000 200">
-                  <defs><linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#0A84FF" stopOpacity="0.6" /><stop offset="100%" stopColor="#0A84FF" stopOpacity="0" /></linearGradient></defs>
-                  <motion.path initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1.5 }} d="M 0,150 C 100,120 150,80 250,120 C 350,160 400,100 500,150 C 600,200 650,40 750,20 C 850,0 900,150 1000,140 L 1000,200 L 0,200 Z" fill="url(#areaGradient)" />
-                  <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 2 }} d="M 0,150 C 100,120 150,80 250,120 C 350,160 400,100 500,150 C 600,200 650,40 750,20 C 850,0 900,150 1000,140" fill="none" stroke="#0A84FF" strokeWidth="4" className="drop-shadow-[0_0_20px_rgba(10,132,255,1)]" />
-                </svg>
-              </div>
-            </motion.div>
-            
-            <motion.div variants={slideInRight} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }}
-              className="col-span-1 bg-[#111111] rounded-[24px] p-8 border border-[#222] flex flex-col min-h-[380px] relative overflow-hidden">
-              <div className="flex justify-between items-center mb-8 relative z-10">
-                <h2 className="text-[22px] font-bold flex items-center gap-3 text-white"><Globe size={24} className="text-[#FF453A]"/> Threat Feed</h2>
-              </div>
-              <div className="flex-grow flex flex-col space-y-3 relative z-10">
-                {[{ ip: '192.168.1.1', type: 'Port Scan', time: '2m ago' },{ ip: '10.0.0.45', type: 'Data Poisoning', time: '15m ago' }].map((threat, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.2 }}
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.05]">
-                    <div className="flex items-center gap-4">
-                      <div className="relative flex h-3 w-3"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF453A] opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-[#FF453A]"></span></div>
-                      <div><p className="text-[15px] font-mono font-bold text-white">{threat.ip}</p><p className="text-[13px] text-[#86868B] mt-0.5">{threat.type}</p></div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+          <p style={{fontSize:10,color:"#91a0b5",marginTop:18}}>Example monitoring values. Live system measurements are not connected to these cards yet.</p>
         </div>
+      </section>
+
+      <footer className="dash-footer">
+        <span>© {new Date().getFullYear()} AIOps · Infrastructure overview</span>
+        <div className="dash-footer-links"><a href="#home">Back to top ↑</a><a href="#services">Service health</a><a href="#deployments">Deployments</a></div>
+      </footer>
+
+      <div style={{position:"fixed",bottom:20,right:20,zIndex:20}}>
+        <motion.button whileHover={{scale:1.06}} whileTap={{scale:.95}} onClick={refresh} aria-label="Refresh dashboard" style={{border:"1px solid #dedee5",background:"#fff",boxShadow:"0 6px 25px #11111114",borderRadius:99,width:45,height:45,display:"grid",placeItems:"center",cursor:"pointer",color:"#1d1d1f"}}>
+          <RefreshCw size={17} style={{animation:refreshing?"dash-spin .7s linear infinite":"none"}}/>
+        </motion.button>
       </div>
-
-      {/* SECTION 4: WHITE (Security, Compliance, Uptime) */}
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#FBFBFD] text-[#1D1D1F] py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-20">
-            <p className="text-[13px] font-bold tracking-[0.1em] text-[#0A84FF] uppercase mb-4 flex items-center justify-center gap-2"><Sparkles size={16} /> What it covers</p>
-            <h2 className="text-[40px] md:text-[56px] font-bold tracking-[-0.03em] mb-4">Everything, end-to-end.</h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }} whileHover={{ y: -10 }}
-              className="bg-white/90 backdrop-blur-2xl rounded-[32px] p-10 border border-[#E5E5EA] shadow-xl flex flex-col h-[420px] relative overflow-hidden group">
-              <div className="flex justify-between items-center mb-6 relative z-10">
-                <h2 className="text-[22px] font-semibold flex items-center gap-3"><ShieldCheck size={24} className="text-[#30D158]"/> Security</h2>
-                <span className="text-[13px] font-bold text-[#30D158] bg-[#30D158]/10 px-4 py-1.5 rounded-full border border-[#30D158]/20">Grade A</span>
-              </div>
-              <div className="flex-grow relative flex items-center justify-center z-10">
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <motion.div animate={{ rotate: 360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="w-64 h-64 rounded-full border border-[#30D158]/20" />
-                  <motion.div animate={{ rotate: -360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute w-48 h-48 rounded-full border border-dashed border-[#30D158]/40" />
-                </div>
-                <motion.div whileHover={{ scale: 1.1 }} className="relative w-24 h-24 bg-white rounded-[2rem] shadow-[0_10px_20px_rgba(48,209,88,0.2)] border border-[#E5E5EA] flex items-center justify-center">
-                   <Shield size={48} className="text-[#30D158]" strokeWidth={1.5} />
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} whileHover={{ y: -10 }}
-              className="bg-white/90 backdrop-blur-2xl rounded-[32px] p-10 border border-[#E5E5EA] shadow-xl flex flex-col h-[420px] relative overflow-hidden group">
-              <h2 className="text-[22px] font-semibold flex items-center gap-3 mb-8 relative z-10"><Award size={24} className="text-[#0A84FF]"/> Compliance</h2>
-              <div className="grid grid-cols-2 gap-4 mb-8 relative z-10">
-                {['SOC2', 'ISO 27001', 'GDPR', 'HIPAA'].map((cert, i) => (
-                  <motion.div key={i} whileHover={{ scale: 1.05 }} className="flex flex-col items-center justify-center gap-3 bg-white border border-[#E5E5EA] rounded-2xl p-5 shadow-sm">
-                    <div className="w-10 h-10 rounded-full bg-[#30D158]/10 flex items-center justify-center"><CheckCircle2 size={22} className="text-[#30D158]" /></div>
-                    <span className="text-[14px] font-bold text-[#1D1D1F]">{cert}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.3 }} whileHover={{ y: -10 }}
-              className="bg-white/90 backdrop-blur-2xl rounded-[32px] p-10 border border-[#E5E5EA] shadow-xl flex flex-col h-[420px] relative overflow-hidden group">
-              <div className="flex justify-between items-center mb-8 relative z-10">
-                <h2 className="text-[22px] font-semibold flex items-center gap-3"><Activity size={24} className="text-[#30D158]"/> Uptime</h2>
-                <span className="text-[15px] font-bold text-[#30D158]">99.99%</span>
-              </div>
-              <div className="flex-grow relative z-10 flex items-end pb-4">
-                <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 50">
-                  <defs><linearGradient id="uptimeGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#30D158" stopOpacity="0.4" /><stop offset="100%" stopColor="#30D158" stopOpacity="0" /></linearGradient></defs>
-                  <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5 }} d="M 0,45 Q 10,42 20,45 T 40,40 T 60,42 T 80,15 T 100,20 L 100,50 L 0,50 Z" fill="url(#uptimeGradient)" />
-                  <motion.path initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} transition={{ duration: 1.5 }} d="M 0,45 Q 10,42 20,45 T 40,40 T 60,42 T 80,15 T 100,20" fill="none" stroke="#30D158" strokeWidth="2" />
-                </svg>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* SECTION 5: DARK (AI, Terminal) */}
-      <div className="relative w-full bg-[#000000] py-24 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <motion.div initial={{ opacity: 0, x: -60 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
-              className="col-span-1 lg:col-span-2 bg-gradient-to-br from-[#1C1C1E] to-[#0A0A0C] rounded-[24px] p-8 border border-[#2C2C2E] relative overflow-hidden flex flex-col min-h-[300px] group">
-              <div className="flex items-center gap-3 mb-6 relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-[#0A84FF]/20 flex items-center justify-center"><Sparkles size={24} className="text-[#0A84FF]" /></div>
-                <div><h2 className="text-[20px] font-bold">AI Copilot</h2><p className="text-[14px] text-[#86868B]">Automated Root Cause Analysis</p></div>
-              </div>
-              <div className="bg-[#0A0A0C]/80 backdrop-blur-xl border border-[#2C2C2E] rounded-2xl p-6 relative z-10 flex-grow">
-                <p className="text-[15px] leading-relaxed text-[#F5F5F7]"><span className="text-[#FF453A] font-bold">Alert:</span> Log Ingestion service is down on port 8000. <br/><br/><span className="text-[#0A84FF] font-bold">Analysis:</span> High memory usage caused a pod crash. <br/><br/><span className="text-[#30D158] font-bold">Suggestion:</span> Increase memory limit to 2GB and restart.</p>
-              </div>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 60 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
-              className="col-span-1 bg-[#111111] rounded-[24px] p-8 border border-[#222]">
-              <h2 className="text-[20px] font-bold mb-8 flex items-center gap-3"><Users size={22} className="text-[#86868B]"/> Team Activity</h2>
-              <div className="space-y-6">
-                {[{ user: 'Aryan', action: 'deployed v2.0', time: '2m ago', avatar: 'AT', color: 'bg-[#0A84FF]' },{ user: 'John', action: 'resolved incident', time: '15m ago', avatar: 'JD', color: 'bg-[#FF9F0A]' }].map((act, i) => (
-                  <div key={i} className="flex items-center gap-4"><div className={`w-10 h-10 rounded-full ${act.color} flex items-center justify-center text-[13px] font-bold text-white`}>{act.avatar}</div><div><p className="text-[15px] font-medium"><span className="font-bold text-white">{act.user}</span> <span className="text-[#86868B]">{act.action}</span></p><p className="text-[13px] text-[#86868B]">{act.time}</p></div></div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
-            className="w-full bg-[#0A0A0C] rounded-[24px] border border-[#2C2C2E] overflow-hidden shadow-2xl relative mb-8">
-            <div className="flex items-center gap-2.5 px-5 py-4 bg-[#1C1C1E] border-b border-[#2C2C2E]">
-              <div className="flex gap-2"><div className="w-3.5 h-3.5 rounded-full bg-[#FF453A]" /><div className="w-3.5 h-3.5 rounded-full bg-[#FF9F0A]" /><div className="w-3.5 h-3.5 rounded-full bg-[#30D158]" /></div>
-              <span className="text-[14px] font-bold text-[#86868B] ml-2">Terminal</span>
-            </div>
-            <div className="p-6 font-mono text-[14px] leading-[1.8] h-[200px]">
-              <p className="text-[#30D158]">$ aiops connect --cluster production</p>
-              <p className="text-[#86868B] mt-1">Connecting securely...</p>
-              <p className="text-[#0A84FF] mt-3">[INFO] Connected to 4 active nodes.</p>
-              <p className="text-[#FF453A] mt-1">[ERROR] Log Ingestion (localhost:8000) is unreachable.</p>
-              <p className="text-[#30D158] mt-4 flex items-center gap-1.5">$ <span className="w-2.5 h-5 bg-[#F5F5F7] animate-pulse inline-block" /></p>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
-            className="w-full bg-[#111111] rounded-[24px] p-10 md:p-14 border border-[#222] flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden">
-            <div className="absolute -right-20 -bottom-20 opacity-10 pointer-events-none"><ShieldCheck size={500} className="text-[#0A84FF]" strokeWidth={1} /></div>
-            <div className="flex-1 relative z-10">
-              <h2 className="text-[40px] font-bold tracking-[-0.03em] leading-tight mb-4">Full Pipeline Assurance.</h2>
-              <p className="text-[18px] text-[#86868B] max-w-md mb-8 leading-relaxed font-medium">Every stage cryptographically verified — from contributor to output.</p>
-              <div className="flex gap-4"><motion.button whileHover={{ scale: 1.03 }} className="flex items-center gap-2 px-7 py-3.5 bg-[#F5F5F7] text-black rounded-full text-[16px] font-bold">Download Report</motion.button></div>
-            </div>
-            <div className="flex-shrink-0 relative w-full md:w-[400px] h-[240px] bg-[#0A0A0C]/80 backdrop-blur-2xl rounded-2xl border border-[#222] p-7 flex flex-col justify-between shadow-2xl z-10">
-              <div className="flex items-center gap-3"><ShieldCheck size={26} className="text-[#0A84FF]" strokeWidth={2} /><span className="text-[18px] font-bold">Assurance Certificate</span></div>
-              <div className="space-y-3"><div className="h-2 w-full bg-[#222] rounded-full" /><div className="h-2 w-4/5 bg-[#222] rounded-full" /><div className="h-2 w-full bg-[#222] rounded-full" /></div>
-              <p className="text-[13px] font-mono font-semibold text-[#86868B]">Signed: 0x8f3a...4b2c</p>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-    </div>
-  )
+      <style>{`@keyframes dash-spin{to{transform:rotate(360deg)}}html{scroll-behavior:smooth;scroll-padding-top:20px}`}</style>
+    </main>
+  );
 }
-
-export default Dashboard

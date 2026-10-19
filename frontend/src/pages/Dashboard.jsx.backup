@@ -1,0 +1,731 @@
+import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Activity,
+  AlertCircle,
+  ArrowDownRight,
+  ArrowRight,
+  ArrowUpRight,
+  CheckCircle2,
+  ChevronDown,
+  Clock3,
+  Cloud,
+  Cpu,
+  GitBranch,
+  GitCommitHorizontal,
+  Layers3,
+  RefreshCw,
+  Server,
+  ShieldCheck,
+  Terminal,
+  Zap,
+} from "lucide-react";
+
+const services = [
+  {
+    name: "API Gateway",
+    detail: "Request routing",
+    status: "Operational",
+    uptime: "99.98%",
+    icon: Cloud,
+    color: "blue",
+  },
+  {
+    name: "Application Server",
+    detail: "Core application",
+    status: "Operational",
+    uptime: "99.95%",
+    icon: Server,
+    color: "green",
+  },
+  {
+    name: "Build Pipeline",
+    detail: "CI / CD workflow",
+    status: "Operational",
+    uptime: "99.91%",
+    icon: GitBranch,
+    color: "purple",
+  },
+  {
+    name: "Compute Engine",
+    detail: "Processing resources",
+    status: "Monitoring",
+    uptime: "98.76%",
+    icon: Cpu,
+    color: "orange",
+  },
+];
+
+const activities = [
+  {
+    title: "Deployment completed",
+    detail: "Production · main branch",
+    time: "8 min ago",
+    type: "success",
+  },
+  {
+    title: "Build pipeline passed",
+    detail: "Build #284 · 12 checks",
+    time: "24 min ago",
+    type: "success",
+  },
+  {
+    title: "Resource usage increased",
+    detail: "Compute Engine · 72% CPU",
+    time: "41 min ago",
+    type: "warning",
+  },
+  {
+    title: "Configuration updated",
+    detail: "Environment variables",
+    time: "1 hr ago",
+    type: "info",
+  },
+];
+
+const deployments = [
+  {
+    version: "v2.8.4",
+    branch: "main",
+    environment: "Production",
+    status: "Successful",
+    time: "Today, 10:42 AM",
+  },
+  {
+    version: "v2.8.3",
+    branch: "release/stable",
+    environment: "Staging",
+    status: "Successful",
+    time: "Today, 9:18 AM",
+  },
+  {
+    version: "v2.8.2",
+    branch: "main",
+    environment: "Production",
+    status: "Successful",
+    time: "Yesterday, 6:32 PM",
+  },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function SectionHeading({ eyebrow, title, description, action }) {
+  return (
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        {eyebrow && (
+          <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">
+            {eyebrow}
+          </p>
+        )}
+
+        <h2 className="text-lg font-semibold tracking-tight text-white sm:text-xl">
+          {title}
+        </h2>
+
+        {description && (
+          <p className="mt-1.5 text-sm leading-6 text-zinc-400">
+            {description}
+          </p>
+        )}
+      </div>
+
+      {action}
+    </div>
+  );
+}
+
+function MetricCard({
+  title,
+  value,
+  change,
+  positive,
+  icon: Icon,
+  subtitle,
+  delay = 0,
+}) {
+  return (
+    <motion.div
+      variants={fadeUp}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.35, delay }}
+      whileHover={{ y: -3 }}
+      className="group rounded-2xl border border-white/[0.07] bg-[#141419] p-5 transition-colors hover:border-white/[0.13] sm:p-6"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-zinc-400">{title}</p>
+
+          <p className="mt-4 text-3xl font-semibold tracking-[-0.045em] text-white sm:text-[34px]">
+            {value}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/[0.07] bg-white/[0.035] p-2.5 text-zinc-300 transition-colors group-hover:bg-white/[0.07]">
+          <Icon size={18} strokeWidth={1.8} />
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <span
+          className={`inline-flex items-center gap-1 text-xs font-medium ${
+            positive ? "text-emerald-400" : "text-orange-300"
+          }`}
+        >
+          {positive ? (
+            <ArrowUpRight size={14} />
+          ) : (
+            <ArrowDownRight size={14} />
+          )}
+          {change}
+        </span>
+
+        <span className="text-xs text-zinc-500">{subtitle}</span>
+      </div>
+    </motion.div>
+  );
+}
+
+function StatusPill({ status }) {
+  const healthy =
+    status === "Operational" || status === "Successful";
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium ${
+        healthy
+          ? "border-emerald-400/15 bg-emerald-400/[0.07] text-emerald-300"
+          : "border-orange-400/15 bg-orange-400/[0.07] text-orange-300"
+      }`}
+    >
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${
+          healthy ? "bg-emerald-400" : "bg-orange-400"
+        }`}
+      />
+      {status}
+    </span>
+  );
+}
+
+export default function Dashboard() {
+  const [period, setPeriod] = useState("Last 24 hours");
+  const [refreshing, setRefreshing] = useState(false);
+  const [activityFilter, setActivityFilter] = useState("All activity");
+
+  const filteredActivities = useMemo(() => {
+    if (activityFilter === "All activity") {
+      return activities;
+    }
+
+    if (activityFilter === "Alerts") {
+      return activities.filter((item) => item.type === "warning");
+    }
+
+    return activities.filter((item) => item.type === "success");
+  }, [activityFilter]);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    window.setTimeout(() => setRefreshing(false), 600);
+  };
+
+  return (
+    <main className="min-h-screen bg-[#0A0A0D] text-white">
+      <div className="mx-auto w-full max-w-[1440px] px-4 py-7 sm:px-6 sm:py-9 lg:px-10 lg:py-10">
+        {/* Page header */}
+        <motion.header
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-8 flex flex-col gap-5 border-b border-white/[0.07] pb-7 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <div className="mb-3 flex items-center gap-2 text-xs text-zinc-500">
+              <span>Workspace</span>
+              <span>/</span>
+              <span className="text-zinc-300">Overview</span>
+            </div>
+
+            <h1 className="text-[30px] font-semibold tracking-[-0.045em] text-white sm:text-4xl">
+              Dashboard
+            </h1>
+
+            <p className="mt-2 max-w-xl text-sm leading-6 text-zinc-400 sm:text-[15px]">
+              A clear overview of your infrastructure, deployments, and
+              system health.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-[#141419] px-3 py-2.5 text-xs text-zinc-300">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-30" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              System online
+            </div>
+
+            <button
+              type="button"
+              onClick={handleRefresh}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/[0.09] bg-white/[0.035] px-3.5 py-2.5 text-sm text-zinc-200 transition hover:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            >
+              <RefreshCw
+                size={15}
+                className={refreshing ? "animate-spin" : ""}
+              />
+              Refresh
+            </button>
+          </div>
+        </motion.header>
+
+        {/* Metrics */}
+        <section aria-label="System metrics">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-medium text-zinc-300">
+              System overview
+            </p>
+
+            <label className="relative">
+              <span className="sr-only">Reporting period</span>
+
+              <select
+                value={period}
+                onChange={(event) => setPeriod(event.target.value)}
+                className="appearance-none rounded-lg border border-white/[0.08] bg-[#141419] py-2 pl-3 pr-9 text-xs text-zinc-300 outline-none transition focus:border-blue-500/60"
+              >
+                <option>Last 24 hours</option>
+                <option>Last 7 days</option>
+                <option>Last 30 days</option>
+              </select>
+
+              <ChevronDown
+                size={13}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500"
+              />
+            </label>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <MetricCard
+              title="Service availability"
+              value="99.98%"
+              change="+0.04%"
+              positive
+              subtitle="vs. previous period"
+              icon={Activity}
+              delay={0.04}
+            />
+
+            <MetricCard
+              title="Successful deployments"
+              value="128"
+              change="+12.6%"
+              positive
+              subtitle="vs. previous period"
+              icon={GitCommitHorizontal}
+              delay={0.08}
+            />
+
+            <MetricCard
+              title="Active services"
+              value="12 / 13"
+              change="1 monitoring"
+              positive={false}
+              subtitle="requires attention"
+              icon={Layers3}
+              delay={0.12}
+            />
+
+            <MetricCard
+              title="Avg. response time"
+              value="142 ms"
+              change="-8.2%"
+              positive
+              subtitle="faster than before"
+              icon={Zap}
+              delay={0.16}
+            />
+          </div>
+
+          <p className="mt-3 text-[11px] text-zinc-600">
+            Illustrative interface values · {period}
+          </p>
+        </section>
+
+        {/* Main content */}
+        <div className="mt-10 grid grid-cols-1 items-start gap-6 xl:grid-cols-[1.45fr_0.85fr]">
+          <section className="min-w-0">
+            <SectionHeading
+              eyebrow="Infrastructure"
+              title="Service health"
+              description="Monitor the status of your core services."
+              action={
+                <span className="inline-flex items-center gap-1.5 self-start text-xs font-medium text-zinc-400 sm:self-auto">
+                  <Activity size={14} />
+                  Live overview
+                </span>
+              }
+            />
+
+            <div className="mt-5 overflow-hidden rounded-2xl border border-white/[0.07] bg-[#111115]">
+              {services.map((service, index) => {
+                const Icon = service.icon;
+
+                const colorClasses = {
+                  blue: "bg-blue-400/10 text-blue-300",
+                  green: "bg-emerald-400/10 text-emerald-300",
+                  purple: "bg-violet-400/10 text-violet-300",
+                  orange: "bg-orange-400/10 text-orange-300",
+                };
+
+                return (
+                  <motion.div
+                    key={service.name}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: index * 0.06,
+                    }}
+                    className={`flex flex-wrap items-center justify-between gap-4 px-4 py-4 transition hover:bg-white/[0.025] sm:px-5 ${
+                      index !== services.length - 1
+                        ? "border-b border-white/[0.06]"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div
+                        className={`rounded-xl p-2.5 ${colorClasses[service.color]}`}
+                      >
+                        <Icon size={18} strokeWidth={1.8} />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-zinc-100">
+                          {service.name}
+                        </p>
+                        <p className="mt-1 text-xs text-zinc-500">
+                          {service.detail}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="ml-auto flex items-center gap-4 sm:gap-6">
+                      <div className="hidden text-right sm:block">
+                        <p className="text-sm font-medium text-zinc-200">
+                          {service.uptime}
+                        </p>
+                        <p className="mt-1 text-[11px] text-zinc-500">
+                          Availability
+                        </p>
+                      </div>
+
+                      <StatusPill status={service.status} />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Recent deployments */}
+            <div className="mt-9">
+              <SectionHeading
+                eyebrow="Delivery"
+                title="Recent deployments"
+                description="A quick look at recent release activity."
+                action={
+                  <span className="inline-flex items-center gap-1.5 text-xs text-zinc-500">
+                    <GitBranch size={14} />
+                    CI / CD
+                  </span>
+                }
+              />
+
+              <div className="mt-5 overflow-x-auto rounded-2xl border border-white/[0.07] bg-[#111115]">
+                <table className="w-full min-w-[540px] text-left">
+                  <thead>
+                    <tr className="border-b border-white/[0.07] text-[11px] uppercase tracking-wider text-zinc-500">
+                      <th className="px-5 py-3.5 font-medium">Release</th>
+                      <th className="px-4 py-3.5 font-medium">
+                        Environment
+                      </th>
+                      <th className="px-4 py-3.5 font-medium">Status</th>
+                      <th className="px-5 py-3.5 font-medium">Time</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {deployments.map((deployment) => (
+                      <tr
+                        key={deployment.version}
+                        className="border-b border-white/[0.045] last:border-0 transition hover:bg-white/[0.025]"
+                      >
+                        <td className="px-5 py-4">
+                          <p className="text-sm font-medium text-zinc-200">
+                            {deployment.version}
+                          </p>
+                          <p className="mt-1 text-xs text-zinc-500">
+                            {deployment.branch}
+                          </p>
+                        </td>
+
+                        <td className="px-4 py-4 text-sm text-zinc-400">
+                          {deployment.environment}
+                        </td>
+
+                        <td className="px-4 py-4">
+                          <StatusPill status={deployment.status} />
+                        </td>
+
+                        <td className="px-5 py-4 text-xs text-zinc-500">
+                          {deployment.time}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          {/* Right column */}
+          <aside className="min-w-0 space-y-6">
+            <section>
+              <SectionHeading
+                eyebrow="Live feed"
+                title="Recent activity"
+                description="Latest events across your workspace."
+                action={
+                  <span className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+                    <Clock3 size={13} />
+                    Activity
+                  </span>
+                }
+              />
+
+              <div className="mt-5 rounded-2xl border border-white/[0.07] bg-[#111115] p-4 sm:p-5">
+                <label className="relative block">
+                  <span className="sr-only">Filter activity</span>
+
+                  <select
+                    value={activityFilter}
+                    onChange={(event) =>
+                      setActivityFilter(event.target.value)
+                    }
+                    className="w-full appearance-none rounded-lg border border-white/[0.07] bg-[#17171C] px-3 py-2.5 pr-9 text-xs text-zinc-300 outline-none focus:border-blue-500/60"
+                  >
+                    <option>All activity</option>
+                    <option>Deployments</option>
+                    <option>Alerts</option>
+                  </select>
+
+                  <ChevronDown
+                    size={13}
+                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500"
+                  />
+                </label>
+
+                <div className="mt-5">
+                  {filteredActivities.length > 0 ? (
+                    filteredActivities.map((item, index) => {
+                      const Icon =
+                        item.type === "warning"
+                          ? AlertCircle
+                          : item.type === "success"
+                            ? CheckCircle2
+                            : Terminal;
+
+                      const iconColor =
+                        item.type === "warning"
+                          ? "text-orange-300 bg-orange-400/10"
+                          : item.type === "success"
+                            ? "text-emerald-300 bg-emerald-400/10"
+                            : "text-blue-300 bg-blue-400/10";
+
+                      return (
+                        <div
+                          key={item.title}
+                          className={`relative flex gap-3 ${
+                            index !== filteredActivities.length - 1
+                              ? "pb-5"
+                              : "pb-1"
+                          }`}
+                        >
+                          {index !== filteredActivities.length - 1 && (
+                            <span className="absolute bottom-0 left-[15px] top-8 w-px bg-white/[0.07]" />
+                          )}
+
+                          <div
+                            className={`relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${iconColor}`}
+                          >
+                            <Icon size={15} />
+                          </div>
+
+                          <div className="min-w-0 flex-1 pt-0.5">
+                            <p className="text-[13px] font-medium leading-5 text-zinc-200">
+                              {item.title}
+                            </p>
+                            <p className="mt-1 text-xs leading-5 text-zinc-500">
+                              {item.detail}
+                            </p>
+                            <p className="mt-2 text-[10px] text-zinc-600">
+                              {item.time}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="py-6 text-center text-sm text-zinc-500">
+                      No matching activity.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* System status */}
+            <section className="rounded-2xl border border-white/[0.07] bg-[#111115] p-5 sm:p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-white">
+                    System status
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Overall infrastructure health
+                  </p>
+                </div>
+
+                <ShieldCheck size={21} className="text-emerald-300" />
+              </div>
+
+              <div className="mt-6 flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-400/15 bg-emerald-400/[0.07]">
+                  <CheckCircle2 size={21} className="text-emerald-300" />
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-emerald-300">
+                    Core systems operational
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    One service is being monitored.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-4">
+                {[
+                  {
+                    label: "API availability",
+                    value: 99,
+                    display: "99%",
+                  },
+                  {
+                    label: "Build success rate",
+                    value: 96,
+                    display: "96%",
+                  },
+                  {
+                    label: "Resource capacity",
+                    value: 72,
+                    display: "72%",
+                  },
+                ].map((item) => (
+                  <div key={item.label}>
+                    <div className="mb-2 flex items-center justify-between gap-3 text-xs">
+                      <span className="text-zinc-400">{item.label}</span>
+                      <span className="font-medium tabular-nums text-zinc-200">
+                        {item.display}
+                      </span>
+                    </div>
+
+                    <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${item.value}%` }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="h-full rounded-full bg-zinc-300"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <p className="mt-5 border-t border-white/[0.06] pt-4 text-[11px] leading-5 text-zinc-600">
+                Example monitoring values. Connect live telemetry to display
+                actual system health.
+              </p>
+            </section>
+
+            {/* Developer workspace */}
+            <section className="rounded-2xl border border-white/[0.07] bg-[#111115] p-5">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-white/[0.05] p-2.5 text-zinc-300">
+                  <Terminal size={18} />
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-zinc-100">
+                    Developer workspace
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Tools and project resources
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 divide-y divide-white/[0.06]">
+                {[
+                  {
+                    label: "Deployment history",
+                    icon: GitBranch,
+                  },
+                  {
+                    label: "Infrastructure resources",
+                    icon: Server,
+                  },
+                  {
+                    label: "System diagnostics",
+                    icon: Activity,
+                  },
+                ].map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <div
+                      key={item.label}
+                      className="flex w-full items-center justify-between gap-3 py-3 text-xs text-zinc-400"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <Icon size={15} />
+                        {item.label}
+                      </span>
+
+                      <ArrowRight size={14} />
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <footer className="mt-10 flex flex-col gap-2 border-t border-white/[0.06] pt-5 text-[11px] text-zinc-600 sm:flex-row sm:items-center sm:justify-between">
+          <span>Workspace overview</span>
+
+          <span className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Interface ready
+          </span>
+        </footer>
+      </div>
+    </main>
+  );
+}
