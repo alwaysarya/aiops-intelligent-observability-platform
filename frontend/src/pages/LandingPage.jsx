@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useRef, useState, useEffect } from 'react'
-import { ArrowRight, Activity, Brain, Database, GitBranch, Zap, CheckCircle2, TrendingUp, ShieldCheck, BarChart3, Lock, Cpu, Server, Terminal, ShoppingCart, CreditCard, Cloud, Code2, Sparkles, Users, Star, Play, Radio, Clock, Building2, Plus, ArrowUp, Globe } from 'lucide-react'
+import { ArrowRight, ChevronRight, Activity, Brain, Database, GitBranch, Zap, CheckCircle2, TrendingUp, ShieldCheck, BarChart3, Lock, Cpu, Server, Terminal, ShoppingCart, CreditCard, Cloud, Code2, Sparkles, Users, Star, Play, Radio, Clock, Building2, Plus, ArrowUp, Globe } from 'lucide-react'
 
 function Counter({ to, suffix = '', prefix = '' }) {
   const ref = useRef(null)
@@ -124,7 +124,7 @@ function LandingPage() {
               Real-time observability with AI-powered anomaly detection, intelligent root cause analysis, and automated alerting for cloud-native applications.
             </p>
             <div className="mt-14 flex flex-wrap items-center justify-center gap-4">
-              <button onClick={() => navigate('/login')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
+              <button onClick={() => navigate('/dashboard')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
                 Enter AIOps World <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
               </button>
               <a href="#features" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 backdrop-blur-md px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-[#1D1D1F] shadow-sm transition-all hover:bg-white hover:shadow-md">
@@ -226,7 +226,488 @@ function LandingPage() {
         </div>
       </section>
 
+
+      {/* NEW: LIVE GLOBAL NETWORK MAP */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Global Infrastructure</p>
+            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Observability without borders.</h2>
+            <p className="text-gray-500 mt-4 max-w-[600px] mx-auto text-[18px] font-medium">Monitor your services across 50+ regions in real-time.</p>
+          </div>
+          
+          <div className="relative w-full h-[400px] rounded-[40px] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden flex items-center justify-center">
+            {/* Dotted World Map Background */}
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '30px 30px' }} />
+            
+            {/* Glowing Nodes (Fake Locations) */}
+            <div className="absolute top-[30%] left-[20%] w-4 h-4 bg-teal-500 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.8)] animate-pulse" />
+            <div className="absolute top-[25%] left-[40%] w-3 h-3 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+            <div className="absolute top-[50%] left-[60%] w-5 h-5 bg-emerald-500 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.8)] animate-pulse" />
+            <div className="absolute top-[60%] left-[80%] w-3 h-3 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+            
+            {/* Connecting SVG Lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+              <path d="M 200 120 Q 300 160 400 100" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+              <path d="M 400 100 Q 500 160 600 200" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+              <path d="M 600 200 Q 700 220 800 240" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+            </svg>
+
+            <div className="relative z-10 text-center">
+              <p className="text-[64px] font-black text-[#1D1D1F] tracking-tighter">50+</p>
+              <p className="text-[14px] font-bold text-gray-500 uppercase tracking-widest">Global Regions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: LOGS & INCIDENTS DARK MOCKUP */}
+      <section className="relative py-32 bg-[#1D1D1F] overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="flex-1">
+              <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-400 mb-5">Centralized Logs</p>
+              <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-white mb-6 leading-tight">Every error. <br/>One place.</h2>
+              <p className="text-[20px] text-white/50 font-medium mb-8">Search through millions of logs in milliseconds. AI automatically groups related errors and pinpoints the exact stack trace.</p>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Full-text search</div>
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Trace correlation</div>
+              </div>
+            </div>
+            <div className="flex-1 w-full relative">
+              <div className="absolute -inset-4 bg-teal-500/20 rounded-[40px] blur-2xl" />
+              <div className="relative rounded-3xl bg-[#0A0A0F] border border-white/10 shadow-2xl overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-[12px] font-mono text-white/40">production-logs</span>
+                </div>
+                <div className="p-6 font-mono text-[12px] leading-relaxed text-white/80">
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    <span className="text-red-400 font-bold shrink-0">ERROR</span>
+                    <div>
+                      <p className="text-white font-semibold">Database connection timeout</p>
+                      <p className="text-white/40 mt-1">at pool.connect (db.js:42:15)</p>
+                    </div>
+                  </div>
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                    <span className="text-amber-400 font-bold shrink-0">WARN</span>
+                    <div>
+                      <p className="text-white font-semibold">High memory usage detected</p>
+                      <p className="text-white/40 mt-1">Pod auth-service-5f8d9 (85%)</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+                    <span className="text-teal-400 font-bold shrink-0">INFO</span>
+                    <div>
+                      <p className="text-white font-semibold">Request completed successfully</p>
+                      <p className="text-white/40 mt-1">GET /api/v1/users (200 OK)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: AI ASSISTANT CHAT MOCKUP */}
+      <section className="relative py-32 bg-white border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Meet Copilot</p>
+            <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Ask your infrastructure.</h2>
+          </div>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-[800px] mx-auto bg-[#FBFBFD] rounded-[32px] border border-black/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
+            <div className="h-16 bg-white/80 border-b border-black/5 flex items-center px-6 gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1D1D1F] flex items-center justify-center"><Sparkles size={16} className="text-teal-400" /></div>
+              <span className="font-bold text-[#1D1D1F]">AIOps Copilot</span>
+              <span className="text-[11px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-md font-bold ml-auto">Online</span>
+            </div>
+            <div className="p-8 space-y-6">
+              {/* User Message */}
+              <div className="flex justify-end">
+                <div className="bg-[#1D1D1F] text-white p-4 rounded-2xl rounded-tr-sm max-w-[80%]">
+                  <p className="text-[15px]">Why is the payment-service latency so high right now?</p>
+                </div>
+              </div>
+              {/* AI Response */}
+              <div className="flex justify-start">
+                <div className="bg-white border border-black/5 p-5 rounded-2xl rounded-tl-sm max-w-[85%] shadow-sm">
+                  <p className="text-[15px] text-gray-700 font-medium mb-4">I found the root cause. The latency is caused by a slow database query in the <code className="bg-red-50 text-red-600 px-1 py-0.5 rounded text-sm font-mono">orders</code> table.</p>
+                  <div className="bg-[#FBFBFD] border border-black/5 rounded-xl p-3 shadow-sm mb-4">
+                    <p className="text-[13px] font-mono text-gray-600">SELECT * FROM orders WHERE status = 'pending' <span className="text-red-500">-- Missing Index</span></p>
+                  </div>
+                  <p className="text-[15px] text-gray-700 font-medium">I recommend adding an index on <code className="bg-teal-50 text-teal-700 px-1 py-0.5 rounded text-sm font-mono">status</code>. This should reduce latency by 85%.</p>
+                  <div className="flex gap-2 mt-5">
+                    <button className="bg-[#1D1D1F] text-white text-[13px] font-bold px-4 py-2 rounded-lg">Apply Fix</button>
+                    <button className="bg-white border border-black/10 text-gray-700 text-[13px] font-bold px-4 py-2 rounded-lg">View Query Plan</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+
+      {/* ================= NEW 5 PREMIUM SECTIONS ================= */}
+
+      {/* 1. GLOBAL NETWORK MAP */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Global Infrastructure</p>
+            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Observability without borders.</h2>
+            <p className="text-gray-500 mt-4 max-w-[600px] mx-auto text-[18px] font-medium">Monitor your services across 50+ regions in real-time.</p>
+          </div>
+          <div className="relative w-full h-[400px] rounded-[40px] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden flex items-center justify-center">
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '30px 30px' }} />
+            <div className="absolute top-[30%] left-[20%] w-4 h-4 bg-teal-500 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.8)] animate-pulse" />
+            <div className="absolute top-[25%] left-[40%] w-3 h-3 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+            <div className="absolute top-[50%] left-[60%] w-5 h-5 bg-emerald-500 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.8)] animate-pulse" />
+            <div className="absolute top-[60%] left-[80%] w-3 h-3 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+              <path d="M 200 120 Q 300 160 400 100" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+              <path d="M 400 100 Q 500 160 600 200" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+              <path d="M 600 200 Q 700 220 800 240" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+            </svg>
+            <div className="relative z-10 text-center">
+              <p className="text-[64px] font-black text-[#1D1D1F] tracking-tighter">50+</p>
+              <p className="text-[14px] font-bold text-gray-500 uppercase tracking-widest">Global Regions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. CENTRALIZED LOGS DARK MOCKUP */}
+      <section className="relative py-32 bg-[#1D1D1F] overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="flex-1">
+              <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-400 mb-5">Centralized Logs</p>
+              <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-white mb-6 leading-tight">Every error. <br/>One place.</h2>
+              <p className="text-[20px] text-white/50 font-medium mb-8">Search through millions of logs in milliseconds. AI automatically groups related errors and pinpoints the exact stack trace.</p>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Full-text search</div>
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Trace correlation</div>
+              </div>
+            </div>
+            <div className="flex-1 w-full relative">
+              <div className="absolute -inset-4 bg-teal-500/20 rounded-[40px] blur-2xl" />
+              <div className="relative rounded-3xl bg-[#0A0A0F] border border-white/10 shadow-2xl overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-[12px] font-mono text-white/40">production-logs</span>
+                </div>
+                <div className="p-6 font-mono text-[12px] leading-relaxed text-white/80">
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    <span className="text-red-400 font-bold shrink-0">ERROR</span>
+                    <div>
+                      <p className="text-white font-semibold">Database connection timeout</p>
+                      <p className="text-white/40 mt-1">at pool.connect (db.js:42:15)</p>
+                    </div>
+                  </div>
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                    <span className="text-amber-400 font-bold shrink-0">WARN</span>
+                    <div>
+                      <p className="text-white font-semibold">High memory usage detected</p>
+                      <p className="text-white/40 mt-1">Pod auth-service-5f8d9 (85%)</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+                    <span className="text-teal-400 font-bold shrink-0">INFO</span>
+                    <div>
+                      <p className="text-white font-semibold">Request completed successfully</p>
+                      <p className="text-white/40 mt-1">GET /api/v1/users (200 OK)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. AI ASSISTANT CHAT MOCKUP */}
+      <section className="relative py-32 bg-white border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Meet Copilot</p>
+            <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Ask your infrastructure.</h2>
+          </div>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-[800px] mx-auto bg-[#FBFBFD] rounded-[32px] border border-black/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
+            <div className="h-16 bg-white/80 border-b border-black/5 flex items-center px-6 gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1D1D1F] flex items-center justify-center"><Sparkles size={16} className="text-teal-400" /></div>
+              <span className="font-bold text-[#1D1D1F]">AIOps Copilot</span>
+              <span className="text-[11px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-md font-bold ml-auto">Online</span>
+            </div>
+            <div className="p-8 space-y-6">
+              <div className="flex justify-end">
+                <div className="bg-[#1D1D1F] text-white p-4 rounded-2xl rounded-tr-sm max-w-[80%]">
+                  <p className="text-[15px]">Why is the payment-service latency so high right now?</p>
+                </div>
+              </div>
+              <div className="flex justify-start">
+                <div className="bg-white border border-black/5 p-5 rounded-2xl rounded-tl-sm max-w-[85%] shadow-sm">
+                  <p className="text-[15px] text-gray-700 font-medium mb-4">I found the root cause. The latency is caused by a slow database query in the <code className="bg-red-50 text-red-600 px-1 py-0.5 rounded text-sm font-mono">orders</code> table.</p>
+                  <div className="bg-[#FBFBFD] border border-black/5 rounded-xl p-3 shadow-sm mb-4">
+                    <p className="text-[13px] font-mono text-gray-600">SELECT * FROM orders WHERE status = 'pending' <span className="text-red-500">-- Missing Index</span></p>
+                  </div>
+                  <p className="text-[15px] text-gray-700 font-medium">I recommend adding an index on <code className="bg-teal-50 text-teal-700 px-1 py-0.5 rounded text-sm font-mono">status</code>. This should reduce latency by 85%.</p>
+                  <div className="flex gap-2 mt-5">
+                    <button className="bg-[#1D1D1F] text-white text-[13px] font-bold px-4 py-2 rounded-lg">Apply Fix</button>
+                    <button className="bg-white border border-black/10 text-gray-700 text-[13px] font-bold px-4 py-2 rounded-lg">View Query Plan</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 4. DEPLOYMENT PIPELINE VISUAL */}
+      <section className="relative py-24 bg-white border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Deployments</p>
+            <h2 className="text-[40px] font-bold text-[#1D1D1F]">From code to prod in 60 seconds.</h2>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between p-10 rounded-[40px] bg-[#FBFBFD] border border-black/5 shadow-sm gap-6">
+            {[
+              { name: 'GitHub', icon: Code2, status: 'success' },
+              { name: 'Build', icon: Server, status: 'success' },
+              { name: 'Test', icon: ShieldCheck, status: 'success' },
+              { name: 'Deploy', icon: Cloud, status: 'active' },
+            ].map((step, i) => (
+              <div key={i} className="flex items-center gap-6">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${step.status === 'active' ? 'bg-[#1D1D1F] text-teal-400 shadow-lg' : 'bg-white text-teal-600 border border-teal-100'}`}>                  <step.icon size={28} />
+                </div>
+                <span className="font-bold text-[#1D1D1F] text-[18px]">{step?.name}</span>
+                {i < 3 && <ChevronRight size={24} className="text-gray-300 hidden md:block" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. LIVE METRICS DASHBOARD GRID (Small but Powerful) */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Metrics</p>
+            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Real-time. Always.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm">
+              <Activity size={24} className="text-teal-600 mb-4" />
+              <p className="text-[12px] font-bold text-gray-400 uppercase mb-1">Latency p99</p>
+              <p className="text-[36px] font-black text-[#1D1D1F]">12ms</p>
+              <p className="text-[12px] text-emerald-600 font-bold mt-2">↓ 4ms improvement</p>
+            </div>
+            <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm">
+              <Zap size={24} className="text-amber-600 mb-4" />
+              <p className="text-[12px] font-bold text-gray-400 uppercase mb-1">Throughput</p>
+              <p className="text-[36px] font-black text-[#1D1D1F]">4.2B</p>
+              <p className="text-[12px] text-emerald-600 font-bold mt-2">Logs / day</p>
+            </div>
+            <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm">
+              <ShieldCheck size={24} className="text-indigo-600 mb-4" />
+              <p className="text-[12px] font-bold text-gray-400 uppercase mb-1">Uptime SLA</p>
+              <p className="text-[36px] font-black text-[#1D1D1F]">99.99%</p>
+              <p className="text-[12px] text-emerald-600 font-bold mt-2">Industry best</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================= NEW 5 PREMIUM SECTIONS ================= */}
+
+      {/* 1. GLOBAL NETWORK MAP */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Global Infrastructure</p>
+            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Observability without borders.</h2>
+            <p className="text-gray-500 mt-4 max-w-[600px] mx-auto text-[18px] font-medium">Monitor your services across 50+ regions in real-time.</p>
+          </div>
+          <div className="relative w-full h-[400px] rounded-[40px] bg-white/50 backdrop-blur-xl border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] overflow-hidden flex items-center justify-center">
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '30px 30px' }} />
+            <div className="absolute top-[30%] left-[20%] w-4 h-4 bg-teal-500 rounded-full shadow-[0_0_20px_rgba(20,184,166,0.8)] animate-pulse" />
+            <div className="absolute top-[25%] left-[40%] w-3 h-3 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+            <div className="absolute top-[50%] left-[60%] w-5 h-5 bg-emerald-500 rounded-full shadow-[0_0_25px_rgba(16,185,129,0.8)] animate-pulse" />
+            <div className="absolute top-[60%] left-[80%] w-3 h-3 bg-teal-400 rounded-full shadow-[0_0_15px_rgba(20,184,166,0.6)]" />
+            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40">
+              <path d="M 200 120 Q 300 160 400 100" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+              <path d="M 400 100 Q 500 160 600 200" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+              <path d="M 600 200 Q 700 220 800 240" stroke="#14b8a6" strokeWidth="2" fill="none" strokeDasharray="4 4" />
+            </svg>
+            <div className="relative z-10 text-center">
+              <p className="text-[64px] font-black text-[#1D1D1F] tracking-tighter">50+</p>
+              <p className="text-[14px] font-bold text-gray-500 uppercase tracking-widest">Global Regions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. CENTRALIZED LOGS DARK MOCKUP */}
+      <section className="relative py-32 bg-[#1D1D1F] overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="flex-1">
+              <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-400 mb-5">Centralized Logs</p>
+              <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-white mb-6 leading-tight">Every error. <br/>One place.</h2>
+              <p className="text-[20px] text-white/50 font-medium mb-8">Search through millions of logs in milliseconds. AI automatically groups related errors and pinpoints the exact stack trace.</p>
+              <div className="flex gap-4">
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Full-text search</div>
+                <div className="flex items-center gap-2 text-white/70 text-sm font-medium"><CheckCircle2 size={18} className="text-teal-400"/> Trace correlation</div>
+              </div>
+            </div>
+            <div className="flex-1 w-full relative">
+              <div className="absolute -inset-4 bg-teal-500/20 rounded-[40px] blur-2xl" />
+              <div className="relative rounded-3xl bg-[#0A0A0F] border border-white/10 shadow-2xl overflow-hidden">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-[12px] font-mono text-white/40">production-logs</span>
+                </div>
+                <div className="p-6 font-mono text-[12px] leading-relaxed text-white/80">
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                    <span className="text-red-400 font-bold shrink-0">ERROR</span>
+                    <div>
+                      <p className="text-white font-semibold">Database connection timeout</p>
+                      <p className="text-white/40 mt-1">at pool.connect (db.js:42:15)</p>
+                    </div>
+                  </div>
+                  <div className="mb-4 flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                    <span className="text-amber-400 font-bold shrink-0">WARN</span>
+                    <div>
+                      <p className="text-white font-semibold">High memory usage detected</p>
+                      <p className="text-white/40 mt-1">Pod auth-service-5f8d9 (85%)</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-white/5 rounded-xl">
+                    <span className="text-teal-400 font-bold shrink-0">INFO</span>
+                    <div>
+                      <p className="text-white font-semibold">Request completed successfully</p>
+                      <p className="text-white/40 mt-1">GET /api/v1/users (200 OK)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. AI ASSISTANT CHAT MOCKUP */}
+      <section className="relative py-32 bg-white border-t border-black/5 overflow-hidden">
+        <div className="max-w-[1000px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Meet Copilot</p>
+            <h2 className="text-[48px] md:text-[56px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Ask your infrastructure.</h2>
+          </div>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-[800px] mx-auto bg-[#FBFBFD] rounded-[32px] border border-black/5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
+            <div className="h-16 bg-white/80 border-b border-black/5 flex items-center px-6 gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#1D1D1F] flex items-center justify-center"><Sparkles size={16} className="text-teal-400" /></div>
+              <span className="font-bold text-[#1D1D1F]">AIOps Copilot</span>
+              <span className="text-[11px] bg-teal-100 text-teal-700 px-2 py-0.5 rounded-md font-bold ml-auto">Online</span>
+            </div>
+            <div className="p-8 space-y-6">
+              <div className="flex justify-end">
+                <div className="bg-[#1D1D1F] text-white p-4 rounded-2xl rounded-tr-sm max-w-[80%]">
+                  <p className="text-[15px]">Why is the payment-service latency so high right now?</p>
+                </div>
+              </div>
+              <div className="flex justify-start">
+                <div className="bg-white border border-black/5 p-5 rounded-2xl rounded-tl-sm max-w-[85%] shadow-sm">
+                  <p className="text-[15px] text-gray-700 font-medium mb-4">I found the root cause. The latency is caused by a slow database query in the <code className="bg-red-50 text-red-600 px-1 py-0.5 rounded text-sm font-mono">orders</code> table.</p>
+                  <div className="bg-[#FBFBFD] border border-black/5 rounded-xl p-3 shadow-sm mb-4">
+                    <p className="text-[13px] font-mono text-gray-600">SELECT * FROM orders WHERE status = 'pending' <span className="text-red-500">-- Missing Index</span></p>
+                  </div>
+                  <p className="text-[15px] text-gray-700 font-medium">I recommend adding an index on <code className="bg-teal-50 text-teal-700 px-1 py-0.5 rounded text-sm font-mono">status</code>. This should reduce latency by 85%.</p>
+                  <div className="flex gap-2 mt-5">
+                    <button className="bg-[#1D1D1F] text-white text-[13px] font-bold px-4 py-2 rounded-lg">Apply Fix</button>
+                    <button className="bg-white border border-black/10 text-gray-700 text-[13px] font-bold px-4 py-2 rounded-lg">View Query Plan</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 4. DEPLOYMENT PIPELINE VISUAL */}
+      <section className="relative py-24 bg-white border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Deployments</p>
+            <h2 className="text-[40px] font-bold text-[#1D1D1F]">From code to prod in 60 seconds.</h2>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-between p-10 rounded-[40px] bg-[#FBFBFD] border border-black/5 shadow-sm gap-6">
+            {[
+              { name: 'GitHub', icon: Code2, status: 'success' },
+              { name: 'Build', icon: Server, status: 'success' },
+              { name: 'Test', icon: ShieldCheck, status: 'success' },
+              { name: 'Deploy', icon: Cloud, status: 'active' },
+            ].map((step, i) => (
+              <div key={i} className="flex items-center gap-6">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${step.status === 'active' ? 'bg-[#1D1D1F] text-teal-400 shadow-lg' : 'bg-white text-teal-600 border border-teal-100'}`}>
+                  <step.icon size={28} />
+                </div>
+                <span className="font-bold text-[#1D1D1F] text-[18px]">{step.name}</span>
+                {i < 3 && <ChevronRight size={24} className="text-gray-300 hidden md:block" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. LIVE METRICS DASHBOARD GRID */}
+      <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <p className="text-[12px] font-bold tracking-[0.16em] uppercase text-teal-600 mb-5">Metrics</p>
+            <h2 className="text-[48px] md:text-[64px] font-bold tracking-[-0.04em] text-[#1D1D1F]">Real-time. Always.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm">
+              <Activity size={24} className="text-teal-600 mb-4" />
+              <p className="text-[12px] font-bold text-gray-400 uppercase mb-1">Latency p99</p>
+              <p className="text-[36px] font-black text-[#1D1D1F]">12ms</p>
+              <p className="text-[12px] text-emerald-600 font-bold mt-2">↓ 4ms improvement</p>
+            </div>
+            <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm">
+              <Zap size={24} className="text-amber-600 mb-4" />
+              <p className="text-[12px] font-bold text-gray-400 uppercase mb-1">Throughput</p>
+              <p className="text-[36px] font-black text-[#1D1D1F]">4.2B</p>
+              <p className="text-[12px] text-emerald-600 font-bold mt-2">Logs / day</p>
+            </div>
+            <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm">
+              <ShieldCheck size={24} className="text-indigo-600 mb-4" />
+              <p className="text-[12px] font-bold text-gray-400 uppercase mb-1">Uptime SLA</p>
+              <p className="text-[36px] font-black text-[#1D1D1F]">99.99%</p>
+              <p className="text-[12px] text-emerald-600 font-bold mt-2">Industry best</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* USE CASES */}
+
+
+
       <section className="relative py-32 bg-[#FBFBFD] border-t border-black/5">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-24">
@@ -440,7 +921,7 @@ function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => navigate('/login')} className={`w-full py-4 rounded-2xl text-[16px] font-bold transition-all ${plan.highlight ? 'bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-xl' : 'bg-[#1D1D1F] text-white hover:bg-black shadow-lg'}`}>
+                <button onClick={() => navigate('/dashboard')} className={`w-full py-4 rounded-2xl text-[16px] font-bold transition-all ${plan.highlight ? 'bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-xl' : 'bg-[#1D1D1F] text-white hover:bg-black shadow-lg'}`}>
                   Get Started
                 </button>
               </motion.div>
