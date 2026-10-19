@@ -7,7 +7,7 @@ import UserMenu from './UserMenu'
 import NotificationPanel from './NotificationPanel'
 
 const navItems = [
-  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'Home', path: '/dashboard', icon: LayoutDashboard },
   { label: 'Analytics', path: '/dashboard/analytics', icon: BarChart3 },
   { label: 'Logs', path: '/dashboard/logs', icon: FileText },
   { label: 'Alerts', path: '/dashboard/alerts', icon: Bell },
