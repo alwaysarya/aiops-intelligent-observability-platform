@@ -397,77 +397,7 @@ function AnalyticsPage() {
       </div>
     </motion.div>
   </div>
-</motion.section>{/* ANOMALY TEST PANEL */}
-      <motion.section initial="hidden" whileInView="show" viewport={{ once: true, margin: "-100px" }} className="relative w-full bg-[#F5F5F7] py-24 border-b border-black/[0.06]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#5E5CE6]/[0.06] blur-[120px] rounded-full pointer-events-none" />
-        <div className="max-w-[1240px] mx-auto px-8 relative z-10">
-          <motion.div variants={fadeUp} className="text-center mb-16">
-            <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#0071E3] mb-4">AI Playground</p>
-            <h2 className="text-[clamp(40px,5vw,64px)] font-bold tracking-[-0.055em] leading-[1.02] mb-6 text-[#1D1D1F]">Test the AI live.</h2>
-            <p className="text-[17px] text-[#6E6E73] max-w-[560px] mx-auto leading-[1.7]">Send a real request to our anomaly detection model and see it respond instantly.</p>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="bg-white rounded-[40px] p-10 md:p-14 border border-black/[0.06] relative overflow-hidden shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)]">
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#5E5CE6]/15 blur-[100px] rounded-full pointer-events-none" /><div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#0071E3]/10 blur-[100px] rounded-full pointer-events-none" />
-            
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
-              <div className="flex items-center gap-5">
-                <motion.div animate={{ rotateY: 360 }} transition={{ duration: 4, repeat: Infinity, ease: 'linear' }} className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#5E5CE6] to-[#0071E3] flex items-center justify-center shadow-[0_20px_40px_-10px_rgba(94,92,230,0.5)]">
-                  <Zap size={36} className="text-white" fill="white" />
-                </motion.div>
-                <div>
-                  <h3 className="text-[24px] font-bold text-[#1D1D1F]">Live Anomaly Prediction</h3>
-                  <p className="text-[14px] text-[#86868B] mt-1">Send a request to the AI backend (localhost:8001).</p>
-                </div>
-              </div>
-              
-              <div className="flex flex-col items-start md:items-end gap-3">
-                <button 
-                  onClick={testAnomalyPrediction} 
-                  disabled={isLoading}
-                  className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#0071E3] to-[#5E5CE6] text-white font-bold text-[15px] hover:from-[#5E5CE6] hover:to-[#AF52DE] transition-all shadow-[0_20px_40px_-10px_rgba(0,113,227,0.5)] hover:scale-[1.02] disabled:opacity-50 flex items-center gap-2"
-                >
-                  {isLoading ? (
-                    <><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full" /> Running...</>
-                  ) : (
-                    <><Zap size={18} fill="white" /> Run Prediction</>
-                  )}
-                </button>
-                {testResult && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }} 
-                    animate={{ opacity: 1, y: 0 }} 
-                    className={`flex items-center gap-4 px-4 py-2 rounded-lg border ${
-                      testResult.is_anomaly 
-                        ? 'bg-[#FF453A]/10 border-[#FF453A]/20' 
-                        : 'bg-[#30D158]/10 border-[#30D158]/20'
-                    }`}
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-medium text-[#86868B] uppercase">Score</span>
-                      <span className={`text-[14px] font-semibold ${testResult.is_anomaly ? 'text-[#FF453A]' : 'text-[#30D158]'}`}>
-                        {testResult.score.toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="w-[1px] h-6 bg-black/[0.08]" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-medium text-[#86868B] uppercase">Severity</span>
-                      <span className="text-[14px] font-semibold text-[#1D1D1F] capitalize">{testResult.severity}</span>
-                    </div>
-                    <div className="w-[1px] h-6 bg-black/[0.08]" />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-medium text-[#86868B] uppercase">Status</span>
-                      <span className={`text-[14px] font-semibold ${testResult.is_anomaly ? 'text-[#FF453A]' : 'text-[#30D158]'}`}>
-                        {testResult.is_anomaly ? 'Anomaly' : 'Normal'}
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
+</motion.section>
 
       {/* DARK FOOTER */}
       <section className="relative w-full bg-gradient-to-br from-[#0F1011] via-[#1A1B1E] to-[#0F1011] py-24">
