@@ -88,7 +88,7 @@ export default function Dashboard() {
     <main className="w-full min-h-screen bg-[#09090B] text-[#EDEDED] font-[-apple-system,BlinkMacSystemFont,'Inter','Helvetica_Neue',sans-serif] antialiased selection:bg-[#5E6AD2]/30 overflow-x-hidden">
       
       {/* HERO */}
-      <section className="relative w-full overflow-hidden border-b border-white/[0.06]" style={{ minHeight: '720px' }}>
+      <section className="relative w-full overflow-hidden border-b border-white/[0.06]" style={{ minHeight: '100vh' }}>
         
         {/* Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_60%,transparent_100%)]" />
