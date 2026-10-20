@@ -21,7 +21,7 @@ const barData = [
   { name: 'User', value: 189, color: '#FF453A' },
 ]
 
-export function LogTrafficChart() {
+export function LogTrafficChart({ timeRange = "24h" }) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
@@ -67,7 +67,7 @@ export function LogTrafficChart() {
   )
 }
 
-export function ServiceTrafficChart() {
+export function ServiceTrafficChart({ timeRange = "24h" }) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
