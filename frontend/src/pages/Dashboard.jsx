@@ -28,7 +28,7 @@ function FAQItem({ question, answer, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="rounded-2xl border border-black/[0.06] bg-white overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left hover:bg-[#FAFBFF] transition-colors">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left hover:bg-[#FAFBFF] transition-colors relative">
         <span className="text-[16px] font-semibold text-[#1D1D1F]">{question}</span>
         <ChevronRight size={20} className={`text-[#86868B] transition-transform ${open ? 'rotate-90' : ''}`} />
       </button>
@@ -193,8 +193,8 @@ export default function Dashboard() {
             const Icon = step.icon
             return (
               <motion.div key={step.num} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.15, ease }} whileHover={{ y: -8, boxShadow: '0 40px 80px -20px rgba(0,0,0,0.12)' }} className="relative rounded-[32px] border border-black/[0.06] bg-white p-8 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)] hover:shadow-[0_0_40px_-10px_rgba(0,113,227,0.3)] hover:border-[#0071E3]/30 transition-all overflow-hidden">
-                <div className="absolute top-4 right-6 text-[64px] font-black text-black/[0.03] leading-none">{step.num}</div>
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6" style={{ background: step.color + '12', border: '1px solid ' + step.color + '30' }}>
+                <div className="absolute top-4 right-6 text-[80px] font-black leading-none pointer-events-none select-none animate-pulse">{step.num}</div>
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,113,227,0.3)]" style={{ background: step.color + '12', border: '1px solid ' + step.color + '30' }}>
                   <Icon size={26} style={{ color: step.color }} />
                 </div>
                 <h3 className="text-[22px] font-bold text-[#1D1D1F] mb-3">{step.title}</h3>
@@ -310,7 +310,7 @@ export default function Dashboard() {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0071E3] to-[#5E5CE6] flex items-center justify-center shadow-lg"><Zap size={22} className="text-white" /></div>
               <div><h3 className="text-[20px] font-bold text-[#1D1D1F]">Predictive Alerts</h3><p className="text-[13px] text-[#86868B] mt-1">AI prediction accuracy</p></div>
             </div>
-            <div className="text-[64px] font-black text-[#1D1D1F] tracking-[-0.04em] mb-3">99.2<span className="text-[28px] text-[#0071E3]">%</span></div>
+            <div className="text-[64px] font-black text-[#1D1D1F] tracking-[-0.04em] mb-3 [text-shadow:0_0_40px_rgba(0,113,227,0.3)]">99.2<span className="text-[28px] text-[#0071E3]">%</span></div>
             <div className="h-2 bg-[#F0F0F2] rounded-full overflow-hidden mb-4"><motion.div initial={{ width: 0 }} whileInView={{ width: '99.2%' }} viewport={{ once: true }} transition={{ duration: 1.5 }} className="h-full bg-gradient-to-r from-[#0071E3] to-[#5E5CE6] rounded-full" /></div>
             <p className="text-[13px] text-[#86868B]">Detected 1,247 anomalies this month with 3 false positives</p>
           </motion.div>
@@ -340,7 +340,7 @@ export default function Dashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {['Kafka', 'Prometheus', 'Grafana', 'Datadog', 'Slack', 'PagerDuty', 'GitHub', 'AWS'].map((name, i) => (
               <motion.div key={name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.05 }} whileHover={{ y: -4, borderColor: '#0071E3' }} className="bg-white rounded-2xl p-6 border border-black/[0.06] flex items-center justify-center gap-3 transition-all">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0071E3]/10 to-[#5E5CE6]/10 flex items-center justify-center"><span className="text-[16px] font-black text-[#0071E3]">{name[0]}</span></div>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0071E3] to-[#5E5CE6] flex items-center justify-center shadow-lg"><span className="text-[16px] font-black text-[#0071E3]">{name[0]}</span></div>
                 <span className="text-[14px] font-bold text-[#1D1D1F]">{name}</span>
               </motion.div>
             ))}
@@ -356,7 +356,7 @@ export default function Dashboard() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[{ v: '50ms', l: 'Query latency', c: '#0071E3' }, { v: '12M', l: 'Events / sec', c: '#5E5CE6' }, { v: '99.99%', l: 'Uptime SLA', c: '#30D158' }, { v: '180ms', l: 'Detection time', c: '#AF52DE' }].map((m, i) => (
-            <motion.div key={m.l} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="text-center p-8 rounded-[28px] bg-white border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
+            <motion.div key={m.l} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="text-center p-8 rounded-[28px] bg-gradient-to-br from-white to-[#FAFBFF] border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
               <p className="text-[42px] font-black tracking-[-0.04em] mb-2" style={{ color: m.c }}>{m.v}</p>
               <p className="text-[12px] font-bold uppercase tracking-wider text-[#86868B]">{m.l}</p>
             </motion.div>
@@ -382,7 +382,7 @@ export default function Dashboard() {
               <div className="space-y-3">
                 {[{ u: 'Aryan', a: 'resolved incident #4092', t: '2m', c: 'from-[#30D158] to-[#0071E3]' }, { u: 'Priya', a: 'deployed v2.8.4', t: '5m', c: 'from-[#AF52DE] to-[#5E5CE6]' }, { u: 'John', a: 'flagged anomaly', t: '8m', c: 'from-[#E9A23B] to-[#FF453A]' }].map((act, i) => (
                   <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20">
-                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${act.c} flex items-center justify-center text-[12px] font-bold text-white`}>{act.u[0]}</div>
+                    <div className={`w-10 h-10 rounded-full ring-2 ring-white/30 bg-gradient-to-br ${act.c} flex items-center justify-center text-[12px] font-bold text-white`}>{act.u[0]}</div>
                     <div className="flex-1"><p className="text-[14px] font-semibold text-white">{act.u} <span className="font-normal text-white/70">{act.a}</span></p></div>
                     <span className="text-[11px] text-white/60">{act.t}</span>
                   </div>
@@ -401,7 +401,7 @@ export default function Dashboard() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {['SOC2 Type II', 'ISO 27001', 'GDPR', 'HIPAA'].map((cert, i) => (
-            <motion.div key={cert} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="rounded-[24px] bg-white border border-black/[0.06] p-6 flex flex-col items-center text-center shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
+            <motion.div key={cert} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="rounded-[24px] bg-gradient-to-br from-white to-[#F0FFF4] border border-black/[0.06] p-6 flex flex-col items-center text-center shadow-[0_10px_30px_-10px_rgba(48,209,88,0.15)]">
               <div className="w-12 h-12 rounded-full bg-[#30D158]/10 flex items-center justify-center mb-4"><ShieldCheck size={22} className="text-[#30D158]" /></div>
               <p className="text-[14px] font-bold text-[#1D1D1F]">{cert}</p>
               <p className="text-[11px] text-[#86868B] mt-1">Certified</p>
@@ -419,7 +419,7 @@ export default function Dashboard() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[{ r: 'US-East', p: '12ms' }, { r: 'EU-West', p: '24ms' }, { r: 'Asia-Pacific', p: '45ms' }, { r: 'SA-East', p: '32ms' }].map((reg, i) => (
-              <motion.div key={reg.r} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="rounded-2xl bg-white border border-black/[0.06] p-5">
+              <motion.div key={reg.r} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="rounded-2xl bg-gradient-to-br from-white to-[#FAFBFF] border border-black/[0.06] p-5">
                 <div className="flex items-center gap-2 mb-2"><span className="w-2 h-2 rounded-full bg-[#30D158] animate-pulse" /><span className="text-[14px] font-bold text-[#1D1D1F]">{reg.r}</span></div>
                 <p className="text-[24px] font-black text-[#0071E3] tracking-tight">{reg.p}</p>
                 <p className="text-[11px] text-[#86868B] mt-1">Avg latency</p>
@@ -476,11 +476,11 @@ export default function Dashboard() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[{ q: 'Cut our MTTR from 45 minutes to 90 seconds.', n: 'Priya Sharma', r: 'VP Engineering, FinScale', i: 'PS' }, { q: 'The AI predictions saved us from 3 major outages.', n: 'Rahul Verma', r: 'CTO, ShopNest', i: 'RV' }, { q: 'Migrated 200+ microservices and never looked back.', n: 'Ananya Iyer', r: 'SRE Lead, Cloudify', i: 'AI' }].map((t, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="rounded-[28px] border border-black/[0.06] bg-white p-8 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
+            <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="rounded-[28px] border border-black/[0.06] bg-gradient-to-br from-white to-[#FFFBF5] p-8 shadow-[0_10px_30px_-10px_rgba(233,162,59,0.1)]">
               <div className="flex gap-1 mb-4">{[1,2,3,4,5].map(s => <span key={s} className="text-[#E9A23B]">★</span>)}</div>
               <p className="text-[16px] font-semibold text-[#1D1D1F] leading-[1.6] mb-6">"{t.q}"</p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0071E3] to-[#5E5CE6] flex items-center justify-center text-[12px] font-bold text-white">{t.i}</div>
+                <div className="w-10 h-10 rounded-full ring-2 ring-white/30 bg-gradient-to-br from-[#0071E3] to-[#5E5CE6] flex items-center justify-center text-[12px] font-bold text-white">{t.i}</div>
                 <div><p className="text-[13px] font-bold text-[#1D1D1F]">{t.n}</p><p className="text-[11px] text-[#86868B]">{t.r}</p></div>
               </div>
             </motion.div>
@@ -623,7 +623,7 @@ export default function Dashboard() {
               { name: 'Build success rate', value: '96', suffix: '%', width: '96%', color: '#5E5CE6' },
               { name: 'Resource capacity', value: '72', suffix: '%', width: '72%', color: '#AF52DE' }
             ].map((item, i) => (
-              <motion.div key={item.name} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} whileHover={{ y: -8, boxShadow: '0 40px 80px -20px rgba(0,0,0,0.12)' }} className="rounded-[28px] border border-black/[0.06] bg-white p-8 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)] transition-all">
+              <motion.div key={item.name} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} whileHover={{ y: -8, boxShadow: '0 40px 80px -20px rgba(0,0,0,0.12)' }} className="rounded-[28px] border border-black/[0.06] bg-gradient-to-br from-white to-[#FFFBF5] p-8 shadow-[0_10px_30px_-10px_rgba(233,162,59,0.1)] transition-all">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style={{ background: `${item.color}12`, border: `1px solid ${item.color}30` }}>
                   <ShieldCheck size={22} style={{ color: item.color }} />
                 </div>
@@ -654,7 +654,7 @@ export default function Dashboard() {
             {[...Array(2)].map((_, dup) => (
               <div key={dup} className="flex gap-20">
                 {['FinScale', 'ShopNest', 'Cloudify', 'DataFlow', 'ByteScale', 'Quantum', 'Acme', 'GlobalTech'].map(n => (
-                  <span key={n} className="text-[32px] font-bold text-[#D2D2D7] tracking-tight">{n}</span>
+                  <span key={n} className="text-[32px] font-bold text-[#D2D2D7] tracking-tight hover:text-[#0071E3] hover:scale-110 transition-all duration-300 cursor-pointer">{n}</span>
                 ))}
               </div>
             ))}
@@ -688,7 +688,7 @@ export default function Dashboard() {
           <p className="text-[16px] text-[#6E6E73] mb-8">Product updates, engineering deep-dives, and AIOps best practices. No spam.</p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input type="email" placeholder="you@company.com" className="flex-1 h-12 px-5 rounded-full bg-white border border-black/[0.08] outline-none focus:border-[#0071E3] transition-colors text-[14px]" />
-            <button className="h-12 px-7 rounded-full bg-black text-white text-[14px] font-bold hover:bg-[#0071E3] transition-colors">Subscribe</button>
+            <button className="h-12 px-7 rounded-full bg-gradient-to-r from-[#0071E3] to-[#5E5CE6] text-white text-[14px] font-bold hover:from-[#5E5CE6] hover:to-[#AF52DE] transition-all shadow-[0_10px_30px_-10px_rgba(0,113,227,0.4)]">Subscribe</button>
           </div>
         </div>
       </section>
