@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
@@ -21,11 +22,12 @@ import TracesPage from './pages/TracesPage'
 function App() {
   return (
     <Routes>
-      {/* 1. Landing Page (Default) */}
-      <Route path="/" element={<LandingPage />} />
+      {/* Landing Page alag URL pe chala gaya */}
+      <Route path="/landing" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
       
-      {/* 2. Dashboard & App Routes (No Login Required) */}
-      <Route path="/dashboard" element={<Layout />}>
+      {/* Layout ke andar saare pages, direct root (/) pe */}
+      <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="logs" element={<Logs />} />

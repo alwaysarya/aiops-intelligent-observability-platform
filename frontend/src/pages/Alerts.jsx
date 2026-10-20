@@ -1,293 +1,206 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { 
-  Bell, Send, CheckCircle, AlertCircle, MessageSquare, 
-  Mail, Webhook, Zap, ShieldAlert, CheckCheck, TrendingDown, 
-  Radio, Activity, Layers, ArrowRight, Sparkles
-} from 'lucide-react'
-import { alertsApi } from '../services/api'
-import DarkFooter from '../components/Premium/DarkFooter'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Bell, ShieldAlert, Send, CheckCircle2, AlertTriangle, Zap, Server, Activity, ArrowUpRight } from 'lucide-react'
 import { showToast } from '../components/Premium/Toast'
 
-const linearEase = [0.25, 0.1, 0.25, 1]
+const ease = [0.25, 0.1, 0.25, 1]
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.05, ease: linearEase } }),
-}
+export default function Alerts() {
+  const [alerts, setAlerts] = useState([
+    { id: 1, title: 'Model Drift Detected', desc: 'yolov8n.pt accuracy dropped by 4%', severity: 'CRITICAL', time: '2 mins ago', icon: AlertTriangle, color: '#FF453A' },
+    { id: 2, title: 'Precision Drop', desc: 'custom_v2.pt precision dropped by 2%', severity: 'WARNING', time: '15 mins ago', icon: ShieldAlert, color: '#E9A23B' },
+    { id: 3, title: 'High Latency', desc: 'Inference latency > 200ms on node-04', severity: 'WARNING', time: '1 hour ago', icon: Server, color: '#E9A23B' },
+  ])
 
-function Alerts() {
-  const [channels, setChannels] = useState({ active: [], all: [] })
-  const [testing, setTesting] = useState(false)
-  const [testResult, setTestResult] = useState(null)
-  const [routes, setRoutes] = useState({ critical: 'pagerduty', high: 'slack', medium: 'email' })
-  const [acknowledged, setAcknowledged] = useState(false)
+  const [isTesting, setIsTesting] = useState(false)
 
-  useEffect(() => { loadChannels() }, [])
-
-  const loadChannels = async () => {
-    try { const data = await alertsApi.channels(); setChannels(data) } catch (e) {}
-  }
-
-  const testAlert = async () => {
-    setTesting(true); setTestResult(null)
-    try {
-      const result = await alertsApi.trigger({ title: 'Test Alert', message: 'Test message', severity: 'high', service: 'test-service', host: 'test-host' })
-      setTestResult({ success: true, data: result })
-      showToast('Test alert sent successfully!', 'success')
-    } catch (e) { 
-      setTestResult({ success: false, error: e.message }) 
-      showToast('Failed to send alert.', 'error')
-    }
-    setTesting(false)
+  const handleTestAlert = () => {
+    setIsTesting(true)
+    setTimeout(() => {
+      setIsTesting(false)
+      showToast('Test alert triggered successfully!', 'success')
+    }, 1500)
   }
 
   const handleAcknowledgeAll = () => {
-    setAcknowledged(true)
-    showToast('All active alerts acknowledged!', 'success')
+    setAlerts([])
+    showToast('All alerts acknowledged', 'success')
   }
 
-  const channelIcons = { slack: MessageSquare, email: Mail, webhook: Webhook }
-
   return (
-    <div className="w-full min-h-screen bg-[#09090B] text-[#EDEDED] font-[-apple-system,BlinkMacSystemFont,'Inter','Helvetica_Neue',sans-serif] antialiased selection:bg-[#5E6AD2]/30">
+    <div className="w-full min-h-screen bg-[#FBFBFD] text-[#1D1D1F] font-[-apple-system,BlinkMacSystemFont,'Inter',sans-serif] antialiased selection:bg-[#0071E3]/20 relative overflow-hidden">
       
-      {/* HERO SECTION */}
-      <section className="relative w-full overflow-hidden border-b border-white/[0.06]">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#FF453A]/[0.08] blur-[130px] rounded-full pointer-events-none" />
-        
-        {Array.from({ length: 15 }).map((_, i) => (
-          <motion.div key={i} animate={{ y: [0, -150, 0], opacity: [0, 1, 0] }} transition={{ duration: Math.random() * 8 + 8, repeat: Infinity, delay: Math.random() * 5 }}
-            className="absolute w-1 h-1 bg-[#5E6AD2] rounded-full blur-[1px] shadow-[0_0_8px_#5E6AD2]" style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }} />
-        ))}
+      {/* PREMIUM HERO SECTION (Light Theme Grid & Glows) */}
+      <section className="relative w-full overflow-hidden border-b border-black/[0.06]">
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        {/* Glow Orbs */}
+        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#0071E3]/[0.08] blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[10%] w-[400px] h-[400px] bg-[#E9A23B]/[0.06] blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="relative z-10 max-w-[1100px] mx-auto px-6 py-24 md:py-28">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: linearEase }}>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md mb-6 shadow-[0_0_20px_rgba(255,69,58,0.1)]">
-                  <Radio size={12} className="text-[#FF453A] animate-pulse" />
-                  <span className="text-[12px] font-medium text-[#8A8F98]">Live Routing</span>
+        <div className="relative z-10 max-w-[1240px] mx-auto px-8 py-20 md:py-28">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}>
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-black/[0.06] bg-white/80 backdrop-blur-xl mb-8 shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF453A] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF453A]" />
+                </span>
+                <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#6E6E73]">Live Routing</span>
+              </div>
+              <h1 className="text-[clamp(52px,6.5vw,96px)] font-black tracking-[-0.055em] leading-[0.92] mb-6">
+                Alert<br />
+                <span className="bg-gradient-to-r from-[#FF453A] to-[#E9A23B] bg-clip-text text-transparent">Routing.</span>
+              </h1>
+              <p className="text-[19px] leading-[1.65] text-[#6E6E73] max-w-[480px] font-medium">
+                Route <span className="text-[#FF453A] font-semibold">critical signals</span> to the right teams instantly.
+              </p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2, ease }}>
+              <button 
+                onClick={handleAcknowledgeAll}
+                className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-black text-white text-[15px] font-semibold hover:bg-[#0071E3] transition-all shadow-[0_15px_35px_-10px_rgba(0,0,0,0.3)] hover:scale-105"
+              >
+                <CheckCircle2 size={18} /> Acknowledge All
+              </button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* MAIN CONTENT AREA */}
+      <section className="relative w-full bg-[#FBFBFD] py-16">
+        <div className="max-w-[1240px] mx-auto px-8">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Left Side: Active Alerts List */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-black/[0.06] shadow-sm flex items-center justify-center">
+                    <Bell size={18} className="text-[#1D1D1F]" />
+                  </div>
+                  <h2 className="text-[20px] font-bold tracking-tight text-[#1D1D1F]">Active Alerts</h2>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-white border border-black/[0.06] shadow-sm text-[13px] font-bold text-[#6E6E73]">{alerts.length} Active</span>
+              </div>
+
+              <AnimatePresence>
+                {alerts.length === 0 ? (
+                  <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center p-20 bg-white rounded-[24px] border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
+                    <div className="w-16 h-16 rounded-full bg-[#30D158]/10 flex items-center justify-center mb-6">
+                      <CheckCircle2 size={32} className="text-[#30D158]" />
+                    </div>
+                    <p className="text-[#1D1D1F] font-bold text-xl mb-2">You're all caught up!</p>
+                    <p className="text-[#86868B] text-[15px]">No active alerts to route at the moment.</p>
+                  </motion.div>
+                ) : (
+                  alerts.map((alert, i) => (
+                    <motion.div
+                      key={alert.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ delay: i * 0.1, duration: 0.5, ease }}
+                      whileHover={{ y: -4, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.08)" }}
+                      className="relative bg-white rounded-[20px] p-6 border border-black/[0.06] transition-all group"
+                    >
+                      {/* Colored border indicator */}
+                      <div className="absolute left-0 top-6 bottom-6 w-1.5 rounded-r-full" style={{ background: alert.color }} />
+                      
+                      <div className="flex items-start gap-5 pl-3">
+                        <div className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${alert.color}12`, border: `1px solid ${alert.color}25` }}>
+                          <alert.icon size={22} style={{ color: alert.color }} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <h3 className="font-bold text-[17px] text-[#1D1D1F] tracking-tight">{alert.title}</h3>
+                            <span className="text-[10px] font-black tracking-wider px-2.5 py-1 rounded-md uppercase" style={{ background: `${alert.color}15`, color: alert.color }}>
+                              {alert.severity}
+                            </span>
+                          </div>
+                          <p className="text-[14px] text-[#6E6E73] font-medium">{alert.desc}</p>
+                          <p className="text-[12px] text-[#AEAEB2] mt-3 font-mono font-medium">{alert.time}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Right Side: Widgets */}
+            <div className="space-y-6">
+              
+              {/* Test Delivery Widget */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.6, ease }}
+                className="bg-white rounded-[24px] p-7 border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)] relative overflow-hidden"
+              >
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#0071E3]/10 blur-3xl rounded-full" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-[#0071E3]/10 border border-[#0071E3]/20 flex items-center justify-center">
+                      <Send size={18} className="text-[#0071E3]" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-[16px] text-[#1D1D1F]">Test Delivery</h3>
+                      <p className="text-[12px] text-[#86868B] font-medium">Verify routing rules</p>
+                    </div>
+                  </div>
+                  <p className="text-[14px] text-[#6E6E73] mb-6 leading-relaxed font-medium">
+                    Send a test payload to verify your routing rules are working correctly.
+                  </p>
+                  <button 
+                    onClick={handleTestAlert}
+                    disabled={isTesting}
+                    className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-black text-white font-semibold text-[14px] hover:bg-[#0071E3] transition-colors disabled:opacity-50 shadow-lg"
+                  >
+                    {isTesting ? (
+                      <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                        <Activity size={16} />
+                      </motion.div>
+                    ) : (
+                      <><Zap size={16} /> Trigger Test Alert</>
+                    )}
+                  </button>
                 </div>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1, ease: linearEase }} className="text-[56px] md:text-[72px] font-semibold tracking-[-0.04em] leading-[1.05] mb-4 text-[#EDEDED]">
-                Alert <br />
-                <span className="bg-gradient-to-r from-[#FF453A] via-[#E5A00D] to-[#FF453A] bg-clip-text text-transparent bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite]">Routing.</span>
-              </motion.h1>
-
-              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease: linearEase }} className="text-[17px] text-[#8A8F98] max-w-[400px] leading-[1.6]">
-                Route critical signals to the right teams instantly.
-              </motion.p>
-            </div>
-
-            <motion.button 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3, ease: linearEase }}
-              onClick={handleAcknowledgeAll} 
-              disabled={acknowledged} 
-              className={`px-5 py-3 rounded-lg font-semibold text-[14px] transition-all flex items-center gap-2 ${
-                acknowledged 
-                  ? 'bg-[#30D158]/10 text-[#30D158] border border-[#30D158]/20' 
-                  : 'bg-[#EDEDED] text-[#09090B] hover:bg-white shadow-[0_0_15px_rgba(255,255,255,0.1)]'
-              }`}>
-              <CheckCheck size={16} /> {acknowledged ? 'All Acknowledged' : 'Acknowledge All'}
-            </motion.button>
-          </div>
-        </div>
-      </section>
-
-      {/* MAIN GRID */}
-      <section className="max-w-[1100px] mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          {/* LEFT COLUMN */}
-          <div className="space-y-6">
-            
-            {/* Model Drift Alerts */}
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-              className="bg-[#0F1011] rounded-2xl border border-white/[0.06] p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#FF453A]/10 border border-[#FF453A]/20 flex items-center justify-center">
-                  <TrendingDown size={18} className="text-[#FF453A]" />
-                </div>
-                <div>
-                  <h3 className="text-[16px] font-semibold text-[#EDEDED]">Model Drift Alerts</h3>
-                  <p className="text-[12px] text-[#5A5F66]">2 active alerts</p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-4 rounded-lg bg-[#161718] border border-white/[0.04] hover:border-[#FF453A]/30 transition-colors">
-                  <div>
-                    <p className="text-[14px] font-semibold text-[#EDEDED] font-mono">yolov8n.pt</p>
-                    <p className="text-[12px] text-[#8A8F98] mt-0.5">Accuracy dropped by 4% (was 19.3%)</p>
-                  </div>
-                  <span className="flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-[#FF453A]/10 text-[#FF453A] border border-[#FF453A]/20 shadow-[0_0_8px_rgba(255,69,58,0.2)]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF453A] animate-pulse" /> Critical
-                  </span>
-                </div>
-                <div className="flex justify-between items-center p-4 rounded-lg bg-[#161718] border border-white/[0.04] hover:border-[#E5A00D]/30 transition-colors">
-                  <div>
-                    <p className="text-[14px] font-semibold text-[#EDEDED] font-mono">custom_v2.pt</p>
-                    <p className="text-[12px] text-[#8A8F98] mt-0.5">Precision dropped by 2% (was 53.6%)</p>
-                  </div>
-                  <span className="px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-[#E5A00D]/10 text-[#E5A00D] border border-[#E5A00D]/20">
-                    Warning
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Connected Channels */}
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-              className="bg-[#0F1011] rounded-2xl border border-white/[0.06] p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#5E6AD2]/10 border border-[#5E6AD2]/20 flex items-center justify-center">
-                  <Bell size={18} className="text-[#5E6AD2]" />
-                </div>
-                <div>
-                  <h3 className="text-[16px] font-semibold text-[#EDEDED]">Connected Channels</h3>
-                  <p className="text-[12px] text-[#5A5F66]">Delivery endpoints</p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                {channels.all?.map((ch) => {
-                  const isActive = channels.active.includes(ch)
-                  const Icon = channelIcons[ch] || Bell
-                  return (
-                    <div key={ch} className="flex items-center justify-between p-3.5 rounded-lg bg-[#161718] border border-white/[0.04] hover:border-white/[0.1] transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-[#09090B] border border-white/[0.06] flex items-center justify-center">
-                          <Icon size={16} className="text-[#8A8F98]" />
-                        </div>
-                        <span className="text-[14px] font-medium text-[#EDEDED] capitalize">{ch}</span>
-                      </div>
-                      <span className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider border ${
-                        isActive 
-                          ? 'bg-[#30D158]/10 text-[#30D158] border-[#30D158]/20' 
-                          : 'bg-white/[0.02] text-[#5A5F66] border-white/[0.06]'
-                      }`}>
-                        {isActive ? 'Active' : 'Disabled'}
-                      </span>
-                    </div>
-                  )
-                })}
-                {(!channels.all || channels.all.length === 0) && (
-                  <p className="text-[13px] text-[#5A5F66] text-center py-4">No channels configured.</p>
-                )}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* RIGHT COLUMN */}
-          <div className="space-y-6">
-            
-            {/* Test Delivery */}
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-              className="bg-[#0F1011] rounded-2xl border border-white/[0.06] p-6 relative overflow-hidden">
-              
-              <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-[#5E6AD2]/[0.05] blur-[60px] rounded-full pointer-events-none" />
-
-              <div className="flex items-center gap-3 mb-4 relative z-10">
-                <div className="w-10 h-10 rounded-lg bg-[#5E6AD2]/10 border border-[#5E6AD2]/20 flex items-center justify-center">
-                  <Send size={18} className="text-[#5E6AD2]" />
-                </div>
-                <div>
-                  <h3 className="text-[16px] font-semibold text-[#EDEDED]">Test Delivery</h3>
-                  <p className="text-[12px] text-[#5A5F66]">Verify routing rules</p>
-                </div>
-              </div>
-              
-              <p className="text-[13px] text-[#8A8F98] mb-5 relative z-10">Send a test payload to verify your routing rules are working correctly.</p>
-              
-              <button 
-                onClick={testAlert} 
-                disabled={testing} 
-                className="w-full py-3 rounded-lg bg-[#EDEDED] text-[#09090B] font-semibold text-[14px] hover:bg-white transition-all flex items-center justify-center gap-2 relative z-10 disabled:opacity-50 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+              {/* Routing Rules Widget */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.6, ease }}
+                className="bg-white rounded-[24px] p-7 border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]"
               >
-                {testing ? (
-                  <><motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="w-4 h-4 border-2 border-[#09090B]/30 border-t-[#09090B] rounded-full" /> Sending...</>
-                ) : (
-                  <><Send size={16} /> Trigger Test Alert</>
-                )}
-              </button>
-              
-              {testResult && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  className={`mt-4 p-3.5 rounded-lg flex items-center gap-2 text-[13px] font-medium border ${
-                    testResult.success 
-                      ? 'bg-[#30D158]/10 text-[#30D158] border-[#30D158]/20' 
-                      : 'bg-[#FF453A]/10 text-[#FF453A] border-[#FF453A]/20'
-                  }`}
-                >
-                  {testResult.success ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
-                  {testResult.success ? `Success! ID: ${testResult.data?.alert_id?.slice(0,8) || 'N/A'}` : `Error: ${testResult.error}`}
-                </motion.div>
-              )}
-            </motion.div>
-
-            {/* Routing Rules */}
-            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-              className="bg-[#0F1011] rounded-2xl border border-white/[0.06] p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-[#E5A00D]/10 border border-[#E5A00D]/20 flex items-center justify-center">
-                  <Zap size={18} className="text-[#E5A00D]" />
-                </div>
-                <div>
-                  <h3 className="text-[16px] font-semibold text-[#EDEDED]">Routing Rules</h3>
-                  <p className="text-[12px] text-[#5A5F66]">Severity-based routing</p>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                {[
-                  { level: 'Critical', color: 'text-[#FF453A]', bg: 'bg-[#FF453A]/10', border: 'border-[#FF453A]/20', icon: ShieldAlert, key: 'critical' },
-                  { level: 'High', color: 'text-[#E5A00D]', bg: 'bg-[#E5A00D]/10', border: 'border-[#E5A00D]/20', icon: Zap, key: 'high' },
-                  { level: 'Medium', color: 'text-[#5E6AD2]', bg: 'bg-[#5E6AD2]/10', border: 'border-[#5E6AD2]/20', icon: Bell, key: 'medium' },
-                ].map(rule => (
-                  <div key={rule.key} className="p-3.5 rounded-lg bg-[#161718] border border-white/[0.04] flex items-center justify-between hover:border-white/[0.1] transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded flex items-center justify-center ${rule.bg} border ${rule.border}`}>
-                        <rule.icon size={16} className={rule.color} />
-                      </div>
-                      <span className="text-[14px] font-semibold text-[#EDEDED]">{rule.level}</span>
-                    </div>
-                    <select 
-                      value={routes[rule.key]} 
-                      onChange={(e) => { setRoutes({...routes, [rule.key]: e.target.value}); showToast(`Routing updated`, 'success') }}
-                      className="px-3 py-1.5 rounded-md bg-[#09090B] border border-white/[0.06] outline-none text-[12px] font-medium text-[#EDEDED] appearance-none cursor-pointer hover:border-white/[0.15] transition-colors"
-                    >
-                      <option value="slack">Slack</option>
-                      <option value="email">Email</option>
-                      <option value="pagerduty">PagerDuty</option>
-                      <option value="webhook">Webhook</option>
-                    </select>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-[#E9A23B]/10 border border-[#E9A23B]/20 flex items-center justify-center">
+                    <ShieldAlert size={18} className="text-[#E9A23B]" />
                   </div>
-                ))}
-              </div>
-            </motion.div>
+                  <h3 className="font-bold text-[16px] text-[#1D1D1F]">Routing Rules</h3>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { label: 'Critical → PagerDuty', color: '#FF453A' },
+                    { label: 'Warning → Slack #alerts', color: '#E9A23B' },
+                    { label: 'Info → Email Digest', color: '#0071E3' },
+                  ].map((rule, i) => (
+                    <div key={i} className="flex items-center justify-between p-3.5 rounded-xl bg-[#FAFBFF] border border-black/[0.04] hover:border-black/[0.08] transition-colors cursor-default group">
+                      <div className="flex items-center gap-3">
+                        <span className="w-2 h-2 rounded-full" style={{ background: rule.color }} />
+                        <span className="text-[13px] text-[#1D1D1F] font-semibold">{rule.label}</span>
+                      </div>
+                      <ArrowUpRight size={14} className="text-[#AEAEB2] group-hover:text-[#1D1D1F] transition-colors" />
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+              
+            </div>
           </div>
         </div>
       </section>
-
-      <DarkFooter 
-        badge="Alerting" 
-        title="Never miss" 
-        highlight="an anomaly." 
-        description="Configure PagerDuty, Slack, and Email integrations for round-the-clock incident response." 
-        primary="Setup Webhooks" 
-        secondary="API Docs" 
-      />
-
-      <style>{`
-        @keyframes shimmer {
-          0% { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
-        }
-      `}</style>
     </div>
   )
 }
-
-export default Alerts
