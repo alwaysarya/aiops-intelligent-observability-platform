@@ -88,7 +88,7 @@ export default function Dashboard() {
     <main className="w-full min-h-screen bg-[#09090B] text-[#EDEDED] font-[-apple-system,BlinkMacSystemFont,'Inter','Helvetica_Neue',sans-serif] antialiased selection:bg-[#5E6AD2]/30 overflow-x-hidden">
       
       {/* HERO */}
-      <section className="relative w-full overflow-hidden border-b border-white/[0.06]" style={{ minHeight: '100vh' }}>
+      <section className="relative w-full overflow-hidden before:absolute before:inset-0 before:opacity-[0.015] before:pointer-events-none before:bg-[url('data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%273%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')] border-b border-white/[0.06]" style={{ minHeight: '100vh' }}>
         
         {/* Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_60%,transparent_100%)]" />
@@ -103,7 +103,7 @@ export default function Dashboard() {
 
         <motion.div 
           style={{ y: heroY, opacity: heroOpacity }}
-          className="relative z-10 max-w-[1200px] mx-auto px-6 py-24 md:py-32"
+          className="relative z-10 max-w-[1200px] mx-auto px-6 py-32 md:py-32"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -219,7 +219,7 @@ export default function Dashboard() {
       </section>
 
       {/* TOPOLOGY SECTION */}
-      <section className="max-w-[1180px] mx-auto px-6 py-24" id="overview">
+      <section className="max-w-[1180px] mx-auto px-6 py-32" id="overview">
         <Heading eyebrow="Live Service Topology" title="Your infrastructure, connected." description="Explore service dependencies, system health, and the signals flowing across your infrastructure." />
 
         <motion.div 
@@ -309,7 +309,7 @@ export default function Dashboard() {
       </section>
 
       {/* SERVICES & ACTIVITY */}
-      <section className="max-w-[1180px] mx-auto px-6 py-24" id="services">
+      <section className="max-w-[1180px] mx-auto px-6 py-32" id="services">
         <Heading eyebrow="Infrastructure" title="Built to keep things moving." description="See the state of core services without digging through logs and multiple tools." />
         
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-12">
@@ -397,7 +397,7 @@ export default function Dashboard() {
       </section>
 
       {/* DEPLOYMENTS */}
-      <section className="max-w-[1180px] mx-auto px-6 py-24" id="deployments">
+      <section className="max-w-[1180px] mx-auto px-6 py-32" id="deployments">
         <Heading eyebrow="Delivery" title="Every release, accounted for." description="A clean history of recent changes across production and staging." />
         
         <motion.div 
@@ -436,7 +436,7 @@ export default function Dashboard() {
 
       {/* SYSTEM CONFIDENCE */}
       <section className="w-full bg-[#0A0F1A] border-y border-white/[0.06]">
-        <div className="max-w-[1180px] mx-auto px-6 py-24">
+        <div className="max-w-[1180px] mx-auto px-6 py-32">
           <Heading eyebrow="System Confidence" title="Know where you stand." description="A quick, readable snapshot of the indicators teams use to assess system readiness." />
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
