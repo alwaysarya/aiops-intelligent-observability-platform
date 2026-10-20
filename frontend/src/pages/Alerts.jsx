@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bell, ShieldAlert, Send, CheckCircle2, AlertTriangle, Zap, Server, Activity, ArrowUpRight, Search, Filter, ShieldCheck } from 'lucide-react'
+import { Download, Bell, ShieldAlert, Send, CheckCircle2, AlertTriangle, Zap, Server, Activity, ArrowUpRight, Search, Filter, ShieldCheck } from 'lucide-react'
 import { showToast } from '../components/Premium/Toast'
 
 const ease = [0.25, 0.1, 0.25, 1]
@@ -14,6 +14,14 @@ export default function Alerts() {
   
   const [alerts, setAlerts] = useState(initialAlerts)
   const [isTesting, setIsTesting] = useState(false)
+  const [assignedTo, setAssignedTo] = useState({})
+  const [autoRefresh, setAutoRefresh] = useState(false)
+  const [liveTime, setLiveTime] = useState(new Date().toLocaleTimeString())
+
+  useEffect(() => {
+    const timer = setInterval(() => setLiveTime(new Date().toLocaleTimeString()), 1000)
+    return () => clearInterval(timer)
+  }, [])
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('ALL')
 
@@ -25,6 +33,45 @@ export default function Alerts() {
       return matchesSearch && matchesFilter
     })
   }, [alerts, searchTerm, filter])
+
+  
+  
+  
+  const handleAssign = (id, team) => {
+    setAssignedTo({ ...assignedTo, [id]: team })
+    showToast(`Alert assigned to ${team}`, 'success')
+  }
+
+  
+  useEffect(() => {
+    let interval
+    if (autoRefresh) {
+      interval = setInterval(() => {
+        // Simulate fetch/refresh by adding a mock alert occasionally or just logging
+        console.log('Auto-refreshing alerts...')
+      }, 10000)
+    }
+    return () => clearInterval(interval)
+  }, [autoRefresh])
+
+  const handleResolve = (id) => {
+    setAlerts(alerts.filter(a => a.id !== id))
+    showToast('Alert resolved successfully', 'success')
+  }
+
+  const handleExport = () => {
+    const headers = ['ID', 'Title', 'Description', 'Severity', 'Time', 'Status']
+    const csvData = alerts.map(a => [a.id, a.title, a.desc, a.severity, a.time, a.status].join(','))
+    const csvContent = "data:text/csv;charset=utf-8," + headers.join(',') + "\n" + csvData.join("\n")
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute("download", "aiops_alerts.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    showToast('Alerts exported to CSV', 'success')
+  }
 
   const stats = [
     { label: 'Total Alerts', value: alerts.length, icon: Bell, color: '#1D1D1F' },
@@ -67,6 +114,8 @@ export default function Alerts() {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF453A]" />
                 </span>
                 <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#6E6E73]">Live Routing</span>
+                {/* LIVE CLOCK */}
+                <span className="ml-2 pl-2 border-l border-black/[0.1] text-[11px] font-mono font-bold text-[#FF453A]">{liveTime}</span>
               </div>
               <h1 className="text-[clamp(52px,6.5vw,88px)] font-black tracking-[-0.055em] leading-[0.92] mb-4">
                 Alert<br />
@@ -84,6 +133,21 @@ export default function Alerts() {
               >
                 <CheckCircle2 size={16} /> Acknowledge All
               </button>
+              
+              <div className="flex items-center gap-2 h-12 px-4 rounded-full bg-white border border-black/[0.1]">
+                <span className="text-[12px] font-bold text-[#6E6E73]">Auto-Refresh</span>
+                <button 
+                  onClick={() => setAutoRefresh(!autoRefresh)}
+                  className={`w-8 h-4 rounded-full transition-colors relative ${autoRefresh ? 'bg-[#30D158]' : 'bg-[#D1D1D6]'}`}
+                >
+                  <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${autoRefresh ? 'left-4.5' : 'left-0.5'}`} />
+                </button>
+              </div>
+
+              <button onClick={handleExport} className="inline-flex items-center gap-2 h-12 px-6 rounded-full bg-white border border-black/[0.1] text-[#1D1D1F] text-[14px] font-semibold hover:bg-[#F5F5F7] transition-all">
+                <Download size={16} /> Export CSV
+              </button>
+
             </motion.div>
           </div>
         </div>
@@ -163,7 +227,26 @@ export default function Alerts() {
                             </span>
                           </div>
                           <p className="text-[13px] text-[#6E6E73] font-medium">{alert.desc}</p>
-                          <p className="text-[11px] text-[#AEAEB2] mt-2 font-mono font-medium">{alert.time}</p>
+                          <div className="flex items-center justify-between mt-2"><p className="text-[11px] text-[#AEAEB2] font-mono font-medium">{alert.time}</p>
+                          
+                          <div className="flex items-center gap-2 ml-auto">
+                            <select 
+                              onChange={(e) => { e.stopPropagation(); handleAssign(alert.id, e.target.value); }} 
+                              defaultValue="" 
+                              className="text-[10px] font-bold text-[#6E6E73] bg-white border border-black/[0.1] rounded-md px-1.5 py-0.5 outline-none cursor-pointer"
+                            >
+                              <option value="" disabled>Assign</option>
+                              <option value="Dev Team">Dev Team</option>
+                              <option value="SRE Team">SRE Team</option>
+                              <option value="Security">Security</option>
+                            </select>
+                            {assignedTo[alert.id] && <span className="text-[10px] text-[#0071E3] font-bold">{assignedTo[alert.id]}</span>}
+                          </div>
+
+                          <button onClick={(e) => { e.stopPropagation(); handleResolve(alert.id); }} className="ml-auto text-[11px] font-bold text-[#30D158] hover:text-[#28a745] transition-colors flex items-center gap-1">
+                            <CheckCircle2 size={12} /> Resolve
+                          </button>
+</div>
                         </div>
                       </div>
                     </motion.div>
