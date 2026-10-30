@@ -42,7 +42,7 @@ function LoginPage() {
           <p className="text-[17px] text-white/50 leading-relaxed">An offline assurance layer for AIOps. Verify contributors, data, models, and inference — before deployment.</p>
         </div>
         
-        <div className="relative z-10 text-[12px] text-white/30">© 2026 AIOps Observability Platform</div>
+        <div className="relative z-10 text-[12px] text-white/30">© {new Date().getFullYear()} AIOps Observability Platform</div>
       </div>
 
       {/* Right Side Login Form */}

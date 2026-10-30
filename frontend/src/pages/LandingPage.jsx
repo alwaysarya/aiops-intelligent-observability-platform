@@ -1024,7 +1024,7 @@ function LandingPage() {
             </div>
           </div>
           <div className="border-t border-black/5 pt-10 text-center flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-gray-400 text-[14px] font-medium">© 2026 AIOps Observability Platform. All rights reserved.</p>
+            <p className="text-gray-400 text-[14px] font-medium">© {new Date().getFullYear()} AIOps Observability Platform. All rights reserved.</p>
             <div className="flex gap-6 text-gray-400">
               <Globe size={22} className="hover:text-black cursor-pointer transition-colors" />
               <Code2 size={22} className="hover:text-black cursor-pointer transition-colors" />
