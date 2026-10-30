@@ -19,6 +19,7 @@ from src.log_parser import LogParser
 from src.utils.config import settings
 from src.utils.logger import logger
 from src.utils.tracing import instrument_fastapi, setup_tracing
+from src.redis_cache import get_cached_logs, set_cached_logs
 from src.utils.security import create_access_token, get_current_user, TokenData
 from src.models.database import init_db, get_db, LogRecord
 
