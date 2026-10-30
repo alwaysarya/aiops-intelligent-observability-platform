@@ -134,67 +134,6 @@ function LandingPage() {
           </motion.div>
         </motion.div>
       </section>
-      {/* N8N STYLE WORKFLOW ARCHITECTURE */}
-      <section className="relative w-full bg-[#0A0A0B] py-24 border-y border-white/[0.06] overflow-hidden">
-        {/* Grid Background for Dark Theme */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-        <div className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-[#30D158]/[0.05] blur-[100px] rounded-full pointer-events-none" />
-
-        <div className="max-w-[1240px] mx-auto px-8 relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-[11px] font-bold tracking-[0.1em] text-[#30D158] uppercase mb-4">
-              <Zap size={12} /> Workflow Architecture
-            </div>
-            <h2 className="text-[36px] font-bold text-white tracking-tight">How data flows</h2>
-          </div>
-
-          <div className="relative w-full max-w-5xl mx-auto h-[300px] flex items-center justify-center">
-            {/* SVG Connecting Lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-              <defs>
-                <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#30D158" stopOpacity="0.8" />
-                  <stop offset="50%" stopColor="#0071E3" stopOpacity="0.5" />
-                  <stop offset="100%" stopColor="#AF52DE" stopOpacity="0.8" />
-                </linearGradient>
-              </defs>
-              {/* Main horizontal flow */}
-              <motion.path d="M 100 150 L 300 150 L 400 150 L 600 150 L 700 150 L 900 150 L 1100 150" fill="none" stroke="url(#flowGrad)" strokeWidth="2" strokeDasharray="8,4" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, ease: "easeInOut" }} />
-              {/* Branches */}
-              <motion.path d="M 300 150 L 300 80 L 400 80" fill="none" stroke="#30D158" strokeWidth="1.5" strokeDasharray="5,5" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.5, ease: "easeInOut" }} />
-              <motion.path d="M 600 150 L 600 220 L 700 220" fill="none" stroke="#FF453A" strokeWidth="1.5" strokeDasharray="5,5" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }} />
-              <motion.path d="M 900 150 L 900 80 L 1000 80" fill="none" stroke="#0071E3" strokeWidth="1.5" strokeDasharray="5,5" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 1.1, ease: "easeInOut" }} />
-            </svg>
-
-            {/* N8N Style Nodes */}
-            <div className="absolute left-[5%] top-1/2 -translate-y-1/2">
-              <WorkflowNode label="Logs API" icon={Terminal} color="#30D158" delay={0} />
-            </div>
-            <div className="absolute left-[25%] top-1/2 -translate-y-1/2">
-              <WorkflowNode label="Event Queue" icon={Server} color="#0071E3" delay={0.2} />
-            </div>
-            <div className="absolute left-[25%] top-[20%]">
-              <WorkflowNode label="Metrics" icon={Activity} color="#30D158" delay={0.4} isSmall />
-            </div>
-            <div className="absolute left-[45%] top-1/2 -translate-y-1/2">
-              <WorkflowNode label="AI Engine" icon={Cpu} color="#AF52DE" delay={0.6} isLarge />
-            </div>
-            <div className="absolute left-[45%] bottom-[15%]">
-              <WorkflowNode label="Database" icon={Database} color="#FF453A" delay={0.8} isSmall />
-            </div>
-            <div className="absolute left-[65%] top-1/2 -translate-y-1/2">
-              <WorkflowNode label="Rules Engine" icon={ShieldCheck} color="#0071E3" delay={1.0} />
-            </div>
-            <div className="absolute left-[65%] top-[20%]">
-              <WorkflowNode label="Anomaly" icon={Zap} color="#0071E3" delay={1.2} isSmall />
-            </div>
-            <div className="absolute left-[85%] top-1/2 -translate-y-1/2">
-              <WorkflowNode label="Alerting" icon={Bell} color="#30D158" delay={1.4} />
-            </div>
-          </div>
-        </div>
-      </section>
-    
 
       {/* MARQUEE */}
       <section className="relative py-16 border-y border-black/5 bg-white/50 backdrop-blur-md overflow-hidden">
@@ -1098,22 +1037,4 @@ function LandingPage() {
   )
 }
 
-
-function WorkflowNode({ label, icon: Icon, color, delay, isLarge, isSmall }) {
-  const sizeClass = isLarge ? 'w-16 h-16 rounded-2xl' : isSmall ? 'w-10 h-10 rounded-xl' : 'w-12 h-12 rounded-xl';
-  const iconSize = isLarge ? 24 : isSmall ? 16 : 20;
-  
-  return (
-    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay, duration: 0.5, type: "spring" }}
-      className="flex flex-col items-center gap-2 relative z-10">
-      <div className={`${sizeClass} bg-[#121214] border border-white/[0.1] shadow-[0_0_20px_rgba(0,0,0,0.5)] flex items-center justify-center relative group`}>
-        <div className="absolute inset-0 opacity-20 rounded-xl blur-md transition-opacity group-hover:opacity-40" style={{ background: color }} />
-        <Icon size={iconSize} style={{ color: color }} className="relative z-10" />
-        {/* Small Green Dot like n8n */}
-        <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#30D158] rounded-full border-2 border-[#0A0A0B]"></div>
-      </div>
-      <span className="text-[11px] font-bold text-[#86868B] whitespace-nowrap">{label}</span>
-    </motion.div>
-  )
-}
 export default LandingPage
