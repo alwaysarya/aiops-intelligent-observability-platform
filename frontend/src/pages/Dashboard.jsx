@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, ChevronRight, Activity, ShieldCheck, Box, Zap, TrendingUp, ArrowDown, Database } from 'lucide-react'
 
@@ -42,6 +42,21 @@ function FAQItem({ question, answer, defaultOpen = false }) {
 }
 
 export default function Dashboard() {
+  const [dashboardData, setDashboardData] = useState({
+    total_logs: 0,
+    errors: 0,
+    uptime: '0%',
+    avg_latency: '0ms',
+    source: 'loading'
+  })
+
+  useEffect(() => {
+    fetch('http://localhost:8000/analytics')
+      .then(res => res.json())
+      .then(data => setDashboardData(data))
+      .catch(err => console.error("Dashboard fetch error:", err))
+  }, [])
+
   const [filter, setFilter] = useState('All activity')
   const { scrollYProgress } = useScroll()
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, 80])
@@ -88,7 +103,7 @@ export default function Dashboard() {
                 </a>
               </div>
               <div className="flex items-center gap-10 mt-14 pt-8 border-t border-black/[0.06]">
-                {[{ v: '99.99%', l: 'Uptime SLA' }, { v: '50ms', l: 'Avg response' }, { v: '24/7', l: 'Support' }].map((s, i) => (
+                {[{ v: dashboardData.uptime, l: 'Uptime SLA' }, { v: dashboardData.avg_latency, l: 'Avg response' }, { v: '24/7', l: 'Support' }].map((s, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + i * 0.15, duration: 0.6 }}>
                     <p className="text-[26px] font-bold tracking-tight bg-gradient-to-br from-[#1D1D1F] to-[#424245] bg-clip-text text-transparent">{s.v}</p>
                     <p className="text-[11px] font-semibold text-[#86868B] uppercase tracking-wider mt-1">{s.l}</p>
@@ -355,7 +370,7 @@ export default function Dashboard() {
           <h2 className="text-[clamp(40px,5vw,64px)] font-bold tracking-[-0.055em] leading-[1.02] mb-6">Built for speed.</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[{ v: '50ms', l: 'Query latency', c: '#0071E3' }, { v: '12M', l: 'Events / sec', c: '#5E5CE6' }, { v: '99.99%', l: 'Uptime SLA', c: '#30D158' }, { v: '180ms', l: 'Detection time', c: '#AF52DE' }].map((m, i) => (
+          {[{ v: dashboardData.avg_latency, l: 'Query latency', c: '#0071E3' }, { v: dashboardData.total_logs.toLocaleString(), l: 'Events / sec', c: '#5E5CE6' }, { v: dashboardData.uptime, l: 'Uptime SLA', c: '#30D158' }, { v: '180ms', l: 'Detection time', c: '#AF52DE' }].map((m, i) => (
             <motion.div key={m.l} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="text-center p-8 rounded-[28px] bg-gradient-to-br from-white to-[#FAFBFF] border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
               <p className="text-[42px] font-black tracking-[-0.04em] mb-2" style={{ color: m.c }}>{m.v}</p>
               <p className="text-[12px] font-bold uppercase tracking-wider text-[#86868B]">{m.l}</p>
