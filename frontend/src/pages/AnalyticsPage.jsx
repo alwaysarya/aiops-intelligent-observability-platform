@@ -21,6 +21,9 @@ const fadeUp = {
 
 function AnalyticsPage() {
   const [services, setServices] = useState({})
+  const [analyticsData, setAnalyticsData] = useState({
+    total_logs: 0, errors: 0, warnings: 0, uptime: '0%', avg_latency: '0ms', source: 'loading'
+  })
   const [testResult, setTestResult] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [timeRange, setTimeRange] = useState('1h')
@@ -76,9 +79,9 @@ function AnalyticsPage() {
   }
 
   const kpiStats = [
-    { label: 'Events / min', value: '124,800', trend: '+18%', isUp: true, icon: Activity, color: '#5E6AD2' },
-    { label: 'Anomalies', value: '33', trend: '-5', isUp: false, icon: AlertTriangle, color: '#FF453A' },
-    { label: 'Uptime', value: '99.99%', trend: '+0.02%', isUp: true, icon: Shield, color: '#30D158' },
+    { label: 'Events / min', value: '{analyticsData.total_logs.toLocaleString()}', trend: '+18%', isUp: true, icon: Activity, color: '#5E6AD2' },
+    { label: 'Anomalies', value: '{analyticsData.errors}', trend: '-5', isUp: false, icon: AlertTriangle, color: '#FF453A' },
+    { label: 'Uptime', value: '{analyticsData.uptime}', trend: '+0.02%', isUp: true, icon: Shield, color: '#30D158' },
     { label: 'Alert Response', value: '180ms', trend: '-24ms', isUp: true, icon: Clock, color: '#E5A00D' },
   ]
 
@@ -192,7 +195,7 @@ function AnalyticsPage() {
                   <div className="flex justify-between items-center mb-4">
                     <div>
                       <p className="text-[10px] font-bold text-[#86868B] uppercase tracking-wider">Requests / sec</p>
-                      <p className="text-[28px] font-black text-[#1D1D1F] mt-1">124,800</p>
+                      <p className="text-[28px] font-black text-[#1D1D1F] mt-1">{analyticsData.total_logs.toLocaleString()}</p>
                     </div>
                     <span className="px-2.5 py-1 rounded-full bg-[#E8F8EE] text-[#177245] text-[11px] font-bold border border-[#30D158]/30">+18%</span>
                   </div>
