@@ -201,3 +201,50 @@ def get_analytics(db: Session = Depends(get_db)):
         logger.error(f"Analytics failed: {e}")
         return {"total_logs": 0, "errors": 0, "warnings": 0, "uptime": "0%", "avg_latency": "0ms", "source": "error"}
 
+
+@app.get("/rca/graph")
+def get_graph():
+    """Get service dependency graph from Neo4j"""
+    if neo4j_driver:
+        try:
+            with neo4j_driver.session() as session:
+                result = session.run("MATCH (n) RETURN count(n) as nodes")
+                nodes = result.single()["nodes"]
+                
+                result = session.run("MATCH ()-[r]->() RETURN count(r) as rels")
+                rels = result.single()["rels"]
+                
+                return {"nodes": nodes, "relationships": rels, "source": "neo4j"}
+        except Exception as e:
+            return {"error": str(e), "source": "neo4j"}
+    return {"nodes": 0, "relationships": 0, "source": "unavailable"}
+
+@app.post("/rca/seed")
+def seed_graph():
+    """Seed Neo4j with sample service dependencies"""
+    if neo4j_driver:
+        try:
+            with neo4j_driver.session() as session:
+                # Create services
+                services = ["api-gateway", "log-ingestion", "anomaly-detector", "alert-service", "root-cause-analyzer"]
+                for s in services:
+                    session.run("MERGE (n:Service {name: $name})", name=s)
+                
+                # Create dependencies (api-gateway depends on log-ingestion, etc.)
+                deps = [
+                    ("api-gateway", "log-ingestion"),
+                    ("log-ingestion", "anomaly-detector"),
+                    ("anomaly-detector", "alert-service"),
+                    ("alert-service", "root-cause-analyzer"),
+                    ("api-gateway", "alert-service"),
+                ]
+                for src, dst in deps:
+                    session.run(
+                        "MATCH (a:Service {name: $src}), (b:Service {name: $dst}) MERGE (a)-[:DEPENDS_ON]->(b)",
+                        src=src, dst=dst
+                    )
+                return {"status": "seeded", "services": len(services), "dependencies": len(deps)}
+        except Exception as e:
+            return {"error": str(e)}
+    return {"error": "neo4j unavailable"}
+
