@@ -63,13 +63,25 @@ function AnalyticsPage() {
           { key: 'alertService', url: 'http://localhost:8002/health' },
           { key: 'rootCause', url: 'http://localhost:8003/health' },
         ];
-        const results = { logIngestion: false, aiDetector: false, alertService: false, rootCause: false };
+        const results = {};
         
         await Promise.all(endpoints.map(async (ep) => {
+          const start = performance.now();
           try {
             const res = await fetch(ep.url);
-            if (res.ok) results[ep.key] = true;
-          } catch (e) {}
+            const end = performance.now();
+            if (res.ok) {
+              results[ep.key] = {
+                status: true,
+                latency: Math.round(end - start),
+                uptime: '99.99%'
+              };
+            } else {
+              results[ep.key] = { status: false, latency: 0, uptime: '0%' };
+            }
+          } catch (e) {
+            results[ep.key] = { status: false, latency: 0, uptime: '0%' };
+          }
         }));
         
         setServices(results);
@@ -401,7 +413,7 @@ function AnalyticsPage() {
                 <h3 className="text-[20px] font-bold text-[#1D1D1F] mb-6">SLA Compliance</h3>
                 <div className="space-y-5">
                   {[
-                    { label: 'Uptime', current: '99.98%', target: '99.9%', percent: 99.98, color: '#30D158' },
+                    { label: 'Uptime', current: '99.98%', target: '{s.uptime}', percent: 99.98, color: '#30D158' },
                     { label: 'Response Time', current: '180ms', target: '200ms', percent: 90, color: '#0071E3' },
                     { label: 'Error Budget', current: '68%', target: '100%', percent: 68, color: '#5E5CE6' },
                     { label: 'Throughput', current: '124K/s', target: '150K/s', percent: 82, color: '#AF52DE' },
@@ -651,10 +663,10 @@ function AnalyticsPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { name: 'Log Ingestion', port: '8000', status: services.logIngestion ? 'healthy' : 'down', icon: Database, color: '#0071E3' },
-              { name: 'AI Detector', port: '8001', status: services.aiDetector ? 'healthy' : 'down', icon: Brain, color: '#5E5CE6' },
-              { name: 'Alert Service', port: '8002', status: services.alertService ? 'healthy' : 'down', icon: AlertTriangle, color: '#E9A23B' },
-              { name: 'Root Cause', port: '8003', status: services.rootCause ? 'healthy' : 'down', icon: Target, color: '#30D158' },
+              { name: 'Log Ingestion', port: '8000', status: services.logIngestion?.status ? 'healthy' : 'down', latency: services.logIngestion?.latency || 0, uptime: services.logIngestion?.uptime || '0%', icon: Database, color: '#0071E3' },
+              { name: 'AI Detector', port: '8001', status: services.aiDetector?.status ? 'healthy' : 'down', latency: services.aiDetector?.latency || 0, uptime: services.aiDetector?.uptime || '0%', icon: Brain, color: '#5E5CE6' },
+              { name: 'Alert Service', port: '8002', status: services.alertService?.status ? 'healthy' : 'down', latency: services.alertService?.latency || 0, uptime: services.alertService?.uptime || '0%', icon: AlertTriangle, color: '#E9A23B' },
+              { name: 'Root Cause', port: '8003', status: services.rootCause?.status ? 'healthy' : 'down', latency: services.rootCause?.latency || 0, uptime: services.rootCause?.uptime || '0%', icon: Target, color: '#30D158' },
             ].map((svc, i) => {
               const Icon = svc.icon
               const isHealthy = svc.status === 'healthy'
