@@ -1,3 +1,4 @@
+from neo4j import GraphDatabase
 import signal
 import sys
 from contextlib import asynccontextmanager
@@ -69,6 +70,17 @@ async def lifespan(app: FastAPI):
     yield
     if es_writer: 
         es_writer.stop()
+
+
+# Initialize Neo4j
+neo4j_driver = None
+try:
+    neo4j_driver = GraphDatabase.driver("bolt://neo4j:7687", auth=("neo4j", "aiops_password"))
+    neo4j_driver.verify_connectivity()
+    logger.info("✅ Neo4j connected.")
+except Exception as e:
+    logger.warning(f"⚠️ Neo4j unavailable: {e}")
+    neo4j_driver = None
 
 app = FastAPI(title="Log Ingestion Service", lifespan=lifespan)
 app.state.limiter = limiter
