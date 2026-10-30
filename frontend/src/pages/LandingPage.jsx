@@ -124,7 +124,7 @@ function LandingPage() {
               Real-time observability with AI-powered anomaly detection, intelligent root cause analysis, and automated alerting for cloud-native applications.
             </p>
             <div className="mt-14 flex flex-wrap items-center justify-center gap-4">
-              <button onClick={() => navigate('/dashboard')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
+              <button onClick={() => navigate('/app')} className="group inline-flex items-center gap-2 rounded-full bg-[#1D1D1F] px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-white transition-all hover:scale-[1.03] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)]">
                 Enter AIOps World <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" strokeWidth={2.4} />
               </button>
               <a href="#features" className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 backdrop-blur-md px-10 py-5 text-[17px] font-semibold tracking-[-0.01em] text-[#1D1D1F] shadow-sm transition-all hover:bg-white hover:shadow-md">
@@ -921,7 +921,7 @@ function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => navigate('/dashboard')} className={`w-full py-4 rounded-2xl text-[16px] font-bold transition-all ${plan.highlight ? 'bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-xl' : 'bg-[#1D1D1F] text-white hover:bg-black shadow-lg'}`}>
+                <button onClick={() => navigate('/app')} className={`w-full py-4 rounded-2xl text-[16px] font-bold transition-all ${plan.highlight ? 'bg-white text-[#1D1D1F] hover:bg-gray-100 shadow-xl' : 'bg-[#1D1D1F] text-white hover:bg-black shadow-lg'}`}>
                   Get Started
                 </button>
               </motion.div>

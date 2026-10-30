@@ -13,10 +13,10 @@ import NotificationPanel from './NotificationPanel'
 const linearEase = [0.25, 0.1, 0.25, 1]
 
 const navItems = [
-  { label: 'Home', path: '/', icon: LayoutDashboard },
-  { label: 'Analytics', path: '/analytics', icon: BarChart3 },
-  { label: 'Logs', path: '/logs', icon: FileText },
-  { label: 'Alerts', path: '/alerts', icon: Bell },
+  { label: 'Home', path: '/app', icon: LayoutDashboard },
+  { label: 'Analytics', path: '/app/analytics', icon: BarChart3 },
+  { label: 'Logs', path: '/app/logs', icon: FileText },
+  { label: 'Alerts', path: '/app/alerts', icon: Bell },
   {
     label: 'Platform',
     icon: Brain,
@@ -37,7 +37,7 @@ const navItems = [
       { label: 'Distributed Traces', path: '/traces', icon: Activity, desc: 'Request waterfall' },
     ]
   },
-  { label: 'Settings', path: '/settings', icon: Settings },
+  { label: 'Settings', path: '/app/settings', icon: Settings },
 ]
 
 function Topbar() {
