@@ -78,6 +78,16 @@ services:
   # MICROSERVICES
   # ==========================================
 
+
+  redis:
+    image: redis:7-alpine
+    container_name: aiops-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
   api-gateway:
     build: ./services/api-gateway
     container_name: aiops-api-gateway
