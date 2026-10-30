@@ -104,9 +104,9 @@ function Settings() {
                     </div>
                   </div>
 
-                  <button onClick={saveProfile} className="px-6 py-3 rounded-xl bg-apple-blue text-white font-semibold hover:bg-apple-blueHover transition-all flex items-center gap-2">
-                    <Save size={18} /> Save Changes
-                  </button>
+                  <button onClick={saveProfile} className="px-6 py-3 rounded-xl bg-apple-blue text-white font-semibold hover:bg-apple-blueHover transition-all flex items-center gap-2" onClick={() => showToast("Settings saved successfully!", "success")}>
+                      <Save size={18} /> Save Changes
+                    </button>
                 </motion.div>
               )}
 
