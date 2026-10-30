@@ -828,10 +828,10 @@ function AnalyticsPage() {
           </h2>
           <p className="text-[18px] text-white/60 max-w-[500px] mx-auto mb-10">Dive deeper into your infrastructure metrics and identify trends before they become issues.</p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <a href="#" className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-white text-black text-[15px] font-bold hover:bg-[#0071E3] hover:text-white transition-all shadow-2xl">
+            <a href="/app" className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-white text-black text-[15px] font-bold hover:bg-[#0071E3] hover:text-white transition-all shadow-2xl">
               View Full Report <ArrowRight size={18} />
             </a>
-            <a href="#" className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-white/10 text-white text-[15px] font-bold border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm">
+            <a href="/app" className="inline-flex items-center gap-2 h-14 px-8 rounded-full bg-white/10 text-white text-[15px] font-bold border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm">
               Export Data
             </a>
           </div>
