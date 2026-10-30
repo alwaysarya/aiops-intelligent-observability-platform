@@ -136,6 +136,37 @@ services:
       - aiops-network
     restart: unless-stopped
 
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: aiops-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - aiops-network
+    depends_on:
+      - api-gateway
+    restart: unless-stopped
+
+
+  n8n:
+    image: n8nio/n8n
+    container_name: aiops-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
   api-gateway:
     build: ./services/api-gateway
     container_name: aiops-api-gateway
@@ -223,3 +254,4 @@ volumes:
 
   postgres_master_data:
   neo4j_data:
+  n8n_data:
