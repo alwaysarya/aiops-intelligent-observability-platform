@@ -4,12 +4,7 @@ import { ArrowRight, ChevronRight, Activity, ShieldCheck, Box, Zap, TrendingUp, 
 
 const ease = [0.16, 1, 0.3, 1]
 
-const services = [
-  { name: 'API Gateway', detail: 'Request routing and traffic', uptime: '99.98%', status: 'Operational', icon: Box, color: '#0071E3' },
-  { name: 'Application Server', detail: 'Core application services', uptime: '99.95%', status: 'Operational', icon: Zap, color: '#5E5CE6' },
-  { name: 'Build Pipeline', detail: 'Continuous integration', uptime: '99.91%', status: 'Operational', icon: TrendingUp, color: '#30D158' },
-  { name: 'Compute Engine', detail: 'Processing resources', uptime: '98.76%', status: 'Monitoring', icon: ShieldCheck, color: '#E9A23B' },
-]
+
 
 const deployments = [
   { version: 'v2.8.4', branch: 'main', environment: 'Production', status: 'Successful', time: 'Today · 10:42 AM' },
@@ -43,19 +38,24 @@ function FAQItem({ question, answer, defaultOpen = false }) {
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState({
-    total_logs: 0,
-    errors: 0,
-    uptime: '0%',
-    avg_latency: '0ms',
-    source: 'loading'
-  })
+    total_logs: 0, errors: 0, uptime: "0%", avg_latency: "0ms", source: "loading"
+  });
+
+  const services = [
+    { name: 'API Gateway', detail: 'Request routing and traffic', uptime: dashboardData.uptime, status: 'Operational', icon: Box, color: '#0071E3' },
+    { name: 'Application Server', detail: 'Core application services', uptime: dashboardData.uptime, status: 'Operational', icon: Zap, color: '#5E5CE6' },
+    { name: 'Build Pipeline', detail: 'Continuous integration', uptime: dashboardData.uptime, status: 'Operational', icon: TrendingUp, color: '#30D158' },
+    { name: 'Compute Engine', detail: 'Processing resources', uptime: dashboardData.uptime, status: 'Monitoring', icon: ShieldCheck, color: '#E9A23B' },
+  ]
+
 
   useEffect(() => {
-    fetch('http://localhost:8000/analytics')
+    fetch("http://localhost:8000/analytics")
       .then(res => res.json())
       .then(data => setDashboardData(data))
-      .catch(err => console.error("Dashboard fetch error:", err))
-  }, [])
+      .catch(err => console.error("Dashboard fetch error:", err));
+  }, []);
+
 
   const [filter, setFilter] = useState('All activity')
   const { scrollYProgress } = useScroll()

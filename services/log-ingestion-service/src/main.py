@@ -144,16 +144,35 @@ def get_analytics(db: Session = Depends(get_db)):
             index = "aiops-logs-*"
             total_res = es_writer.client.count(index=index)
             total_logs = total_res.get('count', 0)
+            
             error_res = es_writer.client.count(index=index, query={"match": {"level": "ERROR"}})
             error_count = error_res.get('count', 0)
+            
             warn_res = es_writer.client.count(index=index, query={"match": {"level": "WARN"}})
             warn_count = warn_res.get('count', 0)
+            
+            # Calculate real uptime
+            if total_logs > 0:
+                uptime = f"{((total_logs - error_count) / total_logs * 100):.2f}%"
+            else:
+                uptime = "100%"
+            
+            # Calculate real avg latency
+            try:
+                avg_res = es_writer.client.search(index=index, body={
+                    "size": 0,
+                    "aggs": {"avg_duration": {"avg": {"field": "duration_ms"}}}
+                })
+                avg_latency = f"{avg_res['aggregations']['avg_duration'].get('value', 0):.0f}ms"
+            except:
+                avg_latency = "0ms"
+            
             return {
                 "total_logs": total_logs,
                 "errors": error_count,
                 "warnings": warn_count,
-                "uptime": "99.99%",
-                "avg_latency": "50ms",
+                "uptime": uptime,
+                "avg_latency": avg_latency,
                 "source": "elasticsearch"
             }
     except Exception as e:
@@ -164,14 +183,21 @@ def get_analytics(db: Session = Depends(get_db)):
         total_logs = db.query(LogRecord).count()
         error_count = db.query(LogRecord).filter(LogRecord.level == "ERROR").count()
         warn_count = db.query(LogRecord).filter(LogRecord.level == "WARN").count()
+        
+        if total_logs > 0:
+            uptime = f"{((total_logs - error_count) / total_logs * 100):.2f}%"
+        else:
+            uptime = "100%"
+        
         return {
             "total_logs": total_logs,
             "errors": error_count,
             "warnings": warn_count,
-            "uptime": "99.99%",
-            "avg_latency": "50ms",
+            "uptime": uptime,
+            "avg_latency": "0ms",
             "source": "postgres"
         }
     except Exception as e:
         logger.error(f"Analytics failed: {e}")
-        return {"total_logs": 0, "errors": 0, "warnings": 0, "source": "error"}
+        return {"total_logs": 0, "errors": 0, "warnings": 0, "uptime": "0%", "avg_latency": "0ms", "source": "error"}
+
