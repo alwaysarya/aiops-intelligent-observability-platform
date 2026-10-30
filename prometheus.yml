@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'aiops-services'
+    static_configs:
+      - targets:
+          - 'log-ingestion-service:8000'
+          - 'anomaly-detector:8001'
+          - 'alert-service:8002'
+          - 'root-cause-analyzer:8003'
