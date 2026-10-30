@@ -4,6 +4,79 @@ networks:
     external: true
 
 services:
+  # ==========================================
+  # DATABASE LAYER
+  # ==========================================
+  
+  # 1. Master Database (Handles Writes)
+  postgres-master:
+    image: postgres:15-alpine
+    container_name: aiops-postgres-master
+    environment:
+      POSTGRES_USER: aiops_user
+      POSTGRES_PASSWORD: aiops_password
+      POSTGRES_DB: aiops_db
+      # Replication settings for Read Replica
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    command: >
+      postgres -c wal_level=replica
+               -c max_wal_senders=10
+               -c max_replication_slots=10
+               -c hot_standby=on
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_master_data:/var/lib/postgresql/data
+    networks:
+      - aiops-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aiops_user -d aiops_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # 2. Read Replica Database (Handles Reads)
+  postgres-replica:
+    image: postgres:15-alpine
+    container_name: aiops-postgres-replica
+    environment:
+      POSTGRES_USER: aiops_user
+      POSTGRES_PASSWORD: aiops_password
+      PGUSER: aiops_user
+      PGPASSWORD: aiops_password
+    depends_on:
+      - postgres-master
+    ports:
+      - "5433:5432"
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
+  # 3. PgBouncer (Connection Pooler)
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: aiops-pgbouncer
+    environment:
+      - DB_USER=aiops_user
+      - DB_PASSWORD=aiops_password
+      - DB_HOST=postgres-master
+      - DB_NAME=aiops_db
+      - POOL_MODE=transaction
+      - MAX_CLIENT_CONN=10000
+      - DEFAULT_POOL_SIZE=50
+    ports:
+      - "6432:5432"
+    depends_on:
+      - postgres-master
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
+  # ==========================================
+  # MICROSERVICES
+  # ==========================================
+
   api-gateway:
     build: ./services/api-gateway
     container_name: aiops-api-gateway
@@ -11,8 +84,14 @@ services:
       - "8080:8080"
     environment:
       - ENVIRONMENT=development
+      # Connecting to PgBouncer for pooling
+      - DATABASE_URL=postgresql://aiops_user:aiops_password@pgbouncer:5432/aiops_db
+      - READ_REPLICA_URL=postgresql://aiops_user:aiops_password@postgres-replica:5432/aiops_db
     networks:
       - aiops-network
+    depends_on:
+      - pgbouncer
+      - postgres-replica
     restart: unless-stopped
 
   log-ingestion-service:
@@ -56,3 +135,6 @@ services:
     networks:
       - aiops-network
     restart: unless-stopped
+
+volumes:
+  postgres_master_data:

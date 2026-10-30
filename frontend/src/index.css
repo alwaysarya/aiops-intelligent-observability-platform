@@ -62,3 +62,44 @@ img, video, canvas, svg {
   max-width: 100%;
   height: auto;
 }
+
+/* =========================================
+   MOBILE OPTIMIZATION FIXES
+   ========================================= */
+
+/* 1. Smooth Touch Scrolling */
+html {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* 2. Prevent Text Overflow on Small Screens */
+h1, h2, h3, h4, p, span, a {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 3. Better Tap Targets for Mobile (Min 44px) */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Adjust padding for mobile */
+  .container, .max-w-\[1240px\], .max-w-\[1400px\] {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Prevent horizontal scroll from fixed width elements */
+  .w-\[400px\], .w-\[500px\], .w-\[800px\], .w-\[1240px\] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* 4. Hide Horizontal Scrollbar globally */
+body {
+  overflow-x: hidden;
+}

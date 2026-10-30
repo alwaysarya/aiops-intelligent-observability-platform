@@ -127,7 +127,7 @@ export default function Topbar() {
 
         {/* Right Side Icons (Search, Theme, Notifications, User) */}
         <div className="flex items-center gap-3">
-          <button className="hidden sm:flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/[0.05] transition-colors">
+          <button className="hidden items-center justify-center w-8 h-8 rounded-lg hover:bg-white/[0.05] transition-colors">
             <Search size={16} className="text-[#8A8F98]" />
           </button>
           <div className="flex items-center gap-2">
