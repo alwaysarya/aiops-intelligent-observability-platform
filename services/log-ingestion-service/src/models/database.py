@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, J
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://aiops_user:aiops_password@postgres-master:5432/aiops_db")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://aiops_user:aiops_password@pgbouncer:5432/aiops_db")
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=10, max_overflow=20)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
