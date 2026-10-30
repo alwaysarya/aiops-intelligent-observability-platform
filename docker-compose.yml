@@ -63,6 +63,7 @@ services:
       - DB_HOST=postgres-master
       - DB_NAME=aiops_db
       - POOL_MODE=transaction
+      - AUTH_TYPE=trust
       - MAX_CLIENT_CONN=10000
       - DEFAULT_POOL_SIZE=50
     ports:

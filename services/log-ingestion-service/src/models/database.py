@@ -1,13 +1,11 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, JSON
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
 import os
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, JSON
+from sqlalchemy.orm import sessionmaker, declarative_base
+from datetime import datetime
 
-# Yahan port 5433 kar diya hai
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://aiops:aiops_password@127.0.0.1:5433/aiops")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://aiops_user:aiops_password@postgres-master:5432/aiops_db")
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=10, max_overflow=20)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -15,28 +13,14 @@ class LogRecord(Base):
     __tablename__ = "logs"
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    level = Column(String, index=True)
-    service = Column(String, index=True)
-    message = Column(String)
-    duration_ms = Column(Float, nullable=True)
+    level = Column(String(10), nullable=False)
+    service = Column(String(50), nullable=False)
+    message = Column(Text, nullable=False)
+    duration_ms = Column(Integer, default=0)
     metadata_json = Column(JSON, nullable=True)
 
-class AnomalyRecord(Base):
-    __tablename__ = "anomalies"
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
-    service = Column(String, index=True)
-    score = Column(Float)
-    severity = Column(String)
-    detected_by = Column(String)
-
 def init_db():
-    try:
-        Base.metadata.create_all(bind=engine)
-        print("✅ Database tables created/verified successfully.")
-    except Exception as e:
-        print(f"❌ Database connection failed: {e}")
-        raise e
+    Base.metadata.create_all(bind=engine)
 
 def get_db():
     db = SessionLocal()

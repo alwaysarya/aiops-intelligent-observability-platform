@@ -1,54 +1,56 @@
 import axios from 'axios'
-import { authService } from './auth'
 
-const BASE_URL = 'http://localhost:8080/api'
+// Production mein ye environment variable se aayega
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
-const http = axios.create({ 
-  timeout: 5000, 
+const http = axios.create({
   baseURL: BASE_URL,
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 })
 
-// Add JWT Token to all requests
+// Request interceptor for JWT
 http.interceptors.request.use((config) => {
-  const token = authService.getToken()
+  const token = sessionStorage.getItem('aiops_token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
 })
 
+// Response interceptor for error handling
 http.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      authService.logout()
+      sessionStorage.removeItem('aiops_token')
+      window.location.href = '/login'
     }
     return Promise.reject(error)
   }
 )
 
 export const ingestionApi = {
-  health: () => http.get(`/ingestion/health`).then(r => r.data),
-  ingestLog: (log) => http.post(`/ingestion/ingest`, log).then(r => r.data),
-  getLogs: () => http.get(`/ingestion/logs`).then(r => r.data),
+  health: () => http.get('/ingestion/health').then(r => r.data),
+  getLogs: () => http.get('/ingestion/logs').then(r => r.data),
+  ingestLog: (log) => http.post('/ingestion/ingest', log).then(r => r.data),
 }
 
 export const anomalyApi = {
-  health: () => http.get(`/anomaly/health`).then(r => r.data),
-  predict: (features) => http.post(`/anomaly/predict`, features).then(r => r.data),
+  health: () => http.get('/anomaly/health').then(r => r.data),
+  predict: (features) => http.post('/anomaly/predict', features).then(r => r.data),
 }
 
 export const alertsApi = {
-  health: () => http.get(`/alerts/health`).then(r => r.data),
-  channels: () => http.get(`/alerts/channels`).then(r => r.data),
-  trigger: (alert) => http.post(`/alerts/trigger`, alert).then(r => r.data),
+  health: () => http.get('/alerts/health').then(r => r.data),
+  channels: () => http.get('/alerts/channels').then(r => r.data),
+  trigger: (alert) => http.post('/alerts/trigger', alert).then(r => r.data),
 }
 
 export const rcaApi = {
-  health: () => http.get(`/rca/health`).then(r => r.data),
-  graphStats: () => http.get(`/rca/graph/stats`).then(r => r.data),
-  analyze: (request) => http.post(`/rca/analyze`, request).then(r => r.data),
+  health: () => http.get('/rca/health').then(r => r.data),
+  graphStats: () => http.get('/rca/graph/stats').then(r => r.data),
+  analyze: (request) => http.post('/rca/analyze', request).then(r => r.data),
 }
 
 export const checkAllServices = async () => {
