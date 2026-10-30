@@ -120,6 +120,22 @@ services:
       - aiops-network
     restart: unless-stopped
 
+
+  neo4j:
+    image: neo4j:5.15.0
+    container_name: aiops-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/aiops_password
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - neo4j_data:/data
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
   api-gateway:
     build: ./services/api-gateway
     container_name: aiops-api-gateway
@@ -206,3 +222,4 @@ volumes:
   es_data:
 
   postgres_master_data:
+  neo4j_data:
