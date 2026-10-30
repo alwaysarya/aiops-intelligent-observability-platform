@@ -100,8 +100,14 @@ services:
     container_name: aiops-log-ingestion
     ports:
       - "8000:8000"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - REDIS_HOST=redis
     networks:
       - aiops-network
+    depends_on:
+      - postgres-master
+      - elasticsearch
     restart: unless-stopped
 
   anomaly-detector:
@@ -137,5 +143,24 @@ services:
       - aiops-network
     restart: unless-stopped
 
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: aiops-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - aiops-network
+    restart: unless-stopped
+
 volumes:
+  es_data:
+
   postgres_master_data:
