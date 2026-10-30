@@ -716,7 +716,7 @@ export default function Dashboard() {
                 <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/40 mb-4">{col.title}</p>
                 <div className="space-y-2.5">
                   {col.links.map(link => (
-                    <a key={link} href="#" className="block text-[13px] text-white/70 hover:text-white transition-colors">{link}</a>
+                    <a key={link} href={link === "Contact" ? "mailto:contact@aiops.com" : "/app"} className="block text-[13px] text-white/70 hover:text-white transition-colors">{link}</a>
                   ))}
                 </div>
               </div>
@@ -736,9 +736,9 @@ export default function Dashboard() {
       <footer className="max-w-[1240px] mx-auto px-8 py-12 flex flex-col md:flex-row items-center justify-between gap-6 text-[13px] text-[#86868B] border-t border-black/[0.04]">
         <span>© {new Date().getFullYear()} AIOps · Infrastructure overview</span>
         <div className="flex gap-8">
-          <a href="#" className="hover:text-[#0071E3] transition-colors font-medium">Back to top ↑</a>
-          <a href="#" className="hover:text-[#0071E3] transition-colors font-medium">Service health</a>
-          <a href="#" className="hover:text-[#0071E3] transition-colors font-medium">Deployments</a>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:text-[#0071E3] transition-colors font-medium">Back to top ↑</button>
+          <a href="/app" className="hover:text-[#0071E3] transition-colors font-medium">Service health</a>
+          <a href="/app" className="hover:text-[#0071E3] transition-colors font-medium">Deployments</a>
         </div>
       </footer>
 

@@ -1002,24 +1002,24 @@ function LandingPage() {
               <h5 className="text-[#1D1D1F] text-[13px] font-bold uppercase tracking-wider mb-5">Product</h5>
               <ul className="space-y-4 text-[15px] font-semibold text-gray-500">
                 <li><a href="#features" className="hover:text-black transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Docs</a></li>
+                <li><a href="/app" className="hover:text-black transition-colors">Pricing</a></li>
+                <li><a href="/docs" className="hover:text-black transition-colors">Docs</a></li>
               </ul>
             </div>
             <div>
               <h5 className="text-[#1D1D1F] text-[13px] font-bold uppercase tracking-wider mb-5">Company</h5>
               <ul className="space-y-4 text-[15px] font-semibold text-gray-500">
-                <li><a href="#" className="hover:text-black transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Careers</a></li>
+                <li><a href="/app" className="hover:text-black transition-colors">About</a></li>
+                <li><a href="/app" className="hover:text-black transition-colors">Blog</a></li>
+                <li><a href="mailto:careers@aiops.com" className="hover:text-black transition-colors">Careers</a></li>
               </ul>
             </div>
             <div>
               <h5 className="text-[#1D1D1F] text-[13px] font-bold uppercase tracking-wider mb-5">Legal</h5>
               <ul className="space-y-4 text-[15px] font-semibold text-gray-500">
-                <li><a href="#" className="hover:text-black transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Terms</a></li>
-                <li><a href="#" className="hover:text-black transition-colors">Security</a></li>
+                <li><a href="/app" className="hover:text-black transition-colors">Privacy</a></li>
+                <li><a href="/app" className="hover:text-black transition-colors">Terms</a></li>
+                <li><a href="/app" className="hover:text-black transition-colors">Security</a></li>
               </ul>
             </div>
           </div>
