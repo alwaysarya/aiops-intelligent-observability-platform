@@ -48,13 +48,34 @@ function AnalyticsPage() {
   const [newRuleSeverity, setNewRuleSeverity] = useState('critical')
 
   useEffect(() => {
+    fetch('http://localhost:8000/analytics')
+      .then(res => res.json())
+      .then(data => setAnalyticsData(data))
+      .catch(err => console.error("Analytics fetch error:", err));
+  }, []);
+
+  useEffect(() => {
     const load = async () => {
       try {
-        const res = await checkAllServices()
-        setServices(res)
-        setLastUpdated(new Date())
+        const endpoints = [
+          { key: 'logIngestion', url: 'http://localhost:8000/health' },
+          { key: 'aiDetector', url: 'http://localhost:8001/health' },
+          { key: 'alertService', url: 'http://localhost:8002/health' },
+          { key: 'rootCause', url: 'http://localhost:8003/health' },
+        ];
+        const results = { logIngestion: false, aiDetector: false, alertService: false, rootCause: false };
+        
+        await Promise.all(endpoints.map(async (ep) => {
+          try {
+            const res = await fetch(ep.url);
+            if (res.ok) results[ep.key] = true;
+          } catch (e) {}
+        }));
+        
+        setServices(results);
+        setLastUpdated(new Date());
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     }
     load()
@@ -79,9 +100,9 @@ function AnalyticsPage() {
   }
 
   const kpiStats = [
-    { label: 'Events / min', value: '{analyticsData.total_logs.toLocaleString()}', trend: '+18%', isUp: true, icon: Activity, color: '#5E6AD2' },
-    { label: 'Anomalies', value: '{analyticsData.errors}', trend: '-5', isUp: false, icon: AlertTriangle, color: '#FF453A' },
-    { label: 'Uptime', value: '{analyticsData.uptime}', trend: '+0.02%', isUp: true, icon: Shield, color: '#30D158' },
+    { label: 'Events / min', value: analyticsData.total_logs.toLocaleString(), trend: '+18%', isUp: true, icon: Activity, color: '#5E6AD2' },
+    { label: 'Anomalies', value: analyticsData.errors, trend: '-5', isUp: false, icon: AlertTriangle, color: '#FF453A' },
+    { label: 'Uptime', value: analyticsData.uptime, trend: '+0.02%', isUp: true, icon: Shield, color: '#30D158' },
     { label: 'Alert Response', value: '180ms', trend: '-24ms', isUp: true, icon: Clock, color: '#E5A00D' },
   ]
 
