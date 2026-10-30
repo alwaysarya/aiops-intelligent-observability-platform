@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
+import ProtectedRoute from './components/Layout/ProtectedRoute'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
 import AnalyticsPage from './pages/AnalyticsPage'
@@ -18,42 +18,38 @@ import KubernetesPage from './pages/KubernetesPage'
 import IncidentsPage from './pages/IncidentsPage'
 import IncidentDetail from './pages/IncidentDetail'
 import TracesPage from './pages/TracesPage'
-
-
-function PageTitle({ title }) {
-  useEffect(() => {
-    document.title = `${title} | AIOps Observability`
-  }, [title])
-  return null
-}
+import LoginPage from './pages/LoginPage'
 
 function App() {
   return (
     <Routes>
-      {/* 1. Landing Page (Default at '/') */}
-      <Route path="/" element={<><PageTitle title='Home' /><LandingPage /></>} />
-      
-      {/* 2. App Layout (Dashboard) at '/app' */}
-      <Route path="/app" element={<Layout />}>
-        <Route index element={<><PageTitle title='Dashboard' /><Dashboard /></>} />
-        <Route path="analytics" element={<><PageTitle title='Analytics' /><AnalyticsPage /></>} />
-        <Route path="logs" element={<><PageTitle title='Logs' /><Logs /></>} />
-        <Route path="alerts" element={<><PageTitle title='Alerts' /><Alerts /></>} />
-        <Route path="root-cause" element={<><PageTitle title='Root Cause' /><RootCause /></>} />
-        <Route path="service-map" element={<><PageTitle title='Service Map' /><ServiceMapPage /></>} />
-        <Route path="sla" element={<><PageTitle title='SLA' /><SLAPage /></>} />
-        <Route path="datasets" element={<><PageTitle title='Datasets' /><DatasetsPage /></>} />
-        <Route path="models" element={<><PageTitle title='Models' /><ModelsPage /></>} />
-        <Route path="reports" element={<><PageTitle title='Reports' /><ReportsPage /></>} />
-        <Route path="kubernetes" element={<><PageTitle title='Kubernetes' /><KubernetesPage /></>} />
-        <Route path="incidents" element={<><PageTitle title='Incidents' /><IncidentsPage /></>} />
-        <Route path="incidents/:id" element={<IncidentDetail />} />
-        <Route path="traces" element={<><PageTitle title='Traces' /><TracesPage /></>} />
-        <Route path="settings" element={<><PageTitle title='Settings' /><Settings /></>} />
-        <Route path="*" element={<NotFound />} />
+      {/* 1. Public Routes */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* 2. Protected Routes (Login Required) */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/app" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="logs" element={<Logs />} />
+          <Route path="alerts" element={<Alerts />} />
+          <Route path="root-cause" element={<RootCause />} />
+          <Route path="service-map" element={<ServiceMapPage />} />
+          <Route path="sla" element={<SLAPage />} />
+          <Route path="datasets" element={<DatasetsPage />} />
+          <Route path="models" element={<ModelsPage />} />
+          <Route path="reports" element={<ReportsPage />} />
+          <Route path="kubernetes" element={<KubernetesPage />} />
+          <Route path="incidents" element={<IncidentsPage />} />
+          <Route path="incidents/:id" element={<IncidentDetail />} />
+          <Route path="traces" element={<TracesPage />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
       </Route>
-      
-      {/* Fallback */}
+
+      {/* 3. Fallback Route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

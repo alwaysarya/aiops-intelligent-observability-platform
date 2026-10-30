@@ -1,12 +1,14 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { authService } from '../../services/auth'
 
 export default function ProtectedRoute() {
-  const isAuth = authService.isAuthenticated()
+  // Check if token exists in sessionStorage
+  const token = sessionStorage.getItem('aiops_token')
   
-  if (!isAuth) {
+  // If no token, redirect to login
+  if (!token) {
     return <Navigate to="/login" replace />
   }
   
+  // If token exists, render child routes
   return <Outlet />
 }
