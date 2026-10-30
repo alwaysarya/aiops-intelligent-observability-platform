@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-SECRET_KEY = "aiops-super-secret-key-change-in-production"
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "fallback-dev-only-key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
