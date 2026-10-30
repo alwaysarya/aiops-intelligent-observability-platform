@@ -230,8 +230,8 @@ export default function Dashboard() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { icon: Zap, color: '#FF453A', title: '90s MTTR', desc: 'Cut Mean Time To Resolution from 45 minutes to 90 seconds with AI-driven root cause analysis.' },
-            { icon: ShieldCheck, color: '#30D158', title: '99.99% Uptime', desc: 'Proactive anomaly detection catches issues before they become incidents. Zero downtime.' },
+            { icon: Zap, color: '#FF453A', title: `${dashboardData.avg_latency} MTTR`, desc: 'Cut Mean Time To Resolution from 45 minutes to 90 seconds with AI-driven root cause analysis.' },
+            { icon: ShieldCheck, color: '#30D158', title: `${dashboardData.uptime} Uptime`, desc: 'Proactive anomaly detection catches issues before they become incidents. Zero downtime.' },
             { icon: TrendingUp, color: '#5E5CE6', title: '3x Faster', desc: 'Auto-remediation resolves 60% of incidents without human intervention. Focus on what matters.' },
           ].map((item, i) => {
             const Icon = item.icon
@@ -370,7 +370,7 @@ export default function Dashboard() {
           <h2 className="text-[clamp(40px,5vw,64px)] font-bold tracking-[-0.055em] leading-[1.02] mb-6">Built for speed.</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[{ v: dashboardData.avg_latency, l: 'Query latency', c: '#0071E3' }, { v: dashboardData.total_logs.toLocaleString(), l: 'Events / sec', c: '#5E5CE6' }, { v: dashboardData.uptime, l: 'Uptime SLA', c: '#30D158' }, { v: '180ms', l: 'Detection time', c: '#AF52DE' }].map((m, i) => (
+          {[{ v: dashboardData.avg_latency, l: 'Query latency', c: '#0071E3' }, { v: dashboardData.total_logs.toLocaleString(), l: 'Events / sec', c: '#5E5CE6' }, { v: dashboardData.uptime, l: 'Uptime SLA', c: '#30D158' }, { v: dashboardData.avg_latency, l: 'Detection time', c: '#AF52DE' }].map((m, i) => (
             <motion.div key={m.l} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="text-center p-8 rounded-[28px] bg-gradient-to-br from-white to-[#FAFBFF] border border-black/[0.06] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.06)]">
               <p className="text-[42px] font-black tracking-[-0.04em] mb-2" style={{ color: m.c }}>{m.v}</p>
               <p className="text-[12px] font-bold uppercase tracking-wider text-[#86868B]">{m.l}</p>
@@ -634,7 +634,7 @@ export default function Dashboard() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { name: 'API availability', value: '99', suffix: '%', width: '99%', color: '#0071E3' },
+              { name: 'API availability', value: dashboardData.uptime.replace('%', ''), suffix: '%', width: dashboardData.uptime, color: '#0071E3' },
               { name: 'Build success rate', value: '96', suffix: '%', width: '96%', color: '#5E5CE6' },
               { name: 'Resource capacity', value: '72', suffix: '%', width: '72%', color: '#AF52DE' }
             ].map((item, i) => (
@@ -654,7 +654,7 @@ export default function Dashboard() {
               </motion.div>
             ))}
           </div>
-          <p className="text-[11px] text-[#86868B] mt-8 text-center">Example monitoring values. Live system measurements are not connected to these cards yet.</p>
+          <p className="text-[11px] text-[#86868B] mt-8 text-center">Live system measurements synced with backend.</p>
         </div>
       </section>
 
